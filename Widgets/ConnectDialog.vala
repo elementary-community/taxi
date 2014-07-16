@@ -19,67 +19,79 @@ using Granite;
 
 namespace Shift {
 
-    public enum Protocol {
-        FTP = 0,
-        SFTP = 1;
-    }
-
-    class Connect {
-        public Protocol protocol { get; set; default = Protocol.FTP; }
-        public string hostname { get; set; }
-        public int port { get; set; default = 21; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public bool anonymous { get; set; default = false; }
-
-        public string get_protocol_string () {
-            switch (protocol) {
-                case Protocol.FTP: return "ftp";
-                case Protocol.SFTP: return "sftp";
-                default: return "ftp";
-            }
-        }
-
-        public string get_uri () {
-            return get_protocol_string () + "://" + hostname;
-        }
-    }
-
     class ConnectDialog : Gtk.Popover {
+    
+        Gtk.Grid grid = new Gtk.Grid ();
+        int row = 0;
+        Gtk.ComboBoxText protocol_combobox;
+        Gtk.SpinButton port_entry   = new Gtk.SpinButton.with_range (0, 50009, 1);
+        Gtk.Entry hostname_entry    = new Gtk.Entry ();
+        Gtk.Entry username_entry    = new Gtk.Entry ();
+        Gtk.Entry password_entry    = new Gtk.Entry ();
+        Gtk.Switch anonymous_switch = new Gtk.Switch ();
+        Gtk.Label username_label    = new Gtk.Label ("Username");
+        Gtk.Label password_label    = new Gtk.Label ("Password");
+
 
         public ConnectDialog (Gtk.Widget widget) {
             set_relative_to (widget);
             build ();
         }
 
-        public signal void connect_initiated (Connect connect_details);
+        public signal void connect_initiated (IConnInfo connect_details);
 
         private void build () {
-
-            var grid = new Gtk.Grid ();
-            this.add (alignment (grid, 6, 12, 12, 12));
-
+            grid = new Gtk.Grid ();
+            grid.margin_left = 12;
+            this.add (grid);
             var row = 0;
+            add_protocol_field ();
+            add_hostname_field ();
+            add_port_field ();
+            add_anon_field ();
+            add_username_field ();
+            add_password_field ();
+            add_connect_button ();
 
+        }
+        
+        private void add_protocol_field () {
             var label = new Gtk.Label ("Protocol");
             label.set_alignment (1.0f, 0.5f);
             grid.attach (label, 0, row, 1, 1);
-            var protocol_combobox = combobox ({"FTP", "SFTP"});
-            grid.attach (alignment (protocol_combobox, 6, 0, 6, 12), 1, row++, 1, 1);
-
-            label = new Gtk.Label ("Hostname");
+            
+            protocol_combobox = combobox ({"FTP", "SFTP"});
+            protocol_combobox.margin_top = 12;
+            protocol_combobox.margin_bottom = 6;
+            protocol_combobox.margin_left = 12;
+            protocol_combobox.margin_right = 12;  
+            grid.attach (protocol_combobox, 1, row++, 1, 1);
+        }
+        
+        private void add_hostname_field () {
+            var label = new Gtk.Label ("Hostname");
             label.set_alignment (1.0f, 0.5f);
-            var hostname_entry = new Gtk.Entry ();
+            grid.attach (label, 0, row, 1, 1);
+            
+            hostname_entry.margin_top = 6;
+            hostname_entry.margin_bottom = 6;
+            hostname_entry.margin_left = 12;
+            hostname_entry.margin_right = 12;  
             hostname_entry.placeholder_text = "example.com";
-            grid.attach (label, 0, row, 1, 1);
-            grid.attach (alignment (hostname_entry, 6, 0, 6, 12), 1, row++, 2, 1);
-
-            label = new Gtk.Label ("Port");
+            grid.attach (hostname_entry, 1, row++, 2, 1);
+        }
+        
+        private void add_port_field () {
+            var label = new Gtk.Label ("Port");
             label.set_alignment (1.0f, 0.5f);
-            var port_entry = new Gtk.SpinButton.with_range (0, 50009, 1);
-            port_entry.set_value (21);
             grid.attach (label, 0, row, 1, 1);
-            grid.attach (alignment (port_entry, 6, 0, 6, 12), 1, row++, 1, 1);
+            
+            port_entry.margin_top = 6;
+            port_entry.margin_bottom = 6;
+            port_entry.margin_left = 12;
+            port_entry.margin_right = 12;   
+            port_entry.set_value (21);
+            grid.attach (port_entry, 1, row++, 1, 1);
 
             protocol_combobox.changed.connect (() => {
                 switch ((Protocol) protocol_combobox.get_active ()) {
@@ -91,27 +103,43 @@ namespace Shift {
                         break;
                 }
             });
-
-            label = new Gtk.Label ("Anonymous");
+        }
+        
+        private void add_anon_field () {
+            var label = new Gtk.Label ("Anonymous");
             label.set_alignment (1.0f, 0.5f);
-            var anonymous_switch = new Gtk.Switch ();
             grid.attach (label, 0, row, 1, 1);
-            grid.attach (alignment (anonymous_switch, 6, 0, 6, 12), 1, row++, 1, 1);
-
-            var username_label = new Gtk.Label ("Username");
+            
+            anonymous_switch.margin_top = 6;
+            anonymous_switch.margin_bottom = 6;
+            anonymous_switch.margin_left = 12;
+            anonymous_switch.margin_right = 12;   
+            grid.attach (anonymous_switch, 1, row++, 1, 1);
+        }
+        
+        private void add_username_field () {
             username_label.set_alignment (1.0f, 0.5f);
-            var username_entry = new Gtk.Entry ();
-            username_entry.placeholder_text = "Username";
             grid.attach (username_label, 0, row, 1, 1);
-            grid.attach (alignment (username_entry, 6, 0, 6, 12), 1, row++, 2, 1);
-
-            var password_label = new Gtk.Label ("Password");
+            
+            username_entry.margin_top = 6;
+            username_entry.margin_bottom = 6;
+            username_entry.margin_left = 12;
+            username_entry.margin_right = 12;
+            username_entry.placeholder_text = "Username";
+            grid.attach (username_entry, 1, row++, 2, 1);
+        }
+        
+        private void add_password_field () {
             password_label.set_alignment (1.0f, 0.5f);
-            var password_entry = new Gtk.Entry ();
-            password_entry.placeholder_text = "Password";
-            password_entry.set_visibility (false);
             grid.attach (password_label, 0, row, 1, 1);
-            grid.attach (alignment (password_entry, 6, 0, 6, 12), 1, row++, 2, 1);
+            
+            password_entry.margin_top = 6;
+            password_entry.margin_bottom = 6;
+            password_entry.margin_left = 12;
+            password_entry.margin_right = 12;
+            password_entry.placeholder_text = "Password";
+            password_entry.set_visibility (false);        
+            grid.attach (password_entry, 1, row++, 2, 1);
 
             anonymous_switch.notify["active"].connect (() => {
                 if (anonymous_switch.get_active ()) {
@@ -126,21 +154,29 @@ namespace Shift {
                     password_entry.set_sensitive (true);
                 }
             });
-
+        }
+        
+        private void add_connect_button () {
             var connect_button = new Gtk.Button ();
             connect_button.add (new Gtk.Label ("Connect"));
+            connect_button.margin_top = 6;
+            connect_button.margin_bottom = 12;
+            connect_button.margin_left = 12;
+            connect_button.margin_right = 12;
+            connect_button.get_style_context ().add_class ("suggested-action");
+            grid.attach (connect_button, 2, row++, 1, 1);
+            
             connect_button.clicked.connect (() => {
-                var connect_data  = new Connect ();
-                connect_data.protocol = (Protocol) protocol_combobox.get_active ();
-                connect_data.port = (int) port_entry.get_value ();
-                connect_data.hostname = hostname_entry.get_text ();
-                connect_data.username = username_entry.get_text ();
-                connect_data.password = password_entry.get_text ();
+                var connect_data       = new ConnInfo ();
+                connect_data.protocol  = (Protocol) protocol_combobox.get_active ();
+                connect_data.port      = (int) port_entry.get_value ();
+                connect_data.hostname  = hostname_entry.get_text ();
+                connect_data.username  = username_entry.get_text ();
+                connect_data.password  = password_entry.get_text ();
                 connect_data.anonymous = anonymous_switch.get_active ();
                 connect_initiated (connect_data);
                 this.hide ();
             });
-            this.add (alignment_full (connect_button, 0, 12, 12, 12, 1.0f, 1.0f));
         }
 
         private ComboBoxText combobox (string[] entries) {
@@ -150,24 +186,6 @@ namespace Shift {
             }
             combobox.active = 0;
             return combobox;
-        }
-
-        private Alignment alignment_full (Widget widget, int top, int right,
-            int bottom, int left, float xalign, float yalign) {
-
-            var alignment = new Alignment (xalign, yalign, 0, 0);
-            alignment.left_padding = left;
-            alignment.right_padding = right;
-            alignment.bottom_padding = bottom;
-            alignment.top_padding = top;
-            alignment.add (widget);
-            return alignment;
-        }
-
-        private Alignment alignment (Widget widget, int top, int right,
-            int bottom, int left) {
-
-            return alignment_full (widget, top, right, bottom, left, 0.0f, 0.0f);
         }
     }
 }
