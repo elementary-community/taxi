@@ -113,7 +113,8 @@ namespace Shift {
             anonymous_switch.margin_top = 6;
             anonymous_switch.margin_bottom = 6;
             anonymous_switch.margin_left = 12;
-            anonymous_switch.margin_right = 12;   
+            anonymous_switch.margin_right = 12;
+            anonymous_switch.hexpand = false;   
             grid.attach (anonymous_switch, 1, row++, 1, 1);
         }
         
