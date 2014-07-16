@@ -44,7 +44,7 @@ namespace Shift {
 
         private void add_connect_button () {
             //var connect_button = new Gtk.Button.with_label ("Connect…");
-            var connect_button = new Gtk.Button.from_icon_name ("folder-remote-symbolic", IconSize.MENU);
+            var connect_button = new Gtk.Button.from_icon_name ("folder-remote-symbolic", IconSize.LARGE_TOOLBAR);
             header_bar.pack_start (connect_button);
 
             var popover = new ConnectDialog (connect_button);
