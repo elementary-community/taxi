@@ -22,13 +22,6 @@ namespace Shift {
     interface IFileAccess : GLib.Object {
 
         /**
-         * Checks if the client is still connected to the server
-         *
-         * @return true if still connected
-         */
-        public abstract bool is_connected_to_server ();
-
-        /**
          * Connects to a server
          *
          * @return true if successful at connecting
@@ -40,14 +33,14 @@ namespace Shift {
          *
          * @return a list of file information objects
          */
-        public abstract List<FileInfo> get_remote_file_list (string path);
+        public async abstract List<FileInfo> get_remote_file_list (string path);
 
         /**
          * Gets a list of files in a local directory
          *
          * @return a list of file information objects
          */
-        public abstract List<FileInfo> get_local_file_list (string path);
+        public async abstract List<FileInfo> get_local_file_list (string path);
 
         /**
          * Gets the path that the program is currently in remotely
