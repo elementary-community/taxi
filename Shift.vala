@@ -57,6 +57,8 @@ namespace Shift {
             //var settings = Gtk.Settings.get_default();
             //settings.gtk_application_prefer_dark_theme = true;
             var gui = new GUI ();
+            gui.register_local_access (new LocalFileAccess ());
+            gui.register_remote_access (new RemoteFileAccess ());
             gui.build ();
         }
     }

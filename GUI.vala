@@ -25,13 +25,24 @@ namespace Shift {
         Gtk.HeaderBar header_bar;
         FilePane localPane;
         FilePane remotePane;
+        IFileAccess remote_access;
+        IFileAccess local_access;
 
         public void build () {
             window = new Gtk.Window ();
             add_header_bar ();
             add_panes ();
+            update_local_pane ();
             setup_window ();
             Gtk.main ();
+        }
+
+        public void register_local_access (IFileAccess local_access) {
+            this.local_access = local_access;
+        }
+
+        public void register_remote_access (IFileAccess remote_access) {
+            this.remote_access = remote_access;
         }
 
         private void add_header_bar () {
@@ -52,6 +63,15 @@ namespace Shift {
             connect_button.clicked.connect (() => {
                 popover.show_all ();
             });
+
+            popover.connect_initiated.connect ((conn) => {
+                remote_access.connect_to_device.begin (conn, (obj, res) => {
+                    if (remote_access.connect_to_device.end (res)) {
+                        update_remote_pane ();
+                        header_bar.subtitle = remote_access.get_path ();
+                    }
+                });
+            });
         }
 
         private void add_app_menu () {
@@ -68,10 +88,48 @@ namespace Shift {
             localPane = new FilePane ();
             pane_inner.pack1 (localPane, true, false);
 
+            localPane.row_clicked.connect ((name) => {
+                local_access.goto_child (name);
+                update_local_pane ();
+            });
+
+            localPane.pathbar_activated.connect ((path) => {
+                local_access.goto_path (path);
+                update_local_pane ();
+            });
+
             remotePane = new FilePane ();
             pane_inner.pack2 (remotePane, true, false);
 
+            remotePane.row_clicked.connect ((name) => {
+                remote_access.goto_child (name);
+                update_remote_pane ();
+            });
+
+            remotePane.pathbar_activated.connect ((path) => {
+                remote_access.goto_path (path);
+                update_remote_pane ();
+            });
+
             window.add (pane_outer);
+        }
+
+        private void update_local_pane () {
+            var local_path = local_access.get_path ();
+            local_access.get_file_list.begin (local_path, (obj, res) => {
+                var local_files = local_access.get_file_list.end (res);
+                localPane.update_list (local_files);
+                localPane.update_pathbar (local_path);
+            });
+        }
+
+        private void update_remote_pane () {
+            var remote_path = remote_access.get_path ();
+            remote_access.get_file_list.begin (remote_path, (obj, res) => {
+                var remote_files = remote_access.get_file_list.end (res);
+                remotePane.update_list (remote_files);
+                remotePane.update_pathbar (remote_path);
+            });
         }
 
         private void add_source_list (Granite.Widgets.ThinPaned pane) {

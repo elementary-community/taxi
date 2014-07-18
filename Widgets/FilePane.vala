@@ -24,6 +24,9 @@ namespace Shift {
         PathBar path_bar;
         ListBox list_box;
 
+        public signal void row_clicked (string name);
+        public signal void pathbar_activated (string path);
+
         public FilePane () {
             set_orientation (Gtk.Orientation.VERTICAL);
             build ();
@@ -35,8 +38,12 @@ namespace Shift {
         }
 
         private void add_path_bar () {
-            path_bar = new PathBar.from_path ("/home/khampal/test/");
+            path_bar = new PathBar ();
             add (path_bar);
+
+            path_bar.navigate.connect ((path) => {
+                pathbar_activated (path);
+            });
         }
 
         private void add_list_box () {
@@ -48,6 +55,58 @@ namespace Shift {
             scrolled_pane.add (list_box);
 
             add (scrolled_pane);
+        }
+
+        public void update_list (List<FileInfo> file_list) {
+            clear_children (list_box);
+            foreach (FileInfo file_info in file_list) {
+                list_box.add (new_row (file_info));
+            }
+            list_box.row_activated.connect ((row) => {
+                stdout.printf ("test\n");
+                row_clicked (row.get_data ("name"));
+            });
+            list_box.show_all ();
+        }
+
+        private Gtk.ListBoxRow new_row (FileInfo file_info) {
+
+            var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            row.hexpand = true;
+            row.halign = Gtk.Align.FILL;
+            row.margin = 6;
+
+            var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
+            icon.halign = Gtk.Align.START;
+            row.pack_start (icon);
+
+            var name = new Gtk.Label (file_info.get_name ());
+            name.hexpand = false;
+            name.set_alignment (0f, 0.5f);
+            row.pack_start (name);
+
+            var size = new Gtk.Label (file_info.get_size ().to_string ());
+            size.halign = Gtk.Align.END;
+            size.hexpand = true;
+            row.pack_end (size);
+
+            var listboxrow = new Gtk.ListBoxRow ();
+            listboxrow.hexpand = true;
+            listboxrow.add (row);
+            listboxrow.set_data ("name", file_info.get_name ());
+
+            return listboxrow;
+        }
+
+        public void update_pathbar (string path) {
+            path_bar.setPath (path);
+            path_bar.show_all ();
+        }
+
+        private void clear_children (Container container) {
+            foreach (Widget child in container.get_children ()) {
+                container.remove (child);
+            }
         }
     }
 }

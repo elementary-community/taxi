@@ -26,34 +26,26 @@ namespace Shift {
          *
          * @return true if successful at connecting
          */
-        public abstract bool connect_to_server (IConnInfo conn_info);
+        public async abstract bool connect_to_device (IConnInfo conn_info);
 
         /**
-         * Get a list of files in a remote directory
+         * Get a list of files in a directory
          *
          * @return a list of file information objects
          */
-        public async abstract List<FileInfo> get_remote_file_list (string path);
+        public async abstract List<FileInfo> get_file_list (string path);
 
         /**
-         * Gets a list of files in a local directory
+         * Gets the path that the program is currently in
          *
-         * @return a list of file information objects
+         * @return the current path
          */
-        public async abstract List<FileInfo> get_local_file_list (string path);
+        public abstract string get_path ();
+       
+        public abstract void goto_child (string name);
 
-        /**
-         * Gets the path that the program is currently in remotely
-         *
-         * @return the current remote path
-         */
-        public abstract string get_remote_path ();
+        public abstract void goto_parent ();
 
-        /**
-         * Gets the path that the program is currently in locally
-         *
-         * @return the current local path
-         */
-        public abstract string get_local_path ();
+        public abstract void goto_path (string path);
     }
 }
