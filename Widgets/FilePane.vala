@@ -73,21 +73,26 @@ namespace Shift {
 
             var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             row.hexpand = true;
-            row.halign = Gtk.Align.FILL;
             row.margin = 6;
+            //row.get_style_context ().add_class ("error");
 
             var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
-            icon.halign = Gtk.Align.START;
-            row.pack_start (icon);
+            icon.set_halign (Gtk.Align.START);
+            icon.set_alignment (0f, 0.5f);
+            icon.margin_right = 6;
+            //icon.get_style_context ().add_class ("warning");
+            row.add (icon);
 
             var name = new Gtk.Label (file_info.get_name ());
-            name.hexpand = false;
+            name.hexpand = true;
+            name.set_halign (Gtk.Align.START);
             name.set_alignment (0f, 0.5f);
-            row.pack_start (name);
+            name.margin_right = 6;
+            //name.get_style_context ().add_class ("warning");
+            row.add (name);
 
             var size = new Gtk.Label (file_info.get_size ().to_string ());
-            size.halign = Gtk.Align.END;
-            size.hexpand = true;
+            size.set_halign (Gtk.Align.END);
             row.pack_end (size);
 
             var listboxrow = new Gtk.ListBoxRow ();
