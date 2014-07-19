@@ -20,7 +20,7 @@ using Granite;
 namespace Shift {
 
     class ConnectDialog : Gtk.Popover {
-    
+
         Gtk.Grid grid = new Gtk.Grid ();
         int row = 0;
         Gtk.ComboBoxText protocol_combobox;
@@ -44,7 +44,6 @@ namespace Shift {
             grid = new Gtk.Grid ();
             grid.margin_left = 12;
             this.add (grid);
-            var row = 0;
             add_protocol_field ();
             add_hostname_field ();
             add_port_field ();
@@ -54,42 +53,42 @@ namespace Shift {
             add_connect_button ();
 
         }
-        
+
         private void add_protocol_field () {
             var label = new Gtk.Label ("Protocol");
             label.set_alignment (1.0f, 0.5f);
             grid.attach (label, 0, row, 1, 1);
-            
+
             protocol_combobox = combobox ({"FTP", "SFTP"});
             protocol_combobox.margin_top = 12;
             protocol_combobox.margin_bottom = 6;
             protocol_combobox.margin_left = 12;
-            protocol_combobox.margin_right = 12;  
+            protocol_combobox.margin_right = 12;
             grid.attach (protocol_combobox, 1, row++, 1, 1);
         }
-        
+
         private void add_hostname_field () {
             var label = new Gtk.Label ("Hostname");
             label.set_alignment (1.0f, 0.5f);
             grid.attach (label, 0, row, 1, 1);
-            
+
             hostname_entry.margin_top = 6;
             hostname_entry.margin_bottom = 6;
             hostname_entry.margin_left = 12;
-            hostname_entry.margin_right = 12;  
+            hostname_entry.margin_right = 12;
             hostname_entry.placeholder_text = "example.com";
             grid.attach (hostname_entry, 1, row++, 2, 1);
         }
-        
+
         private void add_port_field () {
             var label = new Gtk.Label ("Port");
             label.set_alignment (1.0f, 0.5f);
             grid.attach (label, 0, row, 1, 1);
-            
+
             port_entry.margin_top = 6;
             port_entry.margin_bottom = 6;
             port_entry.margin_left = 12;
-            port_entry.margin_right = 12;   
+            port_entry.margin_right = 12;
             port_entry.set_value (21);
             grid.attach (port_entry, 1, row++, 1, 1);
 
@@ -104,12 +103,12 @@ namespace Shift {
                 }
             });
         }
-        
+
         private void add_anon_field () {
             var label = new Gtk.Label ("Anonymous");
             label.set_alignment (1.0f, 0.5f);
             grid.attach (label, 0, row, 1, 1);
-            
+
             anonymous_switch.margin_top = 6;
             anonymous_switch.margin_bottom = 6;
             anonymous_switch.margin_left = 12;
@@ -118,11 +117,11 @@ namespace Shift {
             anonymous_switch.halign = Align.START;
             grid.attach (anonymous_switch, 1, row++, 1, 1);
         }
-        
+
         private void add_username_field () {
             username_label.set_alignment (1.0f, 0.5f);
             grid.attach (username_label, 0, row, 1, 1);
-            
+
             username_entry.margin_top = 6;
             username_entry.margin_bottom = 6;
             username_entry.margin_left = 12;
@@ -130,17 +129,17 @@ namespace Shift {
             username_entry.placeholder_text = "Username";
             grid.attach (username_entry, 1, row++, 2, 1);
         }
-        
+
         private void add_password_field () {
             password_label.set_alignment (1.0f, 0.5f);
             grid.attach (password_label, 0, row, 1, 1);
-            
+
             password_entry.margin_top = 6;
             password_entry.margin_bottom = 6;
             password_entry.margin_left = 12;
             password_entry.margin_right = 12;
             password_entry.placeholder_text = "Password";
-            password_entry.set_visibility (false);        
+            password_entry.set_visibility (false);
             grid.attach (password_entry, 1, row++, 2, 1);
 
             anonymous_switch.notify["active"].connect (() => {
@@ -157,7 +156,7 @@ namespace Shift {
                 }
             });
         }
-        
+
         private void add_connect_button () {
             var connect_button = new Gtk.Button ();
             connect_button.add (new Gtk.Label ("Connect"));
@@ -167,7 +166,7 @@ namespace Shift {
             connect_button.margin_right = 12;
             connect_button.get_style_context ().add_class ("suggested-action");
             grid.attach (connect_button, 2, row++, 1, 1);
-            
+
             connect_button.clicked.connect (() => {
                 var connect_data       = new ConnInfo ();
                 connect_data.protocol  = (Protocol) protocol_combobox.get_active ();

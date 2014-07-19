@@ -21,6 +21,7 @@ namespace Shift {
 
     interface IFileAccess : GLib.Object {
 
+        public signal void connected ();
         /**
          * Connects to a server
          *
@@ -41,7 +42,7 @@ namespace Shift {
          * @return the current path
          */
         public abstract string get_path ();
-       
+
         public abstract void goto_child (string name);
 
         public abstract void goto_parent ();

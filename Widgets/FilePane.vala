@@ -16,13 +16,15 @@
 
 using Gtk;
 using Granite;
+using Gee;
 
 namespace Shift {
 
     class FilePane : Gtk.Grid {
 
         PathBar path_bar;
-        ListBox list_box;
+        Gtk.ListBox list_box;
+        Gtk.Spinner spinner;
 
         public signal void row_clicked (string name);
         public signal void pathbar_activated (string path);
@@ -51,22 +53,51 @@ namespace Shift {
             list_box.hexpand = true;
             list_box.vexpand = true;
 
+            list_box.row_activated.connect ((row) => {
+                stdout.printf ("test\n");
+                row_clicked (row.get_data ("name"));
+            });
+
             var scrolled_pane = new Gtk.ScrolledWindow (null, null);
             scrolled_pane.add (list_box);
 
             add (scrolled_pane);
         }
 
-        public void update_list (List<FileInfo> file_list) {
+        public void update_list (GLib.List<FileInfo> file_list) {
             clear_children (list_box);
-            foreach (FileInfo file_info in file_list) {
+            // Have to convert to gee list because glib list sort function is buggy (it randomly removes items...)
+            var gee_list = glib_to_gee<FileInfo> (file_list);
+            alphabetical_order (gee_list);
+            foreach (FileInfo file_info in gee_list) {
+                if (file_info.get_name ().get_char (0) == '.') continue;
                 list_box.add (new_row (file_info));
             }
-            list_box.row_activated.connect ((row) => {
-                stdout.printf ("test\n");
-                row_clicked (row.get_data ("name"));
-            });
             list_box.show_all ();
+        }
+
+        private Gee.ArrayList<G> glib_to_gee<G> (GLib.List<G> list) {
+            var gee_list = new Gee.ArrayList<G> ();
+            foreach (G item in list) {
+                gee_list.add (item);
+            }
+            return gee_list;
+        }
+
+        private void alphabetical_order (Gee.ArrayList<FileInfo> file_list) {
+            file_list.sort ((a, b) => {
+                if ((a.get_file_type () == FileType.DIRECTORY) &&
+                    (b.get_file_type () == FileType.DIRECTORY)) {
+                    return a.get_name ().collate (b.get_name ());
+                }
+                if (a.get_file_type () == FileType.DIRECTORY) {
+                    return -1;
+                }
+                if (b.get_file_type () == FileType.DIRECTORY) {
+                    return 1;
+                }
+                return a.get_name ().collate (b.get_name ());
+            });
         }
 
         private Gtk.ListBoxRow new_row (FileInfo file_info) {
@@ -112,6 +143,21 @@ namespace Shift {
             foreach (Widget child in container.get_children ()) {
                 container.remove (child);
             }
+        }
+
+        public void start_spinner () {
+            path_bar.hide ();
+            list_box.hide ();
+            spinner = new Gtk.Spinner ();
+            spinner.start ();
+            add (spinner);
+            spinner.show ();
+        }
+
+        public void stop_spinner () {
+            remove (spinner);
+            path_bar.show ();
+            list_box.show ();
         }
     }
 }

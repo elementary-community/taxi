@@ -43,6 +43,10 @@ namespace Shift {
 
         public void register_remote_access (IFileAccess remote_access) {
             this.remote_access = remote_access;
+
+            this.remote_access.connected.connect (() => {
+                remotePane.stop_spinner ();
+            });
         }
 
         private void add_header_bar () {
@@ -54,8 +58,8 @@ namespace Shift {
         }
 
         private void add_connect_button () {
-            //var connect_button = new Gtk.Button.with_label ("Connect…");
-            var connect_button = new Gtk.Button.from_icon_name ("folder-remote-symbolic", IconSize.LARGE_TOOLBAR);
+            var connect_button = new Gtk.Button.with_label ("Connect…");
+            //r connect_button = new Gtk.Button.from_icon_name ("folder-remote-symbolic", IconSize.LARGE_TOOLBAR);            var connect
             header_bar.pack_start (connect_button);
 
             var popover = new ConnectDialog (connect_button);
@@ -65,6 +69,7 @@ namespace Shift {
             });
 
             popover.connect_initiated.connect ((conn) => {
+                remotePane.start_spinner ();
                 remote_access.connect_to_device.begin (conn, (obj, res) => {
                     if (remote_access.connect_to_device.end (res)) {
                         update_remote_pane ();
