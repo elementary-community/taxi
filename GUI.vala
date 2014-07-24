@@ -23,6 +23,8 @@ namespace Shift {
 
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
+        Gtk.ToggleButton select_button;
+        Gtk.ToggleButton favorite_button;
         FilePane localPane;
         FilePane remotePane;
         IFileAccess remote_access;
@@ -54,18 +56,19 @@ namespace Shift {
             header_bar.title = "Shift";
             header_bar.show_close_button = true;
             add_connect_button ();
-            add_app_menu ();
+            add_select_button ();
+            add_favorite_button ();
         }
 
         private void add_connect_button () {
             var connect_button = new Gtk.Button.with_label ("Connect…");
-            //r connect_button = new Gtk.Button.from_icon_name ("folder-remote-symbolic", IconSize.LARGE_TOOLBAR);            var connect
             header_bar.pack_start (connect_button);
 
             var popover = new ConnectDialog (connect_button);
 
             connect_button.clicked.connect (() => {
                 popover.show_all ();
+                select_button.set_active (false);
             });
 
             popover.connect_initiated.connect ((conn) => {
@@ -73,13 +76,73 @@ namespace Shift {
                 remote_access.connect_to_device.begin (conn, (obj, res) => {
                     if (remote_access.connect_to_device.end (res)) {
                         update_remote_pane ();
-                        header_bar.subtitle = remote_access.get_path ();
+                        favorite_button.set_sensitive (true);
                     }
                 });
             });
         }
 
-        private void add_app_menu () {
+        private void remote_pane_disconnect () {
+            favorite_button.set_sensitive (false);
+            // remotePane.disconnect ();
+        }
+
+        private void add_select_button () {
+            select_button = new Gtk.ToggleButton ();
+
+            select_button.add (new Gtk.Image.from_icon_name (
+                "object-select-symbolic",
+                IconSize.SMALL_TOOLBAR
+            ));
+
+            select_button.toggled.connect (() => {
+                activate_selection_mode (select_button.active);
+            });
+
+            header_bar.pack_end (select_button);
+        }
+
+        private void add_favorite_button () {
+            favorite_button = new Gtk.ToggleButton ();
+            favorite_button.set_sensitive (false);
+
+            favorite_button.add (new Gtk.Image.from_icon_name (
+                "non-starred-symbolic",
+                IconSize.SMALL_TOOLBAR
+            ));
+
+            favorite_button.toggled.connect (() => {
+                activate_favorite_mode (favorite_button.active);
+            });
+
+
+            header_bar.pack_end (favorite_button);
+        }
+
+        private void activate_favorite_mode (bool active) {
+            if (active) {
+                favorite_button.set_image (new Gtk.Image.from_icon_name (
+                    "starred-symbolic",
+                    IconSize.SMALL_TOOLBAR
+                ));
+            } else {
+                favorite_button.set_image (new Gtk.Image.from_icon_name (
+                    "non-starred-symbolic",
+                    IconSize.SMALL_TOOLBAR
+                ));
+            }
+        }
+
+        private void activate_selection_mode (bool active) {
+            // localPane.set_show_checkboxes (active);
+            // remotePane.set_show_checkboxes (active);
+            if (active) {
+                header_bar.get_style_context ().add_class ("selection-mode");
+                header_bar.set_title ("Select");
+            } else {
+                header_bar.get_style_context ().remove_class ("selection-mode");
+                header_bar.set_title ("Shift");
+            }
         }
 
         private void add_panes () {
@@ -140,8 +203,8 @@ namespace Shift {
         private void add_source_list (Granite.Widgets.ThinPaned pane) {
             var source_list = new Granite.Widgets.SourceList ();
             var saved_category = new Granite.Widgets.SourceList.ExpandableItem ("Saved Sites");
-            add_source_list_item ("Test 1", saved_category);
-            add_source_list_item ("Test 2", saved_category);
+            add_source_list_item ("ftp://hamp.al", saved_category);
+            add_source_list_item ("sftp://snowy.cs.bris.ac.uk", saved_category);
             saved_category.expand_all (true, false);
             var root = source_list.root;
             root.add (saved_category);

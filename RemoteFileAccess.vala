@@ -35,7 +35,7 @@ namespace Shift {
                 if (e.code == 17) {
                     return true;
                 } else {
-                    stdout.printf ("ERROR MOUNTING: " + e.message + "\n");
+                    message ("ERROR MOUNTING: " + e.message + "\n");
                     return false;
                 }
             } finally {
@@ -45,12 +45,12 @@ namespace Shift {
 
         public async List<FileInfo> get_file_list (string path) {
             try {
-                stdout.printf ("Test test test\n");
+                message ("Test test test\n");
                 var file_enum = yield file_handle.enumerate_children_async (
                         "standard::*", 0, Priority.DEFAULT);
                 return yield file_enum.next_files_async (5000, Priority.DEFAULT);
             } catch (Error e) {
-                stderr.printf ("File list error: %s %d\n", e.message, e.code);
+                message ("File list error: %s %d\n", e.message, e.code);
                 // Unmounted
                 if (e.code == 16) {
                     //
@@ -62,6 +62,10 @@ namespace Shift {
             return new List<FileInfo>();
         }
 
+        public string get_uri () {
+            return file_handle.get_uri ();
+        }
+
         public string get_path () {
             return file_handle.resolve_relative_path ("/").get_relative_path (file_handle);
         }
@@ -70,7 +74,17 @@ namespace Shift {
         }
 
         public void goto_child (string name) {
-            file_handle = file_handle.get_child (name);
+            var child_file = file_handle.get_child (name);
+            var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
+            if (child_file_type == FileType.DIRECTORY) {
+                file_handle = child_file;
+            } else if (child_file_type == FileType.REGULAR) {
+                try {
+                    AppInfo.launch_default_for_uri (child_file.get_uri (), null);
+                } catch (Error e) {
+                    message (e.message);
+                }
+            }
         }
 
         public void goto_path (string path) {

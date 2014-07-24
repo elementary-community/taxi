@@ -52,8 +52,6 @@ namespace Shift {
         }
 
         protected override void activate () {
-            stdout.printf ("Activate fn\n");
-
             //var settings = Gtk.Settings.get_default();
             //settings.gtk_application_prefer_dark_theme = true;
             var gui = new GUI ();

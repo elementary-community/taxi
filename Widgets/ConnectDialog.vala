@@ -23,6 +23,7 @@ namespace Shift {
 
         Gtk.Grid grid = new Gtk.Grid ();
         int row = 0;
+        Gtk.Button connect_button   = new Gtk.Button ();
         Gtk.ComboBoxText protocol_combobox;
         Gtk.SpinButton port_entry   = new Gtk.SpinButton.with_range (0, 50009, 1);
         Gtk.Entry hostname_entry    = new Gtk.Entry ();
@@ -47,9 +48,9 @@ namespace Shift {
             add_protocol_field ();
             add_hostname_field ();
             add_port_field ();
-            add_anon_field ();
-            add_username_field ();
-            add_password_field ();
+            //add_anon_field ();
+            //add_username_field ();
+            //add_password_field ();
             add_connect_button ();
 
         }
@@ -78,6 +79,8 @@ namespace Shift {
             hostname_entry.margin_right = 12;
             hostname_entry.placeholder_text = "example.com";
             grid.attach (hostname_entry, 1, row++, 2, 1);
+
+            hostname_entry.activate.connect (this.submit_form);
         }
 
         private void add_port_field () {
@@ -102,6 +105,8 @@ namespace Shift {
                         break;
                 }
             });
+
+            port_entry.activate.connect (this.submit_form);
         }
 
         private void add_anon_field () {
@@ -158,7 +163,6 @@ namespace Shift {
         }
 
         private void add_connect_button () {
-            var connect_button = new Gtk.Button ();
             connect_button.add (new Gtk.Label ("Connect"));
             connect_button.margin_top = 6;
             connect_button.margin_bottom = 12;
@@ -167,7 +171,10 @@ namespace Shift {
             connect_button.get_style_context ().add_class ("suggested-action");
             grid.attach (connect_button, 2, row++, 1, 1);
 
-            connect_button.clicked.connect (() => {
+            connect_button.clicked.connect (this.submit_form);
+        }
+
+        private void submit_form () {
                 var connect_data       = new ConnInfo ();
                 connect_data.protocol  = (Protocol) protocol_combobox.get_active ();
                 connect_data.port      = (int) port_entry.get_value ();
@@ -177,7 +184,6 @@ namespace Shift {
                 connect_data.anonymous = anonymous_switch.get_active ();
                 connect_initiated (connect_data);
                 this.hide ();
-            });
         }
 
         private ComboBoxText combobox (string[] entries) {

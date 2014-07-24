@@ -43,6 +43,8 @@ namespace Shift {
          */
         public abstract string get_path ();
 
+        public abstract string get_uri ();
+
         public abstract void goto_child (string name);
 
         public abstract void goto_parent ();

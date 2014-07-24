@@ -46,11 +46,14 @@ namespace Shift {
         }
 
         public void addChildDirectory (string child, string path) {
-            var button = new Gtk.Button.with_label (child);
+            var button = (path == "/") ?
+                new Gtk.Button.from_icon_name (
+                    "drive-harddisk-symbolic", IconSize.MENU) :
+                new Gtk.Button.with_label (child);
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {
                 navigate (button.get_data<string> ("path"));
-                stdout.printf ("PROPERTY: " + button.get_data<string> ("path") + "\n");
+                debug ("PROPERTY: " + button.get_data<string> ("path") + "\n");
             });
             pack_start (button);
             set_child_non_homogeneous (button, true);

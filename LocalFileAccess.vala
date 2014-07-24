@@ -32,7 +32,7 @@ namespace Shift {
                     "standard::*", 0, Priority.DEFAULT);
                 return yield file_enum.next_files_async (5000);
             } catch (Error e) {
-                stderr.printf ("PATH: " + path + " | %s\n", e.message);
+                message ("PATH: " + path + " | %s\n", e.message);
             }
             return new List<FileInfo>();
         }
@@ -41,8 +41,22 @@ namespace Shift {
             return file_handle.get_path ();
         }
 
+        public string get_uri () {
+            return file_handle.get_uri ();
+        }
+
         public void goto_child (string name) {
-            file_handle = file_handle.get_child (name);
+            var child_file = file_handle.get_child (name);
+            var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
+            if (child_file_type == FileType.DIRECTORY) {
+                file_handle = child_file;
+            } else if (child_file_type == FileType.REGULAR) {
+                try {
+                    AppInfo.launch_default_for_uri (child_file.get_uri (), null);
+                } catch (Error e) {
+                    message (e.message);
+                }
+            }
         }
 
         public void goto_path (string path) {
