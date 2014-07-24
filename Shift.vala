@@ -46,6 +46,11 @@ namespace Shift {
             about_license_type = Gtk.License.GPL_3_0;
         }
 
+        public Shift () {
+            Granite.Services.Logger.initialize (exec_name);
+            Granite.Services.Logger.DisplayLevel = Granite.Services.LogLevel.DEBUG;
+        }
+
         public static int main (string[] args) {
             var program = new Shift ();
             return program.run (args);

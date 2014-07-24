@@ -176,6 +176,7 @@ namespace Shift {
 
             remotePane.pathbar_activated.connect ((path) => {
                 remote_access.goto_path (path);
+                debug (remote_access.get_uri ());
                 update_remote_pane ();
             });
 
