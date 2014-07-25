@@ -48,6 +48,7 @@ namespace Shift {
 
             this.remote_access.connected.connect (() => {
                 remotePane.stop_spinner ();
+                header_bar.set_subtitle (remote_access.get_uri ());
             });
         }
 
@@ -185,19 +186,21 @@ namespace Shift {
 
         private void update_local_pane () {
             var local_path = local_access.get_path ();
+            var local_uri  = local_access.get_uri ();
             local_access.get_file_list.begin (local_path, (obj, res) => {
                 var local_files = local_access.get_file_list.end (res);
                 localPane.update_list (local_files);
-                localPane.update_pathbar (local_path);
+                localPane.update_pathbar (local_uri);
             });
         }
 
         private void update_remote_pane () {
             var remote_path = remote_access.get_path ();
+            var remote_uri  = remote_access.get_uri ();
             remote_access.get_file_list.begin (remote_path, (obj, res) => {
                 var remote_files = remote_access.get_file_list.end (res);
                 remotePane.update_list (remote_files);
-                remotePane.update_pathbar (remote_path);
+                remotePane.update_pathbar (remote_uri);
             });
         }
 

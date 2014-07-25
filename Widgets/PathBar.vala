@@ -16,6 +16,7 @@
 
 using Gtk;
 using Granite;
+using Soup;
 
 namespace Shift {
 
@@ -32,12 +33,12 @@ namespace Shift {
             margin = 6;
         }
 
-        public PathBar.from_path (string path) {
+        public PathBar.from_uri (string uri) {
             this ();
-            setPathHelper (path);
+            set_path_helper (uri);
         }
 
-        private string concatUntil (string[] words, int n) {
+        private string concat_until (string[] words, int n) {
             var result = "";
             for (int i = 0; (i < n + 1) && (i < words.length); i++) {
                 result += words [i] + "/";
@@ -45,10 +46,10 @@ namespace Shift {
             return result;
         }
 
-        public void addChildDirectory (string child, string path) {
+        private void add_path_frag (string child, string path) {
             var button = (path == "/") ?
                 new Gtk.Button.from_icon_name (
-                    "drive-harddisk-symbolic", IconSize.MENU) :
+                    child, IconSize.MENU) :
                 new Gtk.Button.with_label (child);
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {
@@ -59,22 +60,32 @@ namespace Shift {
             set_child_non_homogeneous (button, true);
         }
 
-        public void setPath (string path) {
-            clearPath ();
-            setPathHelper (path);
+        public void set_path (string uri) {
+            clear_path ();
+            var uri_obj = new Soup.URI (uri);
+            switch (uri_obj.get_scheme ()) {
+                case "file":
+                    add_path_frag ("drive-harddisk-symbolic", "/");
+                    break;
+                case "ftp":
+                case "sftp":
+                default:
+                    add_path_frag ("folder-remote-symbolic", "/");
+                    break;
+            }
+            set_path_helper (uri_obj.get_path ());
         }
 
-        private void setPathHelper (string path) {
-            addChildDirectory ("/", "/");
+        private void set_path_helper (string path) {
             string[] directories = path.split ("/");
             for (int i = 0; i < directories.length; i++) {
                 if (directories [i] != "") {
-                    addChildDirectory (directories [i], concatUntil (directories, i));
+                    add_path_frag (directories [i], concat_until (directories, i));
                 }
             }
         }
 
-        private void clearPath () {
+        private void clear_path () {
             foreach (Widget child in get_children ()) {
                 remove (child);
             }

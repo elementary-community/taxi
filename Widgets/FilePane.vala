@@ -178,7 +178,7 @@ namespace Shift {
         }
 
         public void update_pathbar (string path) {
-            path_bar.setPath (path);
+            path_bar.set_path (path);
             path_bar.show_all ();
         }
 
