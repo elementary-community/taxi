@@ -30,7 +30,6 @@ namespace Shift {
             get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
             homogeneous = false;
             spacing = 0;
-            margin = 6;
         }
 
         public PathBar.from_uri (string uri) {
@@ -62,6 +61,7 @@ namespace Shift {
 
         public void set_path (string uri) {
             clear_path ();
+            margin = 6;
             var uri_obj = new Soup.URI (uri);
             switch (uri_obj.get_scheme ()) {
                 case "file":
@@ -89,6 +89,7 @@ namespace Shift {
             foreach (Widget child in get_children ()) {
                 remove (child);
             }
+            margin = 0;
         }
     }
 }

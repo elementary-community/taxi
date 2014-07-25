@@ -43,7 +43,7 @@ namespace Shift {
 
         private void build () {
             grid = new Gtk.Grid ();
-            grid.margin_left = 12;
+            grid.margin_start = 12;
             this.add (grid);
             add_protocol_field ();
             add_hostname_field ();
@@ -63,8 +63,8 @@ namespace Shift {
             protocol_combobox = combobox ({"FTP", "SFTP"});
             protocol_combobox.margin_top = 12;
             protocol_combobox.margin_bottom = 6;
-            protocol_combobox.margin_left = 12;
-            protocol_combobox.margin_right = 12;
+            protocol_combobox.margin_start = 12;
+            protocol_combobox.margin_end = 12;
             grid.attach (protocol_combobox, 1, row++, 1, 1);
         }
 
@@ -75,8 +75,8 @@ namespace Shift {
 
             hostname_entry.margin_top = 6;
             hostname_entry.margin_bottom = 6;
-            hostname_entry.margin_left = 12;
-            hostname_entry.margin_right = 12;
+            hostname_entry.margin_start = 12;
+            hostname_entry.margin_end = 12;
             hostname_entry.placeholder_text = "example.com";
             grid.attach (hostname_entry, 1, row++, 2, 1);
 
@@ -90,8 +90,8 @@ namespace Shift {
 
             port_entry.margin_top = 6;
             port_entry.margin_bottom = 6;
-            port_entry.margin_left = 12;
-            port_entry.margin_right = 12;
+            port_entry.margin_start = 12;
+            port_entry.margin_end = 12;
             port_entry.set_value (21);
             grid.attach (port_entry, 1, row++, 1, 1);
 
@@ -116,8 +116,8 @@ namespace Shift {
 
             anonymous_switch.margin_top = 6;
             anonymous_switch.margin_bottom = 6;
-            anonymous_switch.margin_left = 12;
-            anonymous_switch.margin_right = 12;
+            anonymous_switch.margin_start = 12;
+            anonymous_switch.margin_end = 12;
             anonymous_switch.hexpand = false;
             anonymous_switch.halign = Align.START;
             grid.attach (anonymous_switch, 1, row++, 1, 1);
@@ -129,8 +129,8 @@ namespace Shift {
 
             username_entry.margin_top = 6;
             username_entry.margin_bottom = 6;
-            username_entry.margin_left = 12;
-            username_entry.margin_right = 12;
+            username_entry.margin_start = 12;
+            username_entry.margin_end = 12;
             username_entry.placeholder_text = "Username";
             grid.attach (username_entry, 1, row++, 2, 1);
         }
@@ -141,8 +141,8 @@ namespace Shift {
 
             password_entry.margin_top = 6;
             password_entry.margin_bottom = 6;
-            password_entry.margin_left = 12;
-            password_entry.margin_right = 12;
+            password_entry.margin_start = 12;
+            password_entry.margin_end = 12;
             password_entry.placeholder_text = "Password";
             password_entry.set_visibility (false);
             grid.attach (password_entry, 1, row++, 2, 1);
@@ -166,8 +166,8 @@ namespace Shift {
             connect_button.add (new Gtk.Label ("Connect"));
             connect_button.margin_top = 6;
             connect_button.margin_bottom = 12;
-            connect_button.margin_left = 12;
-            connect_button.margin_right = 12;
+            connect_button.margin_start = 12;
+            connect_button.margin_end = 12;
             connect_button.get_style_context ().add_class ("suggested-action");
             grid.attach (connect_button, 2, row++, 1, 1);
 

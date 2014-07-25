@@ -19,7 +19,7 @@ using Granite;
 
 namespace Shift {
 
-    interface IStringFormatter : GLib.Object {
+    interface IStringFormatter : Object {
 
         public abstract string formatted_bytes (int bytes);
 

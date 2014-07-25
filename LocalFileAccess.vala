@@ -18,7 +18,7 @@ using Granite;
 
 namespace Shift {
 
-    class LocalFileAccess : IFileAccess, GLib.Object {
+    class LocalFileAccess : IFileAccess, Object {
 
         private File file_handle = File.new_for_path (Environment.get_home_dir ());
 

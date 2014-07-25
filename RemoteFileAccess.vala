@@ -19,7 +19,7 @@ using Gtk;
 
 namespace Shift {
 
-    class RemoteFileAccess : IFileAccess, GLib.Object {
+    class RemoteFileAccess : IFileAccess, Object {
 
         private IConnInfo connect_info;
         private File file_handle;

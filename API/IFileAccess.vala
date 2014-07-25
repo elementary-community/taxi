@@ -19,7 +19,7 @@ using Granite;
 
 namespace Shift {
 
-    interface IFileAccess : GLib.Object {
+    interface IFileAccess : Object {
 
         public signal void connected ();
         /**

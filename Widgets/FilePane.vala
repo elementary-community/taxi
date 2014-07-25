@@ -28,6 +28,7 @@ namespace Shift {
     class FilePane : Gtk.Grid {
 
         PathBar path_bar;
+        Gtk.Label placeholder_label;
         Gtk.ListBox list_box;
         Gtk.Spinner spinner;
         Gtk.ScrolledWindow scrolled_pane;
@@ -63,7 +64,7 @@ namespace Shift {
                 row_clicked (row.get_data ("name"));
             });
 
-            var placeholder_label = new Gtk.Label ("This folder is empty.");
+            placeholder_label = new Gtk.Label ("This folder is empty.");
             placeholder_label.set_halign (Gtk.Align.CENTER);
             placeholder_label.set_valign (Gtk.Align.CENTER);
             placeholder_label.show ();
@@ -158,7 +159,7 @@ namespace Shift {
             var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
             icon.set_halign (Gtk.Align.START);
             icon.set_alignment (0f, 0.5f);
-            icon.margin_right = 6;
+            icon.margin_end = 6;
             return icon;
         }
 
@@ -167,7 +168,7 @@ namespace Shift {
             name.hexpand = true;
             name.set_halign (Gtk.Align.START);
             name.set_alignment (0f, 0.5f);
-            name.margin_right = 6;
+            name.margin_end = 6;
             return name;
         }
 

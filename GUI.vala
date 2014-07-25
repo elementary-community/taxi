@@ -27,6 +27,8 @@ namespace Shift {
         Gtk.ToggleButton favorite_button;
         FilePane localPane;
         FilePane remotePane;
+        Granite.Widgets.SourceList.ExpandableItem saved_category;
+        IConnectionSaver conn_saver;
         IFileAccess remote_access;
         IFileAccess local_access;
 
@@ -50,6 +52,10 @@ namespace Shift {
                 remotePane.stop_spinner ();
                 header_bar.set_subtitle (remote_access.get_uri ());
             });
+        }
+
+        public void register_connection_saver (IConnectionSaver conn_saver) {
+            this.conn_saver = conn_saver;
         }
 
         private void add_header_bar () {
@@ -78,6 +84,9 @@ namespace Shift {
                     if (remote_access.connect_to_device.end (res)) {
                         update_remote_pane ();
                         favorite_button.set_sensitive (true);
+                        favorite_button.set_active (
+                            conn_saver.is_bookmarked (remote_access.get_uri ())
+                        );
                     }
                 });
             });
@@ -121,17 +130,25 @@ namespace Shift {
         }
 
         private void activate_favorite_mode (bool active) {
+            var uri = remote_access.get_uri ();
             if (active) {
+                if (!conn_saver.is_bookmarked (uri)) {
+                    conn_saver.save (uri);
+                }
                 favorite_button.set_image (new Gtk.Image.from_icon_name (
                     "starred-symbolic",
                     IconSize.SMALL_TOOLBAR
                 ));
             } else {
+                if (conn_saver.is_bookmarked (uri)) {
+                    conn_saver.remove (uri);
+                }
                 favorite_button.set_image (new Gtk.Image.from_icon_name (
                     "non-starred-symbolic",
                     IconSize.SMALL_TOOLBAR
                 ));
             }
+            update_saved_list ();
         }
 
         private void activate_selection_mode (bool active) {
@@ -206,13 +223,19 @@ namespace Shift {
 
         private void add_source_list (Granite.Widgets.ThinPaned pane) {
             var source_list = new Granite.Widgets.SourceList ();
-            var saved_category = new Granite.Widgets.SourceList.ExpandableItem ("Saved Sites");
-            add_source_list_item ("ftp://hamp.al", saved_category);
-            add_source_list_item ("sftp://snowy.cs.bris.ac.uk", saved_category);
+            saved_category = new Granite.Widgets.SourceList.ExpandableItem ("Saved Sites");
+            update_saved_list ();
             saved_category.expand_all (true, false);
             var root = source_list.root;
             root.add (saved_category);
             pane.pack1 (source_list, true, false);
+        }
+
+        private void update_saved_list () {
+            saved_category.clear ();
+            foreach (string saved_uri in conn_saver.get_saved_conns ()) {
+                add_source_list_item (saved_uri, saved_category);
+            }
         }
 
         private void add_source_list_item (string name,

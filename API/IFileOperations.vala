@@ -19,7 +19,7 @@ using Granite;
 
 namespace Shift {
 
-    interface IFileOperations : GLib.Object {
+    interface IFileOperations : Object {
 
     }
 }

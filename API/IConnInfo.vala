@@ -21,7 +21,7 @@ namespace Shift {
 
     public enum Protocol { FTP = 0, SFTP = 1; }
 
-    public interface IConnInfo : GLib.Object {
+    public interface IConnInfo : Object {
 
         /**
          *
