@@ -17,7 +17,7 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     public class ConnInfo : IConnInfo, Object {
         public Protocol protocol { get; set; default = Protocol.FTP; }

@@ -16,29 +16,24 @@
 
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     class LocalFileAccess : IFileAccess, Object {
 
         private File file_handle = File.new_for_path (Environment.get_home_dir ());
+        private IFileOperations file_operation = new FileOperations ();
 
         public async bool connect_to_device (IConnInfo connect_info) {
             return true;
         }
 
-        public async List<FileInfo> get_file_list (string path) {
+        public async List<FileInfo> get_file_list () {
             try {
-                var file_enum = yield file_handle.enumerate_children_async (
-                    "standard::*", 0, Priority.DEFAULT);
-                return yield file_enum.next_files_async (5000);
+                return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
-                message ("PATH: " + path + " | %s\n", e.message);
+                error (e.message);
             }
             return new List<FileInfo>();
-        }
-
-        public string get_path () {
-            return file_handle.get_path ();
         }
 
         public string get_uri () {
@@ -61,10 +56,6 @@ namespace Shift {
 
         public void goto_path (string path) {
             file_handle = File.new_for_path (path);
-        }
-
-        public void goto_parent () {
-            file_handle = file_handle.get_parent ();
         }
     }
 }

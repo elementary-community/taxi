@@ -17,7 +17,7 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     class GUI {
 
@@ -60,7 +60,7 @@ namespace Shift {
 
         private void add_header_bar () {
             header_bar = new Gtk.HeaderBar ();
-            header_bar.title = "Shift";
+            header_bar.title = "Taxi";
             header_bar.show_close_button = true;
             add_connect_button ();
             add_select_button ();
@@ -159,7 +159,7 @@ namespace Shift {
                 header_bar.set_title ("Select");
             } else {
                 header_bar.get_style_context ().remove_class ("selection-mode");
-                header_bar.set_title ("Shift");
+                header_bar.set_title ("Taxi");
             }
         }
 
@@ -202,9 +202,8 @@ namespace Shift {
         }
 
         private void update_local_pane () {
-            var local_path = local_access.get_path ();
             var local_uri  = local_access.get_uri ();
-            local_access.get_file_list.begin (local_path, (obj, res) => {
+            local_access.get_file_list.begin ((obj, res) => {
                 var local_files = local_access.get_file_list.end (res);
                 localPane.update_list (local_files);
                 localPane.update_pathbar (local_uri);
@@ -212,9 +211,8 @@ namespace Shift {
         }
 
         private void update_remote_pane () {
-            var remote_path = remote_access.get_path ();
             var remote_uri  = remote_access.get_uri ();
-            remote_access.get_file_list.begin (remote_path, (obj, res) => {
+            remote_access.get_file_list.begin ((obj, res) => {
                 var remote_files = remote_access.get_file_list.end (res);
                 remotePane.update_list (remote_files);
                 remotePane.update_pathbar (remote_uri);

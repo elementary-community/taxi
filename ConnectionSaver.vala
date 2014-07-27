@@ -17,7 +17,7 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     class ConnectionSaver : IConnectionSaver, Object {
 

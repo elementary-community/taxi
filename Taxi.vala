@@ -17,9 +17,9 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
-    class Shift : Granite.Application {
+    class Taxi : Granite.Application {
 
         construct {
             build_data_dir     = "";
@@ -27,8 +27,8 @@ namespace Shift {
             build_release_name = "Prerelease";
             build_version      = "0.1";
             build_version_info = "";
-            program_name       = "Shift";
-            exec_name          = "shift-ftp";
+            program_name       = "Taxi";
+            exec_name          = "taxi";
             app_copyright      = "";
             app_years          = "2014";
             app_icon           = "";
@@ -46,13 +46,13 @@ namespace Shift {
             about_license_type = Gtk.License.GPL_3_0;
         }
 
-        public Shift () {
+        public Taxi () {
             Granite.Services.Logger.initialize (exec_name);
             Granite.Services.Logger.DisplayLevel = Granite.Services.LogLevel.DEBUG;
         }
 
         public static int main (string[] args) {
-            var program = new Shift ();
+            var program = new Taxi ();
             return program.run (args);
         }
 

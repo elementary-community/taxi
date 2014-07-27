@@ -23,57 +23,55 @@ namespace Taxi {
 
         private IConnInfo connect_info;
         private File file_handle;
-        private IFileOperations file_operation = new FileOperations ();
 
         public async bool connect_to_device (IConnInfo connect_info) {
             var mount = mount_operation_from_connect (connect_info);
             var uri = connect_info.get_uri ();
             file_handle = File.new_for_uri (uri);
             try {
-                return yield file_handle.mount_enclosing_volume (
-                    MountMountFlags.NONE,
-                    mount,
-                    null
-                );
+                return yield file_handle.mount_enclosing_volume (MountMountFlags.NONE, mount, null);
             } catch (Error e) {
-
                 // Already mounted
                 if (e.code == 17) {
                     return true;
+                } else {
+                    message ("ERROR MOUNTING: " + e.message + "\n");
+                    return false;
                 }
-
-                error ("ERROR MOUNTING: " + e.message + "\n");
-                return false;
-
             } finally {
                 connected ();
             }
         }
 
-        public async List<FileInfo> get_file_list () {
+        public async List<FileInfo> get_file_list (string path) {
             try {
-                return yield file_operation.get_file_list (file_handle);
+                message ("Test test test\n");
+                var file_enum = yield file_handle.enumerate_children_async (
+                        "standard::*", 0, Priority.DEFAULT);
+                return yield file_enum.next_files_async (5000, Priority.DEFAULT);
             } catch (Error e) {
-
+                message ("File list error: %s %d\n", e.message, e.code);
                 // Unmounted
                 if (e.code == 16) {
-                    if (yield connect_to_device (connect_info)) {
-                        return yield get_file_list ();
-                    }
+                    //
                 }
-
                 // Host closed conn
                 if (e.code == 0) {
-                    // Try some more times
                 }
-
-                error (e.message);
             }
             return new List<FileInfo>();
         }
 
         public string get_uri () {
             return file_handle.get_uri ();
+        }
+
+        public string get_path () {
+            return file_handle.resolve_relative_path ("/").get_relative_path (file_handle);
+        }
+
+        public void goto_parent () {
+            file_handle = file_handle.get_parent ();
         }
 
         public void goto_child (string name) {
@@ -88,6 +86,8 @@ namespace Taxi {
                     message (e.message);
                 }
             }
+            time_bytes_sync ();
+            time_bytes ();
         }
 
         public void goto_path (string path) {
@@ -111,6 +111,59 @@ namespace Taxi {
                 mount.set_password (connect_info.password);
             });
             return mount;
+        }
+
+        private void time_bytes () {
+            var timer = new Timer ();
+            message ("Timer starting");
+            timer.start ();
+            totalbytes.begin (file_handle, (obj, res) => {
+                timer.stop ();
+                message (totalbytes.end (res).to_string ());
+                message ("Took %f seconds", timer.elapsed ());
+            });
+        }
+
+
+        private async int64 totalbytes (File file) {
+            var file_enum = yield file.enumerate_children_async (
+                "standard::*",
+                0,
+                Priority.DEFAULT
+            );
+            int64 accm = 0;
+            var file_list = yield file_enum.next_files_async (5000, Priority.DEFAULT);
+            foreach (FileInfo file_info in file_list) {
+                if (file_info.get_file_type () == FileType.DIRECTORY) {
+                    accm += yield totalbytes (file.get_child (file_info.get_name ()));
+                } else {
+                    accm += file_info.get_size ();
+                }
+            }
+            return accm;
+        }
+
+        private void time_bytes_sync () {
+            var timer = new Timer ();
+            message ("SYNC Timer starting");
+            timer.start ();
+            message (totalbytes_sync (file_handle).to_string ());
+            timer.stop ();
+            message ("SYNC Took %f seconds", timer.elapsed ());
+        }
+
+        private int64 totalbytes_sync (File file) {
+            var file_enum = file.enumerate_children ("standard::*", FileQueryInfoFlags.NONE);
+            int64 accm = 0;
+            FileInfo file_info;
+            while ((file_info = file_enum.next_file (null)) != null) {
+                if (file_info.get_file_type () == FileType.DIRECTORY) {
+                    accm += totalbytes_sync (file.get_child (file_info.get_name ()));
+                } else {
+                    accm += file_info.get_size ();
+                }
+            }
+            return accm;
         }
     }
 }

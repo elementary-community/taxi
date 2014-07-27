@@ -17,7 +17,7 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     interface IFileAccess : Object {
 
@@ -34,20 +34,18 @@ namespace Shift {
          *
          * @return a list of file information objects
          */
-        public async abstract List<FileInfo> get_file_list (string path);
+        public async abstract List<FileInfo> get_file_list ();
 
         /**
          * Gets the path that the program is currently in
          *
          * @return the current path
          */
-        public abstract string get_path ();
 
         public abstract string get_uri ();
 
         public abstract void goto_child (string name);
 
-        public abstract void goto_parent ();
 
         public abstract void goto_path (string path);
     }

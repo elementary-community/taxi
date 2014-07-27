@@ -19,14 +19,21 @@ using Gdk;
 using Granite;
 using Gee;
 
-namespace Shift {
+namespace Taxi {
+
+    enum Target {
+        STRING,
+        URI_LIST;
+    }
 
     const TargetEntry[] target_list = {
-        { "text/plain", 0, 0 }
+        { "test/plain",    0, Target.STRING },
+        { "text/uri-list", 0, Target.URI_LIST }
     };
 
     class FilePane : Gtk.Grid {
 
+        string current_uri;
         PathBar path_bar;
         Gtk.Label placeholder_label;
         Gtk.ListBox list_box;
@@ -35,6 +42,7 @@ namespace Shift {
 
         public signal void row_clicked (string name);
         public signal void pathbar_activated (string path);
+        public signal void file_dragged (string uri);
 
         public FilePane () {
             set_orientation (Gtk.Orientation.VERTICAL);
@@ -81,6 +89,7 @@ namespace Shift {
             );
 
             list_box.drag_drop.connect (on_drag_drop);
+            list_box.drag_data_received.connect (on_drag_data_received);
 
             add (scrolled_pane);
         }
@@ -150,7 +159,9 @@ namespace Shift {
                 Gdk.DragAction.COPY
             );
 
+            eventboxrow.set_data ("name", file_info.get_name ());
             eventboxrow.drag_begin.connect (on_drag_begin);
+            eventboxrow.drag_data_get.connect (on_drag_data_get);
 
             return listboxrow;
         }
@@ -178,8 +189,9 @@ namespace Shift {
             return size;
         }
 
-        public void update_pathbar (string path) {
-            path_bar.set_path (path);
+        public void update_pathbar (string uri) {
+            current_uri = uri;
+            path_bar.set_path (uri);
             path_bar.show_all ();
         }
 
@@ -208,18 +220,66 @@ namespace Shift {
         }
 
         private void on_drag_begin (Gtk.Widget widget, Gdk.DragContext context) {
-            stdout.printf ("BEGIN WIDGET %s\n", widget.name);
+            debug ("BEGIN WIDGET %s\n", widget.name);
         }
 
         private bool on_drag_drop (
             Gtk.Widget widget,
-            DragContext context,
+            Gdk.DragContext context,
             int x,
             int y,
             uint time
         ) {
-            stdout.printf ("RECEIVED WIDGET %s\n", widget.name);
+            debug ("RECEIVED WIDGET %s\n", widget.name);
+            var target_type = (Atom) context.list_targets ().nth_data (Target.URI_LIST);
+            Gtk.drag_get_data (widget, context, target_type, time);
             return true;
+        }
+
+        private void on_drag_data_get (
+            Gtk.Widget widget,
+            Gdk.DragContext context,
+            Gtk.SelectionData selection_data,
+            uint target_type,
+            uint time
+        ) {
+            string file_name = widget.get_data ("name");
+            string file_uri = current_uri + "/" + file_name;
+            switch (target_type) {
+                case Target.URI_LIST:
+                    selection_data.set_uris ({ file_uri });
+                    debug ("URI TX" + file_uri);
+                    break;
+                case Target.STRING:
+                    selection_data.set_uris ({ file_uri });
+                    debug ("STR TX" + file_uri);
+                    break;
+                default:
+                    assert_not_reached ();
+            }
+        }
+
+        private void on_drag_data_received (
+            Gtk.Widget widget,
+            Gdk.DragContext context,
+            int x,
+            int y,
+            Gtk.SelectionData selection_data,
+            uint target_type,
+            uint time
+        ) {
+            switch (target_type) {
+                case Target.URI_LIST:
+                    debug ("URI RX " + (string) selection_data.get_data ());
+                    file_dragged ((string) selection_data.get_data ());
+                    break;
+                case Target.STRING:
+                    debug ("STR RX" + (string) selection_data.get_data ());
+                    break;
+                default:
+                    message ("Data received not accepted");
+                    break;
+            }
         }
     }
 }

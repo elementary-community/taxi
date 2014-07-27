@@ -17,9 +17,23 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     interface IFileOperations : Object {
 
+        //public virtual signal void file_copying (string name);
+
+        public async abstract bool trash_file (File file) throws Error;
+
+        public async abstract List<FileInfo> get_file_list (File file) throws Error;
+
+        public async abstract void copy_recursive (
+            File source,
+            File destination,
+            FileCopyFlags flags = FileCopyFlags.NONE,
+            Cancellable? cancellable = null
+        ) throws Error;
+
+        public async abstract bool rename_file (File file, string new_name) throws Error;
     }
 }

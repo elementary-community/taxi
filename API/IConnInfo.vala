@@ -17,7 +17,7 @@
 using Gtk;
 using Granite;
 
-namespace Shift {
+namespace Taxi {
 
     public enum Protocol { FTP = 0, SFTP = 1; }
 

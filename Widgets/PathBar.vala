@@ -18,7 +18,7 @@ using Gtk;
 using Granite;
 using Soup;
 
-namespace Shift {
+namespace Taxi {
 
     class PathBar : Gtk.ButtonBox {
 
