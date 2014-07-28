@@ -42,7 +42,8 @@ namespace Taxi {
                     return true;
                 }
 
-                error ("ERROR MOUNTING: " + e.message + "\n");
+                message ("ERROR MOUNTING: " + e.message + "\n");
+
                 return false;
 
             } finally {
@@ -67,9 +68,10 @@ namespace Taxi {
                     // Try some more times
                 }
 
-                error (e.message);
+                message (e.message);
+
+                return new List<FileInfo> ();
             }
-            return new List<FileInfo>();
         }
 
         public string get_uri () {

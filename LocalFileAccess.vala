@@ -31,9 +31,9 @@ namespace Taxi {
             try {
                 return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
-                error (e.message);
+                message (e.message);
+                return new List<FileInfo>();
             }
-            return new List<FileInfo>();
         }
 
         public string get_uri () {

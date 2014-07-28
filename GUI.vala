@@ -19,7 +19,7 @@ using Granite;
 
 namespace Taxi {
 
-    class GUI {
+    class GUI : Object {
 
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
@@ -32,21 +32,15 @@ namespace Taxi {
         IFileAccess remote_access;
         IFileAccess local_access;
 
-        public void build () {
-            window = new Gtk.Window ();
-            add_header_bar ();
-            add_panes ();
-            update_local_pane ();
-            setup_window ();
-            Gtk.main ();
-        }
-
-        public void register_local_access (IFileAccess local_access) {
+        public GUI (
+            IFileAccess local_access,
+            IFileAccess remote_access,
+            IFileOperations file_operation,
+            IConnectionSaver conn_saver
+        ) {
             this.local_access = local_access;
-        }
-
-        public void register_remote_access (IFileAccess remote_access) {
             this.remote_access = remote_access;
+            this.conn_saver = conn_saver;
 
             this.remote_access.connected.connect (() => {
                 remotePane.stop_spinner ();
@@ -54,8 +48,13 @@ namespace Taxi {
             });
         }
 
-        public void register_connection_saver (IConnectionSaver conn_saver) {
-            this.conn_saver = conn_saver;
+        public void build () {
+            window = new Gtk.Window ();
+            add_header_bar ();
+            add_panes ();
+            update_local_pane ();
+            setup_window ();
+            Gtk.main ();
         }
 
         private void add_header_bar () {

@@ -59,10 +59,12 @@ namespace Taxi {
         protected override void activate () {
             //var settings = Gtk.Settings.get_default();
             //settings.gtk_application_prefer_dark_theme = true;
-            var gui = new GUI ();
-            gui.register_local_access (new LocalFileAccess ());
-            gui.register_remote_access (new RemoteFileAccess ());
-            gui.register_connection_saver (new ConnectionSaver ());
+            var gui = new GUI (
+                new LocalFileAccess (),
+                new RemoteFileAccess (),
+                new FileOperations (),
+                new ConnectionSaver ()
+            );
             gui.build ();
         }
     }

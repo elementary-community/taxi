@@ -30,7 +30,7 @@ namespace Taxi {
                 try {
                     data_folder.make_directory (null);
                 } catch (Error e) {
-                    error (e.message);
+                    message (e.message);
                     return false;
                 }
             }
@@ -47,7 +47,7 @@ namespace Taxi {
                 bookmark.add_application (uri, "shift", "shift-ftp");
                 return bookmark.to_file (file_name);
             } catch (BookmarkFileError e) {
-                error (e.message);
+                message (e.message);
             }
             return false;
         }
@@ -61,7 +61,7 @@ namespace Taxi {
                     bookmark.remove_application (uri, "shift");
                     return bookmark.to_file (file_name);
                 } catch (BookmarkFileError e) {
-                    error (e.message);
+                    message (e.message);
                     return false;
                 }
             }
@@ -79,7 +79,7 @@ namespace Taxi {
                         connection_list.append (uri);
                     }
                 } catch (BookmarkFileError e) {
-                    error (e.message);
+                    message (e.message);
                 }
             }
             return connection_list;
@@ -93,7 +93,7 @@ namespace Taxi {
                     bookmark.load_from_file (file_name);
                     return bookmark.has_item (uri);
                 } catch (BookmarkFileError e) {
-                    error (e.message);
+                    message (e.message);
                 }
             }
             return false;
