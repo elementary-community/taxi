@@ -61,7 +61,7 @@ namespace Taxi {
 
         public void set_path (string uri) {
             clear_path ();
-            margin = 6;
+            //margin = 6;
             var uri_obj = new Soup.URI (uri);
             switch (uri_obj.get_scheme ()) {
                 case "file":

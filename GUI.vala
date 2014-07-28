@@ -23,11 +23,9 @@ namespace Taxi {
 
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
-        Gtk.ToggleButton select_button;
-        Gtk.ToggleButton favorite_button;
+        ConnectBox connect_box;
         FilePane localPane;
         FilePane remotePane;
-        Granite.Widgets.SourceList.ExpandableItem saved_category;
         IConnectionSaver conn_saver;
         IFileAccess remote_access;
         IFileAccess local_access;
@@ -44,7 +42,6 @@ namespace Taxi {
 
             this.remote_access.connected.connect (() => {
                 remotePane.stop_spinner ();
-                header_bar.set_subtitle (remote_access.get_uri ());
             });
         }
 
@@ -58,120 +55,31 @@ namespace Taxi {
         }
 
         private void add_header_bar () {
-            header_bar = new Gtk.HeaderBar ();
-            header_bar.title = "Taxi";
-            header_bar.show_close_button = true;
-            add_connect_button ();
-            add_select_button ();
-            add_favorite_button ();
-        }
+            header_bar  = new HeaderBar ();
+            connect_box = new ConnectBox ();
+            header_bar.set_show_close_button (true);
+            header_bar.set_custom_title (new Gtk.Label (null));
+            header_bar.pack_start (connect_box);
 
-        private void add_connect_button () {
-            var connect_button = new Gtk.Button.with_label ("Connect…");
-            header_bar.pack_start (connect_button);
-
-            var popover = new ConnectDialog (connect_button);
-
-            connect_button.clicked.connect (() => {
-                popover.show_all ();
-                select_button.set_active (false);
-            });
-
-            popover.connect_initiated.connect ((conn) => {
+            /*header_bar.connect_initiated.connect ((conn) => {
                 remotePane.start_spinner ();
                 remote_access.connect_to_device.begin (conn, (obj, res) => {
                     if (remote_access.connect_to_device.end (res)) {
                         update_remote_pane ();
-                        favorite_button.set_sensitive (true);
                         favorite_button.set_active (
                             conn_saver.is_bookmarked (remote_access.get_uri ())
                         );
                     }
                 });
-            });
-        }
-
-        private void remote_pane_disconnect () {
-            favorite_button.set_sensitive (false);
-            // remotePane.disconnect ();
-        }
-
-        private void add_select_button () {
-            select_button = new Gtk.ToggleButton ();
-
-            select_button.add (new Gtk.Image.from_icon_name (
-                "object-select-symbolic",
-                IconSize.SMALL_TOOLBAR
-            ));
-
-            select_button.toggled.connect (() => {
-                activate_selection_mode (select_button.active);
-            });
-
-            header_bar.pack_end (select_button);
-        }
-
-        private void add_favorite_button () {
-            favorite_button = new Gtk.ToggleButton ();
-            favorite_button.set_sensitive (false);
-
-            favorite_button.add (new Gtk.Image.from_icon_name (
-                "non-starred-symbolic",
-                IconSize.SMALL_TOOLBAR
-            ));
-
-            favorite_button.toggled.connect (() => {
-                activate_favorite_mode (favorite_button.active);
-            });
-
-
-            header_bar.pack_end (favorite_button);
-        }
-
-        private void activate_favorite_mode (bool active) {
-            var uri = remote_access.get_uri ();
-            if (active) {
-                if (!conn_saver.is_bookmarked (uri)) {
-                    conn_saver.save (uri);
-                }
-                favorite_button.set_image (new Gtk.Image.from_icon_name (
-                    "starred-symbolic",
-                    IconSize.SMALL_TOOLBAR
-                ));
-            } else {
-                if (conn_saver.is_bookmarked (uri)) {
-                    conn_saver.remove (uri);
-                }
-                favorite_button.set_image (new Gtk.Image.from_icon_name (
-                    "non-starred-symbolic",
-                    IconSize.SMALL_TOOLBAR
-                ));
-            }
-            update_saved_list ();
-        }
-
-        private void activate_selection_mode (bool active) {
-            // localPane.set_show_checkboxes (active);
-            // remotePane.set_show_checkboxes (active);
-            if (active) {
-                header_bar.get_style_context ().add_class ("selection-mode");
-                header_bar.set_title ("Select");
-            } else {
-                header_bar.get_style_context ().remove_class ("selection-mode");
-                header_bar.set_title ("Taxi");
-            }
+            });*/
         }
 
         private void add_panes () {
-            var pane_outer = new Granite.Widgets.ThinPaned ();
-            pane_outer.set_position (200);
-            add_source_list (pane_outer);
-
-            var pane_inner = new Granite.Widgets.ThinPaned ();
-            pane_outer.pack2 (pane_inner, true, false);
+            var pane_inner = new Gtk.Grid ();
+            pane_inner.set_column_homogeneous (true);
 
             localPane = new FilePane ();
-            pane_inner.pack1 (localPane, true, false);
+            pane_inner.attach (localPane, 0, 0, 1, 1);
 
             localPane.row_clicked.connect ((name) => {
                 local_access.goto_child (name);
@@ -184,7 +92,7 @@ namespace Taxi {
             });
 
             remotePane = new FilePane ();
-            pane_inner.pack2 (remotePane, true, false);
+            pane_inner.attach (remotePane, 1, 0, 1, 1);
 
             remotePane.row_clicked.connect ((name) => {
                 remote_access.goto_child (name);
@@ -197,7 +105,7 @@ namespace Taxi {
                 update_remote_pane ();
             });
 
-            window.add (pane_outer);
+            window.add (pane_inner);
         }
 
         private void update_local_pane () {
@@ -216,29 +124,6 @@ namespace Taxi {
                 remotePane.update_list (remote_files);
                 remotePane.update_pathbar (remote_uri);
             });
-        }
-
-        private void add_source_list (Granite.Widgets.ThinPaned pane) {
-            var source_list = new Granite.Widgets.SourceList ();
-            saved_category = new Granite.Widgets.SourceList.ExpandableItem ("Saved Sites");
-            update_saved_list ();
-            saved_category.expand_all (true, false);
-            var root = source_list.root;
-            root.add (saved_category);
-            pane.pack1 (source_list, true, false);
-        }
-
-        private void update_saved_list () {
-            saved_category.clear ();
-            foreach (string saved_uri in conn_saver.get_saved_conns ()) {
-                add_source_list_item (saved_uri, saved_category);
-            }
-        }
-
-        private void add_source_list_item (string name,
-            Granite.Widgets.SourceList.ExpandableItem expandable) {
-            var source_list_item = new Granite.Widgets.SourceList.Item (name);
-            expandable.add (source_list_item);
         }
 
         private void setup_window () {
