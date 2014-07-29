@@ -26,11 +26,9 @@ namespace Taxi {
 
 
         public ConnectBox () {
-            //get_style_context ().add_class (Gtk.STYLE_CLASS_WARNING);
-            //set_orientation (Gtk.Orientation.HORIZONTAL);
-            //set_spacing (0);
-            //set_homogeneous (false);
-            //expand = true;
+            set_orientation (Gtk.Orientation.HORIZONTAL);
+            set_spacing (0);
+            set_homogeneous (false);
             build ();
         }
 
@@ -45,24 +43,17 @@ namespace Taxi {
         private ComboBoxText protocol_field () {
             protocol_combobox = combobox ({"FTP", "SFTP"});
             protocol_combobox.set_valign (Gtk.Align.CENTER);
-            protocol_combobox.get_style_context ().add_class ("button");
             return protocol_combobox;
         }
 
         private Gtk.Entry hostname_field () {
             hostname_entry = new Gtk.Entry ();            
             hostname_entry.placeholder_text = "example.com:port";
-            hostname_entry.activate.connect (this.submit_form);
             hostname_entry.set_max_width_chars (100000);
+            hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-next-symbolic");
+            hostname_entry.activate.connect (this.submit_form);
+            hostname_entry.icon_press.connect (this.submit_form); 
             return hostname_entry;
-        }
-        
-        private Gtk.Button right_button () {
-            var connect_button = new Gtk.Button ();
-            connect_button.add (new Gtk.Label (">"));
-            connect_button.set_valign (Gtk.Align.CENTER);
-            connect_button.clicked.connect (this.submit_form);
-            return connect_button;
         }
         
         private void submit_form () {

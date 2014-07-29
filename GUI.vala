@@ -24,6 +24,7 @@ namespace Taxi {
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
         ConnectBox connect_box;
+        Granite.Widgets.Welcome welcome;
         FilePane localPane;
         FilePane remotePane;
         IConnectionSaver conn_saver;
@@ -41,37 +42,53 @@ namespace Taxi {
             this.conn_saver = conn_saver;
 
             this.remote_access.connected.connect (() => {
-                remotePane.stop_spinner ();
             });
         }
 
         public void build () {
             window = new Gtk.Window ();
             add_header_bar ();
-            add_panes ();
-            update_local_pane ();
+            add_welcome ();
             setup_window ();
             Gtk.main ();
         }
 
         private void add_header_bar () {
-            header_bar  = new HeaderBar ();
+            header_bar = new HeaderBar ();
             connect_box = new ConnectBox ();
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
             header_bar.pack_start (connect_box);
 
-            /*header_bar.connect_initiated.connect ((conn) => {
-                remotePane.start_spinner ();
-                remote_access.connect_to_device.begin (conn, (obj, res) => {
-                    if (remote_access.connect_to_device.end (res)) {
-                        update_remote_pane ();
-                        favorite_button.set_active (
-                            conn_saver.is_bookmarked (remote_access.get_uri ())
-                        );
+            connect_box.connect_initiated.connect (this.connect_init);
+        }
+        
+        private void add_welcome () {
+            welcome = new Granite.Widgets.Welcome (
+                "Connect",
+                "Type an URL and press 'Enter' to connecto a server."
+            );
+            welcome.margin = 12;
+            window.add (welcome);
+        }
+        
+        private void connect_init (IConnInfo conn) {
+            remote_access.connect_to_device.begin (conn, (obj, res) => {
+                if (remote_access.connect_to_device.end (res)) {
+                    if (localPane == null) {
+                        window.remove (welcome);
+                        add_panes ();
                     }
-                });
-            });*/
+                    update_local_pane ();
+                    update_remote_pane ();
+                    window.show_all ();
+                        //favorite_button.set_active (
+                        //    conn_saver.is_bookmarked (remote_access.get_uri ())
+                        //);
+                } else {
+                    // [TODO] gtkdialog here
+                }
+            });
         }
 
         private void add_panes () {
