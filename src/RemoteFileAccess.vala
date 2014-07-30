@@ -78,6 +78,10 @@ namespace Taxi {
             return file_handle.get_uri ();
         }
 
+        public string get_path () {
+            return file_handle.get_path ();
+        }
+
         public void goto_child (string name) {
             var child_file = file_handle.get_child (name);
             var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
@@ -94,6 +98,10 @@ namespace Taxi {
 
         public void goto_path (string path) {
             file_handle = file_handle.resolve_relative_path ("/" + path);
+        }
+
+        public File get_current_file () {
+            return file_handle;
         }
 
         private Gtk.MountOperation mount_operation_from_connect (IConnInfo connect_info) {

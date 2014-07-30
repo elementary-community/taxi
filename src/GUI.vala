@@ -30,6 +30,7 @@ namespace Taxi {
         IConnectionSaver conn_saver;
         IFileAccess remote_access;
         IFileAccess local_access;
+        IFileOperations file_operation;
 
         public GUI (
             IFileAccess local_access,
@@ -39,8 +40,8 @@ namespace Taxi {
         ) {
             this.local_access = local_access;
             this.remote_access = remote_access;
+            this.file_operation = file_operation;
             this.conn_saver = conn_saver;
-
             this.remote_access.connected.connect (() => {
             });
         }
@@ -112,51 +113,80 @@ namespace Taxi {
             local_pane = new FilePane (true);
             pane_inner.add (local_pane);
 
-            local_pane.row_clicked.connect ((name) => {
-                local_access.goto_child (name);
-                update_local_pane ();
-            });
-
-            local_pane.pathbar_activated.connect ((path) => {
-                local_access.goto_path (path);
-                update_local_pane ();
-            });
-
-            local_pane.file_dragged.connect ((uri) => {
-            });
+            local_pane.row_clicked.connect (this.on_local_row_clicked);
+            local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
+            local_pane.file_dragged.connect (this.on_local_file_dragged);
 
             remote_pane = new FilePane ();
             pane_inner.add (remote_pane);
-
-            remote_pane.row_clicked.connect ((name) => {
-                remote_access.goto_child (name);
-                update_remote_pane ();
-            });
-
-            remote_pane.pathbar_activated.connect ((path) => {
-                remote_access.goto_path (path);
-                debug (remote_access.get_uri ());
-                update_remote_pane ();
-            });
+            remote_pane.row_clicked.connect (this.on_remote_row_clicked);
+            remote_pane.pathbar_activated.connect (this.on_remote_pathbar_activated);
+            remote_pane.file_dragged.connect (this.on_remote_file_dragged);
 
             window.add (pane_inner);
         }
 
+        private void on_local_pathbar_activated (string path) {
+            local_access.goto_path (path);
+            update_local_pane ();
+        }
+
+        private void on_local_row_clicked (string name) {
+            local_access.goto_child (name);
+            update_local_pane ();
+        }
+
+        private void on_remote_pathbar_activated (string path) {
+            remote_access.goto_path (path);
+            update_remote_pane ();
+        }
+
+        private void on_remote_row_clicked (string name) {
+            remote_access.goto_child (name);
+            update_remote_pane ();
+        }
+
+        private void on_remote_file_dragged (string uri) {
+            on_file_dragged (uri, remote_pane, remote_access);
+        }
+
+        private void on_local_file_dragged (string uri) {
+            on_file_dragged (uri, local_pane, local_access);
+        }
+
+        private void on_file_dragged (string uri, FilePane file_pane, IFileAccess file_access) {
+            var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
+            var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
+            file_operation.copy_recursive.begin (
+                source_file,
+                dest_file,
+                FileCopyFlags.NONE,
+                null,
+                (obj, res) => {
+                    try {
+                        file_operation.copy_recursive.end (res);
+                        update_pane (file_access, file_pane);
+                    } catch (Error e) {
+                        warning (e.message);
+                    }
+                }
+             );
+        }
+
         private void update_local_pane () {
-            var local_uri  = local_access.get_uri ();
-            local_access.get_file_list.begin ((obj, res) => {
-                var local_files = local_access.get_file_list.end (res);
-                local_pane.update_list (local_files);
-                local_pane.update_pathbar (local_uri);
-            });
+            update_pane (local_access, local_pane);
         }
 
         private void update_remote_pane () {
-            var remote_uri  = remote_access.get_uri ();
-            remote_access.get_file_list.begin ((obj, res) => {
-                var remote_files = remote_access.get_file_list.end (res);
-                remote_pane.update_list (remote_files);
-                remote_pane.update_pathbar (remote_uri);
+            update_pane (remote_access, remote_pane);
+        }
+
+        private void update_pane (IFileAccess file_access, FilePane file_pane) {
+            var file_uri = file_access.get_uri ();
+            file_access.get_file_list.begin ((obj, res) => {
+                var file_files = file_access.get_file_list.end (res);
+                file_pane.update_list (file_files);
+                file_pane.update_pathbar (file_uri);
             });
         }
 

@@ -40,6 +40,10 @@ namespace Taxi {
             return file_handle.get_uri ();
         }
 
+        public string get_path () {
+            return file_handle.get_uri ();
+        }
+
         public void goto_child (string name) {
             var child_file = file_handle.get_child (name);
             var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
@@ -56,6 +60,10 @@ namespace Taxi {
 
         public void goto_path (string path) {
             file_handle = File.new_for_path (path);
+        }
+
+        public File get_current_file () {
+            return file_handle;
         }
     }
 }

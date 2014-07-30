@@ -66,6 +66,8 @@ namespace Taxi {
                     Priority.DEFAULT,
                     cancellable
                 );
+            } else {
+                warning ("Unrecognised file type" + file_type.to_string ());
             }
         }
 

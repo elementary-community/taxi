@@ -36,17 +36,14 @@ namespace Taxi {
          */
         public async abstract List<FileInfo> get_file_list ();
 
-        /**
-         * Gets the path that the program is currently in
-         *
-         * @return the current path
-         */
-
         public abstract string get_uri ();
+
+        public abstract string get_path ();
 
         public abstract void goto_child (string name);
 
-
         public abstract void goto_path (string path);
+
+        public abstract File get_current_file ();
     }
 }
