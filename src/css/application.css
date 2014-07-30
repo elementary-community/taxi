@@ -1,9 +1,15 @@
-GtkButton.path-button {
+TaxiPathBar GtkButton.path-button {
     background: none;
     border-radius: 0;
     border-width: 0;
     border-image: none;
 }
-GtkComboBox {
+TaxiPathBar {
+    background-image: -gtk-gradient (linear, left top, left bottom, from (#FEFEFE), to (#F0F0F0));
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #B6B6B6;
+}
+GtkHeaderBar GtkComboBox {
     padding-left: 6px;
 }

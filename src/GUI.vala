@@ -61,7 +61,6 @@ namespace Taxi {
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
             header_bar.pack_start (connect_box);
-
             connect_box.connect_initiated.connect (this.connect_init);
             connect_box.bookmarked.connect (this.bookmark);
         }
@@ -199,16 +198,14 @@ namespace Taxi {
                     styles,
                     Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
                 );
-                message (styles);
                 FileUtils.get_contents ("css/application.css", out styles);
                 Granite.Widgets.Utils.set_theming_for_screen (
                     Gdk.Screen.get_default (),
                     styles,
                     Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
                 );
-                message (styles);
             } catch (FileError e) {
-                warning ("Couldn't load welcome stylesheet fallback");
+                warning (e.message);
             }
         }
 
