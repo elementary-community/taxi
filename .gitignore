@@ -3,3 +3,10 @@ app
 [._]s[a-w][a-z]
 *~
 cmake/.*
+CMakeFiles
+CMakeCache.txt
+*.stamp
+Makefile
+cmake_install.cmake
+taxi
+*.c
