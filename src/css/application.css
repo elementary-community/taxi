@@ -4,3 +4,6 @@ GtkButton.path-button {
     border-width: 0;
     border-image: none;
 }
+GtkComboBox {
+    padding-left: 6px;
+}

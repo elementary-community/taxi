@@ -15,7 +15,7 @@ GraniteWidgetsWelcome GtkLabel {
 
 GraniteWidgetsWelcome .h1,
 GraniteWidgetsWelcome .h3 {
-    color: alpha(@text_color, 0.8);
+    color: alpha(@text_color, 0.9);
 }
 GtkButton.path-button {
     background: none;
