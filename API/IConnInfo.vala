@@ -19,7 +19,7 @@ using Granite;
 
 namespace Taxi {
 
-    public enum Protocol { FTP = 0, SFTP = 1; }
+    public enum Protocol { FTP = 0, SFTP = 1, DAV = 2, AFP = 587; }
 
     public interface IConnInfo : Object {
 
@@ -62,5 +62,7 @@ namespace Taxi {
          *
          */
         public abstract string get_uri ();
+
+        public abstract int get_default_port (Protocol protocol);
     }
 }

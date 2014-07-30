@@ -44,26 +44,36 @@ namespace Taxi {
         public signal void pathbar_activated (string path);
         public signal void file_dragged (string uri);
 
-        public FilePane () {
-            set_orientation (Gtk.Orientation.VERTICAL);
-            build ();
+        public FilePane (bool show_sep = false) {
+            set_orientation (Gtk.Orientation.HORIZONTAL);
+            build (show_sep);
         }
 
-        private void build () {
-            add_path_bar ();
-            add_list_box ();
+        private void build (bool show_sep) {
+            var inner_grid = new Gtk.Grid ();
+            inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
+            inner_grid.add (new_path_bar ());
+            inner_grid.add (new_list_box ());
+            add (inner_grid);
+
+            if (show_sep) {
+                var sep = new Gtk.Separator (Gtk.Orientation.VERTICAL);
+                sep.get_style_context ().add_class ("pane-separator");
+                add (sep);
+            }
         }
 
-        private void add_path_bar () {
+        private PathBar new_path_bar () {
             path_bar = new PathBar ();
-            add (path_bar);
 
             path_bar.navigate.connect ((path) => {
                 pathbar_activated (path);
             });
+
+            return path_bar;
         }
 
-        private void add_list_box () {
+        private Gtk.ScrolledWindow new_list_box () {
             list_box = new ListBox ();
             list_box.hexpand = true;
             list_box.vexpand = true;
@@ -91,7 +101,7 @@ namespace Taxi {
             list_box.drag_drop.connect (on_drag_drop);
             list_box.drag_data_received.connect (on_drag_data_received);
 
-            add (scrolled_pane);
+            return scrolled_pane;
         }
 
         public void update_list (GLib.List<FileInfo> file_list) {

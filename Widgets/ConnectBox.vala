@@ -23,7 +23,7 @@ namespace Taxi {
 
         Gtk.ComboBoxText protocol_combobox;
         Gtk.Entry hostname_entry;
-
+        ulong? handler;
 
         public ConnectBox () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
@@ -33,6 +33,7 @@ namespace Taxi {
         }
 
         public signal void connect_initiated (IConnInfo connect_details);
+        public signal void bookmarked ();
 
         private void build () {
             pack_start (protocol_field (), true, true, 0);
@@ -41,25 +42,34 @@ namespace Taxi {
         }
 
         private ComboBoxText protocol_field () {
-            protocol_combobox = combobox ({"FTP", "SFTP"});
+            protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
             protocol_combobox.set_valign (Gtk.Align.CENTER);
+            protocol_combobox.set_direction (TextDirection.RTL);
             return protocol_combobox;
         }
 
         private Gtk.Entry hostname_field () {
-            hostname_entry = new Gtk.Entry ();            
+            hostname_entry = new Gtk.Entry ();
             hostname_entry.placeholder_text = "example.com:port";
             hostname_entry.set_max_width_chars (100000);
+            hostname_entry.set_hexpand (true);
             hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-next-symbolic");
             hostname_entry.activate.connect (this.submit_form);
-            hostname_entry.icon_press.connect (this.submit_form); 
+            hostname_entry.icon_press.connect (this.submit_form);
             return hostname_entry;
         }
-        
+
         private void submit_form () {
-            var connect_data       = new ConnInfo ();
-            connect_data.protocol  = (Protocol) protocol_combobox.get_active ();
-            connect_data.hostname  = hostname_entry.get_text ();
+            var connect_data      = new ConnInfo ();
+            var protocol          = (Protocol) protocol_combobox.get_active ();
+            var hostname_port     = hostname_entry.get_text ().split (":", 2);
+            var hostname          = hostname_port [0];
+            var port              = (hostname_port.length == 2)?
+                                      int.parse (hostname_port [1]) :
+                                      connect_data.get_default_port (protocol);
+            connect_data.protocol = protocol;
+            connect_data.hostname = hostname;
+            connect_data.port     = port;
             connect_initiated (connect_data);
         }
 
@@ -71,47 +81,23 @@ namespace Taxi {
             combobox.active = 0;
             return combobox;
         }
-        
 
-        
-        /*
-        private void add_favorite_button () {
-            favorite_button = new Gtk.ToggleButton ();
-            favorite_button.set_sensitive (false);
-
-            favorite_button.add (new Gtk.Image.from_icon_name (
-                "non-starred-symbolic",
-                IconSize.SMALL_TOOLBAR
-            ));
-
-            favorite_button.toggled.connect (() => {
-                activate_favorite_mode (favorite_button.active);
-            });
-
-
-            header_bar.pack_end (favorite_button);
+        public void show_favorite_icon (bool added = false) {
+            var icon_name = added ?
+                "user-bookmarks-symbolic" :
+                "bookmark-new-symbolic";
+            hostname_entry.set_icon_from_icon_name (
+                Gtk.EntryIconPosition.SECONDARY,
+                icon_name
+            );
+            if (handler == null) {
+                hostname_entry.icon_press.disconnect (this.submit_form);
+                handler = hostname_entry.icon_press.connect (() => bookmarked ());
+            }
         }
 
-        private void activate_favorite_mode (bool active) {
-            var uri = remote_access.get_uri ();
-            if (active) {
-                if (!conn_saver.is_bookmarked (uri)) {
-                    conn_saver.save (uri);
-                }
-                favorite_button.set_image (new Gtk.Image.from_icon_name (
-                    "starred-symbolic",
-                    IconSize.SMALL_TOOLBAR
-                ));
-            } else {
-                if (conn_saver.is_bookmarked (uri)) {
-                    conn_saver.remove (uri);
-                }
-                favorite_button.set_image (new Gtk.Image.from_icon_name (
-                    "non-starred-symbolic",
-                    IconSize.SMALL_TOOLBAR
-                ));
-            }
-            update_saved_list ();
-        }*/
+        public void show_spinner () {
+        }
+
     }
 }

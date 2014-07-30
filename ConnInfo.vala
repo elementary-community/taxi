@@ -32,12 +32,24 @@ namespace Taxi {
             switch (protocol) {
                 case Protocol.FTP: return "ftp";
                 case Protocol.SFTP: return "sftp";
+                case Protocol.DAV: return "dav";
+                case Protocol.AFP: return "afp";
                 default: return "ftp";
             }
         }
 
         public string get_uri () {
             return get_protocol_string () + "://" + hostname;
+        }
+
+        public int get_default_port (Protocol protocol) {
+            switch (protocol) {
+                case Protocol.FTP: return 21;
+                case Protocol.SFTP: return 22;
+                case Protocol.DAV: return 80;
+                case Protocol.AFP: return 587;
+                default: return 21;
+            }
         }
     }
 }

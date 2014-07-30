@@ -25,8 +25,8 @@ namespace Taxi {
         Gtk.HeaderBar header_bar;
         ConnectBox connect_box;
         Granite.Widgets.Welcome welcome;
-        FilePane localPane;
-        FilePane remotePane;
+        FilePane local_pane;
+        FilePane remote_pane;
         IConnectionSaver conn_saver;
         IFileAccess remote_access;
         IFileAccess local_access;
@@ -61,62 +61,78 @@ namespace Taxi {
             header_bar.pack_start (connect_box);
 
             connect_box.connect_initiated.connect (this.connect_init);
+            connect_box.bookmarked.connect (this.bookmark);
         }
-        
+
         private void add_welcome () {
             welcome = new Granite.Widgets.Welcome (
                 "Connect",
-                "Type an URL and press 'Enter' to connecto a server."
+                "Type an URL and press 'Enter' to connect to a server."
             );
             welcome.margin = 12;
             window.add (welcome);
         }
-        
+
         private void connect_init (IConnInfo conn) {
             remote_access.connect_to_device.begin (conn, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
-                    if (localPane == null) {
+                    if (local_pane == null) {
                         window.remove (welcome);
                         add_panes ();
                     }
                     update_local_pane ();
                     update_remote_pane ();
+                    connect_box.show_favorite_icon (
+                        conn_saver.is_bookmarked (remote_access.get_uri ())
+                    );
                     window.show_all ();
-                        //favorite_button.set_active (
-                        //    conn_saver.is_bookmarked (remote_access.get_uri ())
-                        //);
                 } else {
-                    // [TODO] gtkdialog here
+                    welcome.title = "Could not connect to '" +
+                        conn.hostname + ":" + conn.port.to_string () + "'";
                 }
             });
+        }
+
+        private void bookmark () {
+            if (conn_saver.is_bookmarked (remote_access.get_uri ())) {
+                conn_saver.remove (remote_access.get_uri ());
+            } else {
+                conn_saver.save (remote_access.get_uri ());
+            }
+            connect_box.show_favorite_icon (
+                conn_saver.is_bookmarked (remote_access.get_uri ())
+            );
         }
 
         private void add_panes () {
             var pane_inner = new Gtk.Grid ();
             pane_inner.set_column_homogeneous (true);
 
-            localPane = new FilePane ();
-            pane_inner.attach (localPane, 0, 0, 1, 1);
+            local_pane = new FilePane (true);
+            pane_inner.add (local_pane);
 
-            localPane.row_clicked.connect ((name) => {
+            local_pane.row_clicked.connect ((name) => {
                 local_access.goto_child (name);
                 update_local_pane ();
             });
 
-            localPane.pathbar_activated.connect ((path) => {
+            local_pane.pathbar_activated.connect ((path) => {
                 local_access.goto_path (path);
                 update_local_pane ();
             });
 
-            remotePane = new FilePane ();
-            pane_inner.attach (remotePane, 1, 0, 1, 1);
+            local_pane.file_dragged.connect ((uri) => {
+            });
 
-            remotePane.row_clicked.connect ((name) => {
+            remote_pane = new FilePane ();
+            pane_inner.add (remote_pane);
+
+            remote_pane.row_clicked.connect ((name) => {
                 remote_access.goto_child (name);
                 update_remote_pane ();
             });
 
-            remotePane.pathbar_activated.connect ((path) => {
+            remote_pane.pathbar_activated.connect ((path) => {
                 remote_access.goto_path (path);
                 debug (remote_access.get_uri ());
                 update_remote_pane ();
@@ -129,8 +145,8 @@ namespace Taxi {
             var local_uri  = local_access.get_uri ();
             local_access.get_file_list.begin ((obj, res) => {
                 var local_files = local_access.get_file_list.end (res);
-                localPane.update_list (local_files);
-                localPane.update_pathbar (local_uri);
+                local_pane.update_list (local_files);
+                local_pane.update_pathbar (local_uri);
             });
         }
 
@@ -138,14 +154,14 @@ namespace Taxi {
             var remote_uri  = remote_access.get_uri ();
             remote_access.get_file_list.begin ((obj, res) => {
                 var remote_files = remote_access.get_file_list.end (res);
-                remotePane.update_list (remote_files);
-                remotePane.update_pathbar (remote_uri);
+                remote_pane.update_list (remote_files);
+                remote_pane.update_pathbar (remote_uri);
             });
         }
 
         private void setup_window () {
-            window.default_width = 900;
-            window.default_height = 500;
+            window.default_width = 650;
+            window.default_height = 550;
             window.set_titlebar (header_bar);
             window.show_all ();
         }
