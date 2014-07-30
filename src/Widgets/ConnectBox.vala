@@ -84,8 +84,8 @@ namespace Taxi {
 
         public void show_favorite_icon (bool added = false) {
             var icon_name = added ?
-                "user-bookmarks-symbolic" :
-                "bookmark-new-symbolic";
+                "starred-symbolic" :
+                "non-starred-symbolic";
             hostname_entry.set_icon_from_icon_name (
                 Gtk.EntryIconPosition.SECONDARY,
                 icon_name
