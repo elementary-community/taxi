@@ -50,7 +50,7 @@ namespace Taxi {
 
         private Gtk.Entry hostname_field () {
             hostname_entry = new Gtk.Entry ();
-            hostname_entry.placeholder_text = "example.com:port";
+            hostname_entry.placeholder_text = "hostname:port";
             hostname_entry.set_max_width_chars (100000);
             hostname_entry.set_hexpand (true);
             hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-next-symbolic");

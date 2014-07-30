@@ -1,0 +1,25 @@
+@define-color text_color #333;
+@define-color base_color #FFF;
+@define-color placeholder_text_color shade(@text_color, 2.5);
+.h1 { font: open sans 24; }
+.h2 { font: open sans light 18; }
+.h3 { font: open sans 12; }s
+GraniteWidgetsWelcome {
+    background-color: @base_color;
+}
+GraniteWidgetsWelcome GtkLabel {
+    color: @placeholder_text_color;
+    font: open sans 11;
+    text-shadow: none;
+}
+
+GraniteWidgetsWelcome .h1,
+GraniteWidgetsWelcome .h3 {
+    color: alpha(@text_color, 0.8);
+}
+GtkButton.path-button {
+    background: none;
+    border-radius: 0;
+    border-width: 0;
+    border-image: none;
+}

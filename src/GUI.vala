@@ -50,6 +50,7 @@ namespace Taxi {
             add_header_bar ();
             add_welcome ();
             setup_window ();
+            setup_styles ();
             Gtk.main ();
         }
 
@@ -157,6 +158,28 @@ namespace Taxi {
                 remote_pane.update_list (remote_files);
                 remote_pane.update_pathbar (remote_uri);
             });
+        }
+
+        private void setup_styles () {
+            try {
+                string styles;
+                FileUtils.get_contents ("css/fallback.css", out styles);
+                Granite.Widgets.Utils.set_theming_for_screen (
+                    Gdk.Screen.get_default (),
+                    styles,
+                    Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
+                );
+                message (styles);
+                FileUtils.get_contents ("css/application.css", out styles);
+                Granite.Widgets.Utils.set_theming_for_screen (
+                    Gdk.Screen.get_default (),
+                    styles,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                );
+                message (styles);
+            } catch (FileError e) {
+                warning ("Couldn't load welcome stylesheet fallback");
+            }
         }
 
         private void setup_window () {

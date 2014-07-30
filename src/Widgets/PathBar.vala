@@ -50,6 +50,7 @@ namespace Taxi {
                 new Gtk.Button.from_icon_name (
                     child, IconSize.MENU) :
                 new Gtk.Button.with_label (child);
+            button.get_style_context ().add_class ("path-button");
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {
                 navigate (button.get_data<string> ("path"));
