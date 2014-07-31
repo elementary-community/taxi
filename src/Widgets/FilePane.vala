@@ -147,6 +147,10 @@ namespace Taxi {
             row.hexpand = true;
             row.margin = 6;
 
+            var checkbox = new CheckButton ();
+            checkbox.margin_end = 6;
+            row.add (checkbox);
+
             row.add (row_icon (file_info));
             row.add (row_name (file_info));
 
