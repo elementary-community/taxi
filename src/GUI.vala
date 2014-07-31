@@ -23,6 +23,8 @@ namespace Taxi {
 
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
+        Gtk.Grid outer_box;
+        Gtk.Grid pane_inner;
         ConnectBox connect_box;
         Granite.Widgets.Welcome welcome;
         FilePane local_pane;
@@ -49,6 +51,7 @@ namespace Taxi {
         public void build () {
             window = new Gtk.Window ();
             add_header_bar ();
+            add_outerbox ();
             add_welcome ();
             setup_window ();
             setup_styles ();
@@ -65,20 +68,28 @@ namespace Taxi {
             connect_box.bookmarked.connect (this.bookmark);
         }
 
+        private void add_outerbox () {
+            outer_box = new Gtk.Grid ();
+            outer_box.set_orientation (Gtk.Orientation.VERTICAL);
+            outer_box.set_column_homogeneous (true);
+            window.add (outer_box);
+        }
+
         private void add_welcome () {
             welcome = new Granite.Widgets.Welcome (
                 "Connect",
                 "Type an URL and press 'Enter' to\nconnect to a server."
             );
             welcome.margin = 12;
-            window.add (welcome);
+            welcome.vexpand = true;
+            outer_box.add (welcome);
         }
 
         private void connect_init (IConnInfo conn) {
-            remote_access.connect_to_device.begin (conn, (obj, res) => {
+            remote_access.connect_to_device.begin (conn, window, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
                     if (local_pane == null) {
-                        window.remove (welcome);
+                        outer_box.remove (welcome);
                         add_panes ();
                     }
                     update_local_pane ();
@@ -106,7 +117,7 @@ namespace Taxi {
         }
 
         private void add_panes () {
-            var pane_inner = new Gtk.Grid ();
+            pane_inner = new Gtk.Grid ();
             pane_inner.set_column_homogeneous (true);
 
             local_pane = new FilePane (true);
@@ -122,7 +133,7 @@ namespace Taxi {
             remote_pane.pathbar_activated.connect (this.on_remote_pathbar_activated);
             remote_pane.file_dragged.connect (this.on_remote_file_dragged);
 
-            window.add (pane_inner);
+            outer_box.add (pane_inner);
         }
 
         private void on_local_pathbar_activated (string path) {
@@ -166,10 +177,21 @@ namespace Taxi {
                         file_operation.copy_recursive.end (res);
                         update_pane (file_access, file_pane);
                     } catch (Error e) {
-                        warning (e.message);
+                        new_infobar (e.message, MessageType.ERROR);
                     }
                 }
              );
+        }
+
+        private void new_infobar (string message, MessageType message_type) {
+            var infobar = new InfoBar ();
+            var content = infobar.get_content_area ();
+            content.add (new Gtk.Label (message));
+            infobar.set_message_type (message_type);
+            infobar.set_show_close_button (true);
+            outer_box.attach_next_to (infobar, pane_inner, PositionType.TOP, 1, 1);
+            outer_box.show_all ();
+            infobar.response.connect (() => outer_box.remove (infobar));
         }
 
         private void update_local_pane () {

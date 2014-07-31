@@ -23,7 +23,7 @@ namespace Taxi {
         private File file_handle = File.new_for_path (Environment.get_home_dir ());
         private IFileOperations file_operation = new FileOperations ();
 
-        public async bool connect_to_device (IConnInfo connect_info) {
+        public async bool connect_to_device (IConnInfo connect_info, Gtk.Window window) {
             return true;
         }
 

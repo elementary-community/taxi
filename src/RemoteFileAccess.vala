@@ -24,8 +24,13 @@ namespace Taxi {
         private IConnInfo connect_info;
         private File file_handle;
         private IFileOperations file_operation = new FileOperations ();
+        private Gtk.Window window;
 
-        public async bool connect_to_device (IConnInfo connect_info) {
+        public async bool connect_to_device (
+            IConnInfo connect_info,
+            Gtk.Window window
+        ) {
+            this.window = window;
             var mount = mount_operation_from_connect (connect_info);
             var uri = connect_info.get_uri ();
             file_handle = File.new_for_uri (uri);
@@ -58,7 +63,7 @@ namespace Taxi {
 
                 // Unmounted
                 if (e.code == 16) {
-                    if (yield connect_to_device (connect_info)) {
+                    if (yield connect_to_device (connect_info, window)) {
                         return yield get_file_list ();
                     }
                 }
@@ -105,7 +110,7 @@ namespace Taxi {
         }
 
         private Gtk.MountOperation mount_operation_from_connect (IConnInfo connect_info) {
-            var mount = new Gtk.MountOperation (new Gtk.Window ());
+            var mount = new Gtk.MountOperation (window);
             mount.set_domain (connect_info.hostname);
             stdout.printf ("MOUNT HOST: " + connect_info.hostname + "\n");
             mount.set_anonymous (connect_info.anonymous);

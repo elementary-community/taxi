@@ -27,7 +27,10 @@ namespace Taxi {
          *
          * @return true if successful at connecting
          */
-        public async abstract bool connect_to_device (IConnInfo conn_info);
+        public async abstract bool connect_to_device (
+            IConnInfo conn_info,
+            Gtk.Window window
+        );
 
         /**
          * Get a list of files in a directory
