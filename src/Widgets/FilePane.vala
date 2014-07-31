@@ -194,7 +194,7 @@ namespace Taxi {
         }
 
         private Gtk.Label row_size (FileInfo file_info) {
-            var size = new Gtk.Label (file_info.get_size ().to_string ());
+            var size = new Gtk.Label (bit_string_format (file_info.get_size ()));
             size.set_halign (Gtk.Align.END);
             return size;
         }
@@ -227,6 +227,16 @@ namespace Taxi {
             remove (spinner);
             path_bar.show ();
             scrolled_pane.show ();
+        }
+
+        private string bit_string_format (int64 bytes) {
+            var floatbytes = (float) bytes;
+            int i;
+            for (i = 0; floatbytes >= 1000.0f || i > 6; i++) {
+                floatbytes /= 1000.0f;
+            }
+            string[] measurement = { "bytes", "kB", "MB", "GB", "TB", "PB", "EB" };
+            return "%.3g %s".printf (floatbytes, measurement [i]);
         }
 
         private void on_drag_begin (Gtk.Widget widget, Gdk.DragContext context) {
