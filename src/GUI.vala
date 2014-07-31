@@ -126,6 +126,7 @@ namespace Taxi {
             local_pane.row_clicked.connect (this.on_local_row_clicked);
             local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
             local_pane.file_dragged.connect (this.on_local_file_dragged);
+            local_access.directory_changed.connect (this.update_local_pane);
 
             remote_pane = new FilePane ();
             pane_inner.add (remote_pane);
@@ -176,6 +177,7 @@ namespace Taxi {
                     try {
                         file_operation.copy_recursive.end (res);
                         update_pane (file_access, file_pane);
+                        debug ("Recursive file copy finished!");
                     } catch (Error e) {
                         new_infobar (e.message, MessageType.ERROR);
                     }

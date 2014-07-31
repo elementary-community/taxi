@@ -65,6 +65,7 @@ namespace Taxi {
 
         private PathBar new_path_bar () {
             path_bar = new PathBar ();
+            path_bar.get_style_context ().add_class ("button");
 
             path_bar.navigate.connect ((path) => {
                 pathbar_activated (path);

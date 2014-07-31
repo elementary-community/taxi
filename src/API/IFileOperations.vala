@@ -23,7 +23,10 @@ namespace Taxi {
 
         //public virtual signal void file_copying (string name);
 
-        public async abstract bool trash_file (File file) throws Error;
+        public async abstract bool trash_file (
+            File file,
+            Cancellable? cancellable
+        ) throws Error;
 
         public async abstract List<FileInfo> get_file_list (File file) throws Error;
 

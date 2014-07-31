@@ -22,6 +22,8 @@ namespace Taxi {
     interface IFileAccess : Object {
 
         public signal void connected ();
+        public signal void directory_changed ();
+
         /**
          * Connects to a server
          *

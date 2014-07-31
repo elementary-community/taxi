@@ -20,8 +20,39 @@ namespace Taxi {
 
     class LocalFileAccess : IFileAccess, Object {
 
-        private File file_handle = File.new_for_path (Environment.get_home_dir ());
-        private IFileOperations file_operation = new FileOperations ();
+        private File _file_handle;
+        private IFileOperations file_operation;
+        private FileMonitor? file_monitor;
+
+        private File file_handle {
+            get {
+                return _file_handle;
+            }
+            set {
+                try {
+                    _file_handle = value;
+                    if (file_monitor != null) {
+                        file_monitor.cancel ();
+                    }
+                    file_monitor = _file_handle.monitor_directory (
+                        FileMonitorFlags.NONE,
+                        null
+                    );
+                    file_monitor.changed.connect (() => {
+                        debug ("File directory changed!");
+                        directory_changed ();
+                    });
+                } catch (Error e) {
+                    warning (e.message);
+                }
+            }
+        }
+
+        public LocalFileAccess () {
+            file_monitor = null;
+            file_operation = new FileOperations ();
+            file_handle = File.new_for_path (Environment.get_home_dir ());
+        }
 
         public async bool connect_to_device (IConnInfo connect_info, Gtk.Window window) {
             return true;
