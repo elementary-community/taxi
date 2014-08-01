@@ -5,3 +5,4 @@ app
 cmake/.*
 build/
 taxi
+src/config.vala
