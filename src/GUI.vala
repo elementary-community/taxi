@@ -273,6 +273,8 @@ namespace Taxi {
             window.default_height = 550;
             window.set_titlebar (header_bar);
             window.show_all ();
+
+            window.destroy.connect (Gtk.main_quit);
         }
     }
 }
