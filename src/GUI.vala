@@ -14,9 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Gtk;
-using Granite;
-
 namespace Taxi {
 
     class GUI : Object {
@@ -101,7 +98,7 @@ namespace Taxi {
         }
 
         private void add_header_bar () {
-            header_bar = new HeaderBar ();
+            header_bar = new Gtk.HeaderBar ();
             connect_box = new ConnectBox ();
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
@@ -220,19 +217,19 @@ namespace Taxi {
                         update_pane (file_access, file_pane);
                         debug ("Recursive file copy finished!");
                     } catch (Error e) {
-                        new_infobar (e.message, MessageType.ERROR);
+                        new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
                 }
              );
         }
 
-        private void new_infobar (string message, MessageType message_type) {
-            var infobar = new InfoBar ();
+        private void new_infobar (string message, Gtk.MessageType message_type) {
+            var infobar = new Gtk.InfoBar ();
             var content = infobar.get_content_area ();
             content.add (new Gtk.Label (message));
             infobar.set_message_type (message_type);
             infobar.set_show_close_button (true);
-            outer_box.attach_next_to (infobar, pane_inner, PositionType.TOP, 1, 1);
+            outer_box.attach_next_to (infobar, pane_inner, Gtk.PositionType.TOP, 1, 1);
             outer_box.show_all ();
             infobar.response.connect (() => outer_box.remove (infobar));
         }

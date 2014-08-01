@@ -14,9 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Granite;
-using Gtk;
-
 namespace Taxi {
 
     class RemoteFileAccess : IFileAccess, Object {

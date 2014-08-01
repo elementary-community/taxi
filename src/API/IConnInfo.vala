@@ -14,9 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Gtk;
-using Granite;
-
 namespace Taxi {
 
     public enum Protocol { FTP = 0, SFTP = 1, DAV = 2, AFP = 587; }

@@ -14,8 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Granite;
-
 namespace Taxi {
 
     class LocalFileAccess : IFileAccess, Object {

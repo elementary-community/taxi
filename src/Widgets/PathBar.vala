@@ -14,10 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Gtk;
-using Granite;
-using Soup;
-
 namespace Taxi {
 
     class PathBar : Gtk.ButtonBox {
@@ -25,8 +21,8 @@ namespace Taxi {
         public signal void navigate (string path);
 
         public PathBar () {
-            set_orientation (Orientation.HORIZONTAL);
-            set_layout (ButtonBoxStyle.START);
+            set_orientation (Gtk.Orientation.HORIZONTAL);
+            set_layout (Gtk.ButtonBoxStyle.START);
             get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
             homogeneous = false;
             spacing = 0;
@@ -48,7 +44,7 @@ namespace Taxi {
         private void add_path_frag (string child, string path) {
             var button = (path == "/") ?
                 new Gtk.Button.from_icon_name (
-                    child, IconSize.MENU) :
+                    child, Gtk.IconSize.MENU) :
                 new Gtk.Button.with_label (child);
             button.get_style_context ().add_class ("path-button");
             button.set_data<string> ("path", path);
@@ -87,7 +83,7 @@ namespace Taxi {
         }
 
         private void clear_path () {
-            foreach (Widget child in get_children ()) {
+            foreach (Gtk.Widget child in get_children ()) {
                 remove (child);
             }
             margin = 0;

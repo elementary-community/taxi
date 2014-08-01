@@ -14,9 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Gtk;
-using Granite;
-
 namespace Taxi {
 
     class ConnectBox : Gtk.Box {
@@ -41,13 +38,13 @@ namespace Taxi {
             get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
         }
 
-        private ComboBoxText protocol_field () {
+        private Gtk.ComboBoxText protocol_field () {
             protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
             protocol_combobox.set_valign (Gtk.Align.CENTER);
-            if (protocol_combobox.get_default_direction () == TextDirection.LTR) {
-                protocol_combobox.set_direction (TextDirection.RTL);
+            if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.LTR) {
+                protocol_combobox.set_direction (Gtk.TextDirection.RTL);
             } else {
-                protocol_combobox.set_direction (TextDirection.LTR);
+                protocol_combobox.set_direction (Gtk.TextDirection.LTR);
             }
             return protocol_combobox;
         }
@@ -77,7 +74,7 @@ namespace Taxi {
             connect_initiated (connect_data);
         }
 
-        private ComboBoxText combobox (string[] entries) {
+        private Gtk.ComboBoxText combobox (string[] entries) {
             var combobox = new Gtk.ComboBoxText ();
             foreach (var entry in entries) {
                 combobox.append_text (entry);

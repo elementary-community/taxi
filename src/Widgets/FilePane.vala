@@ -14,11 +14,6 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-using Gtk;
-using Gdk;
-using Granite;
-using Gee;
-
 namespace Taxi {
 
     enum Target {
@@ -26,7 +21,7 @@ namespace Taxi {
         URI_LIST;
     }
 
-    const TargetEntry[] target_list = {
+    const Gtk.TargetEntry[] target_list = {
         { "test/plain",    0, Target.STRING },
         { "text/uri-list", 0, Target.URI_LIST }
     };
@@ -75,7 +70,7 @@ namespace Taxi {
         }
 
         private Gtk.ScrolledWindow new_list_box () {
-            list_box = new ListBox ();
+            list_box = new Gtk.ListBox ();
             list_box.hexpand = true;
             list_box.vexpand = true;
 
@@ -148,7 +143,7 @@ namespace Taxi {
             row.hexpand = true;
             row.margin = 6;
 
-            var checkbox = new CheckButton ();
+            var checkbox = new Gtk.CheckButton ();
             checkbox.margin_end = 6;
             row.add (checkbox);
 
@@ -256,7 +251,7 @@ namespace Taxi {
             uint time
         ) {
             debug ("RECEIVED WIDGET %s\n", widget.name);
-            var target_type = (Atom) context.list_targets ().nth_data (Target.URI_LIST);
+            var target_type = (Gdk.Atom) context.list_targets ().nth_data (Target.URI_LIST);
             Gtk.drag_get_data (widget, context, target_type, time);
             return true;
         }
