@@ -16,14 +16,16 @@
 
 namespace Taxi {
 
-    class RemoteFileAccess : IFileAccess, Object {
+    class RemoteFileAccess : FileAccess {
 
         private IConnInfo connect_info;
-        private File file_handle;
-        private IFileOperations file_operation = new FileOperations ();
         private Gtk.Window window;
 
-        public async bool connect_to_device (
+        public RemoteFileAccess () {
+            file_operation = new FileOperations ();
+        }
+
+        public async override bool connect_to_device (
             IConnInfo connect_info,
             Gtk.Window window
         ) {
@@ -53,7 +55,7 @@ namespace Taxi {
             }
         }
 
-        public async List<FileInfo> get_file_list () {
+        public virtual async List<FileInfo> get_file_list () {
             try {
                 return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
@@ -76,34 +78,8 @@ namespace Taxi {
             }
         }
 
-        public string get_uri () {
-            return file_handle.get_uri ();
-        }
-
-        public string get_path () {
-            return file_handle.get_path ();
-        }
-
-        public void goto_child (string name) {
-            var child_file = file_handle.get_child (name);
-            var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
-            if (child_file_type == FileType.DIRECTORY) {
-                file_handle = child_file;
-            } else if (child_file_type == FileType.REGULAR) {
-                try {
-                    AppInfo.launch_default_for_uri (child_file.get_uri (), null);
-                } catch (Error e) {
-                    message (e.message);
-                }
-            }
-        }
-
-        public void goto_path (string path) {
+        public override void goto_path (string path) {
             file_handle = file_handle.resolve_relative_path ("/" + path);
-        }
-
-        public File get_current_file () {
-            return file_handle;
         }
 
         private Gtk.MountOperation mount_operation_from_connect (IConnInfo connect_info) {

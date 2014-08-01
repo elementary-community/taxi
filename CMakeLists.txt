@@ -40,6 +40,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/ConnInfo.vala
     src/FileOperations.vala
     src/GUI.vala
+    src/FileAccess.vala
     src/LocalFileAccess.vala
     src/RemoteFileAccess.vala
     src/Widgets/ConnectBox.vala

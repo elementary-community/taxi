@@ -16,13 +16,12 @@
 
 namespace Taxi {
 
-    class LocalFileAccess : IFileAccess, Object {
+    class LocalFileAccess : FileAccess {
 
         private File _file_handle;
-        private IFileOperations file_operation;
         private FileMonitor? file_monitor;
 
-        private File file_handle {
+        private override File file_handle {
             get {
                 return _file_handle;
             }
@@ -52,47 +51,11 @@ namespace Taxi {
             file_handle = File.new_for_path (Environment.get_home_dir ());
         }
 
-        public async bool connect_to_device (IConnInfo connect_info, Gtk.Window window) {
+        public async override bool connect_to_device (
+            IConnInfo connect_info,
+            Gtk.Window window
+        ) {
             return true;
-        }
-
-        public async List<FileInfo> get_file_list () {
-            try {
-                return yield file_operation.get_file_list (file_handle);
-            } catch (Error e) {
-                message (e.message);
-                return new List<FileInfo>();
-            }
-        }
-
-        public string get_uri () {
-            return file_handle.get_uri ();
-        }
-
-        public string get_path () {
-            return file_handle.get_uri ();
-        }
-
-        public void goto_child (string name) {
-            var child_file = file_handle.get_child (name);
-            var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
-            if (child_file_type == FileType.DIRECTORY) {
-                file_handle = child_file;
-            } else if (child_file_type == FileType.REGULAR) {
-                try {
-                    AppInfo.launch_default_for_uri (child_file.get_uri (), null);
-                } catch (Error e) {
-                    message (e.message);
-                }
-            }
-        }
-
-        public void goto_path (string path) {
-            file_handle = File.new_for_path (path);
-        }
-
-        public File get_current_file () {
-            return file_handle;
         }
     }
 }
