@@ -41,11 +41,11 @@ namespace Taxi {
         private Gtk.ComboBoxText protocol_field () {
             protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
             protocol_combobox.set_valign (Gtk.Align.CENTER);
-            if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.LTR) {
-                protocol_combobox.set_direction (Gtk.TextDirection.RTL);
-            } else {
-                protocol_combobox.set_direction (Gtk.TextDirection.LTR);
-            }
+            //if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.LTR) {
+            //    protocol_combobox.set_direction (Gtk.TextDirection.RTL);
+            //} else {
+            //    protocol_combobox.set_direction (Gtk.TextDirection.LTR);
+            //}
             return protocol_combobox;
         }
 
