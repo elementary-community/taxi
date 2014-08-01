@@ -22,24 +22,29 @@ namespace Taxi {
     class Taxi : Granite.Application {
 
         construct {
-            build_data_dir     = "";
-            build_pkg_data_dir = "";
-            build_release_name = "Prerelease";
-            build_version      = "0.1";
-            build_version_info = "";
-            program_name       = "Taxi";
-            exec_name          = "taxi";
-            app_copyright      = "";
+            build_data_dir     = Constants.DATADIR;
+            build_pkg_data_dir = Constants.PKGDATADIR;
+            build_release_name = Constants.RELEASE_NAME;
+            build_version      = Constants.VERSION;
+            build_version_info = Constants.VERSION_INFO;
+            program_name       = Constants.PROGRAM_NAME;
+            exec_name          = Constants.EXEC_NAME;
+            app_copyright      = "2014";
             app_years          = "2014";
             app_icon           = "";
-            app_launcher       = "";
-            main_url           = "http://hamp.al/shift";
-            bug_url            = "http://hamp.al/shift";
-            help_url           = "http://hamp.al/shift";
-            translate_url      = "http://hamp.al/shift";
-            about_authors      = {"Kiran John Hampal"};
+            app_launcher       = Constants.APP_LAUNCHER;
+            main_url           = "http://github.com/khampal/Taxi";
+            bug_url            = "http://github.com/khampal/Taxi/issues";
+            help_url           = "http://github.com/khampal/Taxi/wiki";
+            translate_url      = "";
+            about_authors      = {
+                                    "Kiran John Hampal <kiran@hamp.al>"
+                                 };
             about_documenters  = {};
-            about_artists      = {};
+            about_artists      = {
+                                    "Kiran John Hampal <kiran@hamp.al>",
+                                    "Daniel Fore <daniel@elementaryos.org>"
+                                 };
             about_comments     = "";
             about_translators  = "";
             about_license      = "";
@@ -57,8 +62,6 @@ namespace Taxi {
         }
 
         protected override void activate () {
-            //var settings = Gtk.Settings.get_default();
-            //settings.gtk_application_prefer_dark_theme = true;
             var gui = new GUI (
                 new LocalFileAccess (),
                 new RemoteFileAccess (),

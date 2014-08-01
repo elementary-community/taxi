@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Taxi
+Comment=Transfer local and remotes files
+GenericName=FTP Client
+Exec=taxi
+Icon=taxi
+Terminal=false
+Categories=Network

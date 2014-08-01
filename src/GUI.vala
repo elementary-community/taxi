@@ -34,6 +34,48 @@ namespace Taxi {
         IFileAccess local_access;
         IFileOperations file_operation;
 
+        private const string FALLBACK_STYLE = """
+            .h1 { font: open sans 24; }
+            .h2 { font: open sans light 18; }
+            .h3 { font: open sans 12; }
+            GraniteWidgetsWelcome {
+                background-color: #FFF;
+            }
+            GraniteWidgetsWelcome GtkLabel {
+                color: shade(#333, 2.5);
+                font: open sans 11;
+                text-shadow: none;
+            }
+
+            GraniteWidgetsWelcome .h1,
+            GraniteWidgetsWelcome .h3 {
+                color: alpha(#333, 0.9);
+            }
+        """;
+
+        private const string APPLICATION_STYLE = """
+            GtkButton.path-button {
+                background: none;
+                border-radius: 0;
+                border-width: 0;
+                border-image: none;
+            }
+            TaxiPathBar GtkButton.path-button {
+                background: none;
+                border-radius: 0;
+                border-width: 0;
+                border-image: none;
+            }
+            TaxiPathBar.button {
+                border-width: 0px;
+                border-bottom-width: 1px;
+                border-image: none;
+            }
+            GtkHeaderBar GtkComboBox {
+                padding-left: 6px;
+            }
+        """;
+
         public GUI (
             IFileAccess local_access,
             IFileAccess remote_access,
@@ -80,7 +122,6 @@ namespace Taxi {
                 "Connect",
                 "Type an URL and press 'Enter' to\nconnect to a server."
             );
-            welcome.margin = 12;
             welcome.vexpand = true;
             outer_box.add (welcome);
         }
@@ -215,17 +256,14 @@ namespace Taxi {
 
         private void setup_styles () {
             try {
-                string styles;
-                FileUtils.get_contents ("css/fallback.css", out styles);
                 Granite.Widgets.Utils.set_theming_for_screen (
                     Gdk.Screen.get_default (),
-                    styles,
+                    FALLBACK_STYLE,
                     Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
                 );
-                FileUtils.get_contents ("css/application.css", out styles);
                 Granite.Widgets.Utils.set_theming_for_screen (
                     Gdk.Screen.get_default (),
-                    styles,
+                    APPLICATION_STYLE,
                     Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
                 );
             } catch (FileError e) {
