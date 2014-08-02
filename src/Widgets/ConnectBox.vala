@@ -54,7 +54,7 @@ namespace Taxi {
             hostname_entry.placeholder_text = _("hostname:port");
             hostname_entry.set_max_width_chars (100000);
             hostname_entry.set_hexpand (true);
-            hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-next-symbolic");
+            hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-jump-symbolic");
             hostname_entry.activate.connect (this.submit_form);
             hostname_entry.icon_press.connect (this.submit_form);
             return hostname_entry;
