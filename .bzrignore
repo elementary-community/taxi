@@ -6,3 +6,4 @@ cmake/.*
 build/
 taxi
 src/config.vala
+po/*.mo
