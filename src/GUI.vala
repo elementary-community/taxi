@@ -116,8 +116,8 @@ namespace Taxi {
 
         private void add_welcome () {
             welcome = new Granite.Widgets.Welcome (
-                "Connect",
-                "Type an URL and press 'Enter' to\nconnect to a server."
+                _("Connect"),
+                _("Type an URL and press 'Enter' to\nconnect to a server.")
             );
             welcome.vexpand = true;
             outer_box.add (welcome);
@@ -137,8 +137,10 @@ namespace Taxi {
                     );
                     window.show_all ();
                 } else {
-                    welcome.title = "Could not connect to '" +
-                        conn.hostname + ":" + conn.port.to_string () + "'";
+                    welcome.title = _("Could not connect to '%s:%s'").printf (
+                        conn.hostname,
+                        conn.port.to_string ()
+                    );
                 }
             });
         }

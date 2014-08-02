@@ -8,12 +8,13 @@ list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # where we install data directory (if we have any)
 set (DATADIR "${CMAKE_INSTALL_PREFIX}/share")
 set (PROGRAM_NAME "Taxi")
-set (PKGDATADIR "${DATADIR}/taxi")
-set (EXEC_NAME "taxi")
+set (PKGDATADIR "${DATADIR}/${CMAKE_PROJECT_NAME}")
+set (EXEC_NAME ${CMAKE_PROJECT_NAME})
 set (RELEASE_NAME "Crown Vic")
 set (VERSION "0.1")
 set (VERSION_INFO "Initial release of Taxi.")
 set (APP_LAUNCHER "taxi.desktop")
+set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
 # we're about to use pkgconfig to make sure dependencies are installed so let's find pkgconfig first
 find_package(PkgConfig)
@@ -24,6 +25,7 @@ pkg_check_modules(DEPS REQUIRED
     libsoup-2.4
 )
 add_definitions(${DEPS_CFLAGS})
+add_definitions("-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"")
 link_libraries(${DEPS_LIBRARIES})
 link_directories(${DEPS_LIBRARY_DIRS})
 # make sure we have vala
@@ -58,6 +60,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
         posix
         libsoup-2.4
         )
+# translations
+add_subdirectory(po)
 # tell cmake what to call the executable we just made
 add_executable(${EXEC_NAME} ${VALA_C})
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)

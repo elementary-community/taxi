@@ -78,7 +78,7 @@ namespace Taxi {
                 row_clicked (row.get_data ("name"));
             });
 
-            placeholder_label = new Gtk.Label ("This folder is empty.");
+            placeholder_label = new Gtk.Label (_("This folder is empty."));
             placeholder_label.set_halign (Gtk.Align.CENTER);
             placeholder_label.set_valign (Gtk.Align.CENTER);
             placeholder_label.show ();
