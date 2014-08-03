@@ -68,15 +68,8 @@ namespace Taxi {
                 border-bottom-width: 1px;
                 border-image: none;
             }
-            GtkHeaderBar .linked GtkComboBox {
+            GtkHeaderBar GtkComboBox {
                 padding-left: 6px;
-            }
-            GtkHeaderBar .linked .entry.location-button {
-                border-left-style: none;
-            }
-            GtkHeaderBar .linked .entry.location-entry {
-                border-right-style: none;
-                box-shadow: inset -1px 0 transparent;
             }
         """;
 

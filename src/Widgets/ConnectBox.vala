@@ -20,7 +20,6 @@ namespace Taxi {
 
         Gtk.ComboBoxText protocol_combobox;
         Gtk.Entry hostname_entry;
-        Gtk.Button action_button;
         ulong? handler;
 
         public ConnectBox () {
@@ -36,7 +35,6 @@ namespace Taxi {
         private void build () {
             pack_start (protocol_field (), true, true, 0);
             pack_start (hostname_field (), true, true, 0);
-            pack_start (action_field (), true, true, 0);
             get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
         }
 
@@ -56,22 +54,10 @@ namespace Taxi {
             hostname_entry.placeholder_text = _("hostname:port");
             hostname_entry.set_max_width_chars (100000);
             hostname_entry.set_hexpand (true);
-            hostname_entry.get_style_context ().add_class ("location-entry");
+            hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-jump-symbolic");
             hostname_entry.activate.connect (this.submit_form);
+            hostname_entry.icon_press.connect (this.submit_form);
             return hostname_entry;
-        }
-
-        private Gtk.Button action_field () {
-            action_button = new Gtk.Button.from_icon_name (
-                "go-jump-symbolic",
-                Gtk.IconSize.BUTTON
-            );
-            action_button.get_style_context ().remove_class ("button");
-            action_button.get_style_context ().add_class ("entry");
-            action_button.get_style_context ().add_class ("location-button");
-            action_button.set_valign (Gtk.Align.CENTER);
-            handler = action_button.clicked.connect (this.submit_form);
-            return action_button;
         }
 
         private void submit_form () {
@@ -98,13 +84,17 @@ namespace Taxi {
         }
 
         public void show_favorite_icon (bool added = false) {
-            var icon_name = added? "starred-symbolic" : "non-starred-symbolic";
-            action_button.set_image (new Gtk.Image.from_icon_name (
-                icon_name,
-                Gtk.IconSize.BUTTON
-            ));
-            action_button.disconnect (handler);
-            handler = action_button.clicked.connect (() => bookmarked ());
+            var icon_name = added ?
+                "starred-symbolic" :
+                "non-starred-symbolic";
+            hostname_entry.set_icon_from_icon_name (
+                Gtk.EntryIconPosition.SECONDARY,
+                icon_name
+            );
+            if (handler == null) {
+                hostname_entry.icon_press.disconnect (this.submit_form);
+                handler = hostname_entry.icon_press.connect (() => bookmarked ());
+            }
         }
 
         public void show_spinner () {
