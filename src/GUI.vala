@@ -219,6 +219,7 @@ namespace Taxi {
         }
 
         private void on_file_dragged (string uri, FilePane file_pane, IFileAccess file_access) {
+            show_spinner ();
             var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
             var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
             file_operation.copy_recursive.begin (
@@ -234,6 +235,7 @@ namespace Taxi {
                     } catch (Error e) {
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
+                    hide_spinner ();
                 }
              );
         }
