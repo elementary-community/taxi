@@ -110,7 +110,7 @@ namespace Taxi {
             if (hostname_entry.get_text () == "" && show_fav_icon) {
                 ask_hostname ();
             }
-            return true;
+            return false;
         }
 
         private void hide_host_icon () {
