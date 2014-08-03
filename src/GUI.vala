@@ -151,7 +151,7 @@ namespace Taxi {
 
         private void show_spinner () {
             spinner.show ();
-            header_bar.add (spinner);
+            header_bar.pack_end (spinner);
         }
 
         private void hide_spinner () {
@@ -268,8 +268,8 @@ namespace Taxi {
 
         private void setup_spinner () {
             spinner = new Gtk.Spinner ();
-            spinner.margin_start = 6;
             spinner.start ();
+            spinner.margin_end = 6;
         }
 
         private void setup_styles () {
