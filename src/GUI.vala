@@ -22,6 +22,7 @@ namespace Taxi {
         Gtk.HeaderBar header_bar;
         Gtk.Grid outer_box;
         Gtk.Grid pane_inner;
+        Gtk.Spinner spinner;
         ConnectBox connect_box;
         Granite.Widgets.Welcome welcome;
         FilePane local_pane;
@@ -94,6 +95,7 @@ namespace Taxi {
             add_welcome ();
             setup_window ();
             setup_styles ();
+            setup_spinner ();
             Gtk.main ();
         }
 
@@ -124,6 +126,7 @@ namespace Taxi {
         }
 
         private void connect_init (IConnInfo conn) {
+            show_spinner ();
             remote_access.connect_to_device.begin (conn, window, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
                     if (local_pane == null) {
@@ -142,7 +145,17 @@ namespace Taxi {
                         conn.port.to_string ()
                     );
                 }
+                hide_spinner ();
             });
+        }
+
+        private void show_spinner () {
+            spinner.show ();
+            header_bar.add (spinner);
+        }
+
+        private void hide_spinner () {
+            header_bar.remove (spinner);
         }
 
         private void bookmark () {
@@ -251,6 +264,12 @@ namespace Taxi {
                 file_pane.update_list (file_files);
                 file_pane.update_pathbar (file_uri);
             });
+        }
+
+        private void setup_spinner () {
+            spinner = new Gtk.Spinner ();
+            spinner.margin_start = 6;
+            spinner.start ();
         }
 
         private void setup_styles () {

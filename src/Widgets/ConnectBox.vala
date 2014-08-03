@@ -20,12 +20,15 @@ namespace Taxi {
 
         Gtk.ComboBoxText protocol_combobox;
         Gtk.Entry hostname_entry;
+        Gtk.Spinner spinner;
         ulong? handler;
 
         public ConnectBox () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
             set_spacing (0);
             set_homogeneous (false);
+            spinner = new Gtk.Spinner ();
+            spinner.start ();
             build ();
         }
 
@@ -96,9 +99,5 @@ namespace Taxi {
                 handler = hostname_entry.icon_press.connect (() => bookmarked ());
             }
         }
-
-        public void show_spinner () {
-        }
-
     }
 }
