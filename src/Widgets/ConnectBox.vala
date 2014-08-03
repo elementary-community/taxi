@@ -58,8 +58,8 @@ namespace Taxi {
             hostname_entry.set_max_width_chars (100000);
             hostname_entry.set_hexpand (true);
             hostname_entry.activate.connect (this.submit_form);
-            hostname_entry.insert_text.connect (this.on_insert_text);
             hostname_entry.changed.connect (this.on_changed);
+            hostname_entry.focus_out_event.connect (this.on_focus_out);
             return hostname_entry;
         }
 
@@ -86,7 +86,7 @@ namespace Taxi {
             return combobox;
         }
 
-        private void on_insert_text () {
+        private void on_changed () {
             var host_icon = hostname_entry.get_icon_name (Gtk.EntryIconPosition.SECONDARY);
             if (host_icon != "go-jump-symbolic") {
                 hostname_entry.set_icon_from_icon_name (
@@ -100,7 +100,7 @@ namespace Taxi {
             }
         }
 
-        private void on_changed () {
+        private bool on_focus_out () {
             if (hostname_entry.get_text () == "") {
                 if (show_fav_icon) {
                     show_favorite_icon (added);
@@ -109,6 +109,7 @@ namespace Taxi {
                     hide_host_icon ();
                 }
             }
+            return true;
         }
 
         private void hide_host_icon () {
@@ -120,9 +121,9 @@ namespace Taxi {
 
         public void reply_hostname (string hostname) {
             // TODO: Handle text changes in a less lazy way
-            hostname_entry.insert_text.disconnect (this.on_insert_text);
+            hostname_entry.changed.disconnect (this.on_changed);
             hostname_entry.set_text (hostname);
-            hostname_entry.insert_text.connect (this.on_insert_text);
+            hostname_entry.changed.connect (this.on_changed);
         }
 
         public void show_favorite_icon (bool added = false) {
