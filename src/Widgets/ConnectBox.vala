@@ -20,20 +20,20 @@ namespace Taxi {
 
         Gtk.ComboBoxText protocol_combobox;
         Gtk.Entry hostname_entry;
-        Gtk.Spinner spinner;
         ulong? handler;
+        bool show_fav_icon = false;
+        bool added = false;
 
         public ConnectBox () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
             set_spacing (0);
             set_homogeneous (false);
-            spinner = new Gtk.Spinner ();
-            spinner.start ();
             build ();
         }
 
         public signal void connect_initiated (IConnInfo connect_details);
         public signal void bookmarked ();
+        public signal void ask_hostname ();
 
         private void build () {
             pack_start (protocol_field (), true, true, 0);
@@ -57,9 +57,9 @@ namespace Taxi {
             hostname_entry.placeholder_text = _("hostname:port");
             hostname_entry.set_max_width_chars (100000);
             hostname_entry.set_hexpand (true);
-            hostname_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "go-jump-symbolic");
             hostname_entry.activate.connect (this.submit_form);
-            hostname_entry.icon_press.connect (this.submit_form);
+            hostname_entry.insert_text.connect (this.on_insert_text);
+            hostname_entry.changed.connect (this.on_changed);
             return hostname_entry;
         }
 
@@ -86,7 +86,34 @@ namespace Taxi {
             return combobox;
         }
 
+        private void on_insert_text () {
+            var host_icon = hostname_entry.get_icon_name (Gtk.EntryIconPosition.SECONDARY);
+            if (host_icon != "go-jump-symbolic") {
+                hostname_entry.set_icon_from_icon_name (
+                    Gtk.EntryIconPosition.SECONDARY,
+                    "go-jump-symbolic"
+                );
+                if (handler != null) {
+                    hostname_entry.disconnect (handler);
+                }
+                hostname_entry.icon_press.connect (this.submit_form);
+            }
+        }
+
+        private void on_changed () {
+            if (show_fav_icon && hostname_entry.get_text () == "") {
+                show_favorite_icon (added);
+                ask_hostname ();
+            }
+        }
+
+        public void reply_hostname (string hostname) {
+            hostname_entry.set_text (hostname);
+        }
+
         public void show_favorite_icon (bool added = false) {
+            show_fav_icon = true;
+            this.added = added;
             var icon_name = added ?
                 "starred-symbolic" :
                 "non-starred-symbolic";
@@ -94,10 +121,10 @@ namespace Taxi {
                 Gtk.EntryIconPosition.SECONDARY,
                 icon_name
             );
-            if (handler == null) {
-                hostname_entry.icon_press.disconnect (this.submit_form);
-                handler = hostname_entry.icon_press.connect (() => bookmarked ());
+            if (handler != null) {
+                hostname_entry.disconnect (handler);
             }
+            handler = hostname_entry.icon_press.connect (() => bookmarked ());
         }
     }
 }
