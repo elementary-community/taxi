@@ -101,14 +101,28 @@ namespace Taxi {
         }
 
         private void on_changed () {
-            if (show_fav_icon && hostname_entry.get_text () == "") {
-                show_favorite_icon (added);
-                ask_hostname ();
+            if (hostname_entry.get_text () == "") {
+                if (show_fav_icon) {
+                    show_favorite_icon (added);
+                    ask_hostname ();
+                } else {
+                    hide_host_icon ();
+                }
             }
         }
 
+        private void hide_host_icon () {
+            hostname_entry.set_icon_from_icon_name (
+                Gtk.EntryIconPosition.SECONDARY,
+                null
+            );
+        }
+
         public void reply_hostname (string hostname) {
+            // TODO: Handle text changes in a less lazy way
+            hostname_entry.insert_text.disconnect (this.on_insert_text);
             hostname_entry.set_text (hostname);
+            hostname_entry.insert_text.connect (this.on_insert_text);
         }
 
         public void show_favorite_icon (bool added = false) {
