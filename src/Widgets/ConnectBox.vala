@@ -97,17 +97,18 @@ namespace Taxi {
                     hostname_entry.disconnect (handler);
                 }
                 hostname_entry.icon_press.connect (this.submit_form);
+            } else if (hostname_entry.get_text () == "") {
+                if (show_fav_icon) {
+                    show_favorite_icon (added);
+                } else {
+                    hide_host_icon ();
+                }
             }
         }
 
         private bool on_focus_out () {
-            if (hostname_entry.get_text () == "") {
-                if (show_fav_icon) {
-                    show_favorite_icon (added);
-                    ask_hostname ();
-                } else {
-                    hide_host_icon ();
-                }
+            if (hostname_entry.get_text () == "" && show_fav_icon) {
+                ask_hostname ();
             }
             return true;
         }
