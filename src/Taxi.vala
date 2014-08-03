@@ -30,10 +30,10 @@ namespace Taxi {
             app_years          = "2014";
             app_icon           = "";
             app_launcher       = Constants.APP_LAUNCHER;
-            main_url           = "http://github.com/khampal/Taxi";
-            bug_url            = "http://github.com/khampal/Taxi/issues";
-            help_url           = "http://github.com/khampal/Taxi/wiki";
-            translate_url      = "";
+            main_url           = "http://launchpad.net/taxi";
+            bug_url            = "http://bugs.launchpad.net/taxi";
+            help_url           = "http://answers.launchpad.net/taxi";
+            translate_url      = "http://translations.launchpad.net/taxi";
             about_authors      = {
                                     "Kiran John Hampal <kiran@hamp.al>"
                                  };
