@@ -58,6 +58,18 @@ namespace Taxi {
             FileCopyFlags flags = FileCopyFlags.NONE,
             Cancellable? cancellable = null
         ) throws Error {
+            var operation = new OperationInfo (source, cancellable);
+            operation_added (operation);
+            yield copy_recursive_helper (source, destination, flags, cancellable);
+            operation_removed (operation);
+        }
+
+        private async void copy_recursive_helper (
+            File source,
+            File destination,
+            FileCopyFlags flags = FileCopyFlags.NONE,
+            Cancellable? cancellable = null
+        ) throws Error {
             var file_type = source.query_file_type (
                 FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
                 cancellable
@@ -69,7 +81,7 @@ namespace Taxi {
                 string destination_path = destination.get_path ();
                 var file_list = yield get_file_list (source);
                 foreach (FileInfo file_info in file_list) {
-                    yield copy_recursive (
+                    yield copy_recursive_helper (
                         File.new_for_path (Path.build_filename (source_path, file_info.get_name ())),
                         File.new_for_path (Path.build_filename (destination_path, file_info.get_name ())),
                         flags,

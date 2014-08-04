@@ -18,7 +18,9 @@ namespace Taxi {
 
     interface IFileOperations : Object {
 
-        //public virtual signal void file_copying (string name);
+        public signal void operation_added (IOperationInfo operation);
+
+        public signal void operation_removed (IOperationInfo operation);
 
         public async abstract bool trash_file (
             File file,

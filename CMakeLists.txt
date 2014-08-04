@@ -45,13 +45,16 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/FileAccess.vala
     src/LocalFileAccess.vala
     src/RemoteFileAccess.vala
+    src/OperationInfo.vala
     src/Widgets/ConnectBox.vala
     src/Widgets/FilePane.vala
     src/Widgets/PathBar.vala
+    src/Widgets/OperationsPopover.vala
     src/API/IConnectionSaver.vala
     src/API/IConnInfo.vala
     src/API/IFileAccess.vala
     src/API/IFileOperations.vala
+    src/API/IOperationInfo.vala
     src/config.vala
 # tell what libraries to use when compiling
     PACKAGES

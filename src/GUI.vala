@@ -20,6 +20,7 @@ namespace Taxi {
 
         Gtk.Window window;
         Gtk.HeaderBar header_bar;
+        Gtk.EventBox spinner_parent;
         Gtk.Grid outer_box;
         Gtk.Grid pane_inner;
         Gtk.Spinner spinner;
@@ -27,6 +28,7 @@ namespace Taxi {
         Granite.Widgets.Welcome welcome;
         FilePane local_pane;
         FilePane remote_pane;
+        OperationsPopover popover;
         IConnectionSaver conn_saver;
         IFileAccess remote_access;
         IFileAccess local_access;
@@ -85,8 +87,6 @@ namespace Taxi {
             this.remote_access = remote_access;
             this.file_operation = file_operation;
             this.conn_saver = conn_saver;
-            this.remote_access.connected.connect (() => {
-            });
         }
 
         public void build () {
@@ -97,6 +97,7 @@ namespace Taxi {
             setup_window ();
             setup_styles ();
             setup_spinner ();
+            add_popover ();
             Gtk.main ();
         }
 
@@ -153,12 +154,12 @@ namespace Taxi {
         }
 
         private void show_spinner () {
-            spinner.show ();
-            header_bar.pack_end (spinner);
+            spinner_parent.show_all ();
+            header_bar.pack_end (spinner_parent);
         }
 
         private void hide_spinner () {
-            header_bar.remove (spinner);
+            header_bar.remove (spinner_parent);
         }
 
         private void bookmark () {
@@ -222,7 +223,6 @@ namespace Taxi {
         }
 
         private void on_file_dragged (string uri, FilePane file_pane, IFileAccess file_access) {
-            show_spinner ();
             var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
             var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
             file_operation.copy_recursive.begin (
@@ -238,7 +238,6 @@ namespace Taxi {
                     } catch (Error e) {
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
-                    hide_spinner ();
                 }
              );
         }
@@ -275,10 +274,24 @@ namespace Taxi {
             connect_box.reply_hostname (conn_info.hostname + ":" + conn_info.port.to_string ());
         }
 
+        private void add_popover () {
+            popover = new OperationsPopover (spinner);
+            popover.operations_pending.connect (this.show_spinner);
+            popover.operations_finished.connect (this.hide_spinner);
+            file_operation.operation_added.connect (popover.add_operation);
+            file_operation.operation_removed.connect (popover.remove_operation);
+            spinner_parent.button_press_event.connect (() => {
+                popover.show_all ();
+                return false;
+            });
+        }
+
         private void setup_spinner () {
             spinner = new Gtk.Spinner ();
             spinner.start ();
             spinner.margin_end = 6;
+            spinner_parent = new Gtk.EventBox ();
+            spinner_parent.add (spinner);
         }
 
         private void setup_styles () {
