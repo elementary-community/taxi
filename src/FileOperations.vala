@@ -60,8 +60,14 @@ namespace Taxi {
         ) throws Error {
             var operation = new OperationInfo (source, cancellable);
             operation_added (operation);
-            yield copy_recursive_helper (source, destination, flags, cancellable);
-            operation_removed (operation);
+            try {
+                yield copy_recursive_helper (source, destination, flags, cancellable);
+            } catch (Error e) {
+                warning (e.message);
+                throw e;
+            } finally {
+                operation_removed (operation);
+            }
         }
 
         private async void copy_recursive_helper (
