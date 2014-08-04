@@ -18,7 +18,7 @@ namespace Taxi {
 
     interface IOperationInfo : Object {
 
-        public abstract void cancel_operation ();
+        public abstract void cancel ();
 
         public abstract string get_file_name ();
 

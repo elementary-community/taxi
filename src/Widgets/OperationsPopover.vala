@@ -46,7 +46,9 @@ namespace Taxi {
             }
             var row = new Gtk.Grid ();
             operation_map.set (operation, row);
+
             row.add (new Gtk.Label (operation.get_file_name ()));
+
             operation.get_file_icon.begin ((obj, res) => {
                 row.add (
                     new Gtk.Image.from_gicon (
@@ -55,6 +57,19 @@ namespace Taxi {
                     )
                 );
             });
+
+            var cancel = new Gtk.Image.from_icon_name (
+                "process-stop-symbolic",
+                Gtk.IconSize.BUTTON
+            );
+            var cancel_container = new Gtk.EventBox ();
+            cancel_container.add (cancel);
+            cancel_container.button_press_event.connect (() => {
+                operation.cancel ();
+                return false;
+            });
+            row.add (cancel_container);
+
             grid.add (row);
         }
 

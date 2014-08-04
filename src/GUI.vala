@@ -229,7 +229,7 @@ namespace Taxi {
                 source_file,
                 dest_file,
                 FileCopyFlags.NONE,
-                null,
+                new Cancellable (),
                 (obj, res) => {
                     try {
                         file_operation.copy_recursive.end (res);

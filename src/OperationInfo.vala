@@ -27,7 +27,7 @@ namespace Taxi {
             this.cancellable = cancellable;
         }
 
-        public void cancel_operation () {
+        public void cancel () {
             if (cancellable != null) {
                 cancellable.cancel ();
             }
