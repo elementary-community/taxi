@@ -31,7 +31,10 @@ namespace Taxi {
                 var file_list = yield get_file_list (file);
                 foreach (FileInfo file_info in file_list) {
                     yield trash_file (
-                        File.new_for_path (Path.build_filename (file_path, file_info.get_name ())),
+                        File.new_for_path (Path.build_filename (
+                            file_path,
+                            file_info.get_name ()
+                        )),
                         cancellable
                     );
                 }
@@ -80,19 +83,23 @@ namespace Taxi {
                 cancellable
             );
             if (file_type == FileType.DIRECTORY) {
-
                 if (!destination.query_exists ()) {
                     yield destination.make_directory_async (Priority.DEFAULT, cancellable);
                     source.copy_attributes (destination, flags, cancellable);
                 }
-
                 string source_path = source.get_path ();
                 string destination_path = destination.get_path ();
                 var file_list = yield get_file_list (source);
                 foreach (FileInfo file_info in file_list) {
                     yield copy_recursive_helper (
-                        File.new_for_path (Path.build_filename (source_path, file_info.get_name ())),
-                        File.new_for_path (Path.build_filename (destination_path, file_info.get_name ())),
+                        File.new_for_path (Path.build_filename (
+                            source_path,
+                            file_info.get_name ()
+                        )),
+                        File.new_for_path (Path.build_filename (
+                            destination_path,
+                            file_info.get_name ()
+                        )),
                         flags,
                         cancellable
                     );
