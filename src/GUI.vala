@@ -228,7 +228,7 @@ namespace Taxi {
             file_operation.copy_recursive.begin (
                 source_file,
                 dest_file,
-                FileCopyFlags.NONE,
+                FileCopyFlags.OVERWRITE,
                 new Cancellable (),
                 (obj, res) => {
                     try {

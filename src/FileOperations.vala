@@ -81,8 +81,12 @@ namespace Taxi {
                 cancellable
             );
             if (file_type == FileType.DIRECTORY) {
-                yield destination.make_directory_async (Priority.DEFAULT, cancellable);
-                source.copy_attributes (destination, flags, cancellable);
+
+                if (!destination.query_exists ()) {
+                    yield destination.make_directory_async (Priority.DEFAULT, cancellable);
+                    source.copy_attributes (destination, flags, cancellable);
+                }
+
                 string source_path = source.get_path ();
                 string destination_path = destination.get_path ();
                 var file_list = yield get_file_list (source);
