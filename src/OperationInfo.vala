@@ -37,14 +37,20 @@ namespace Taxi {
             return source.get_basename ();
         }
 
-        public async Icon get_file_icon () {
-            var file_info = yield source.query_info_async (
-                "standard::icon",
-                FileQueryInfoFlags.NONE,
-                Priority.DEFAULT,
-                null
-            );
-            return file_info.get_icon ();
+        public async Icon? get_file_icon () {
+            Icon file_icon = null;
+            try {
+                var file_info = yield source.query_info_async (
+                    "standard::icon",
+                    FileQueryInfoFlags.NONE,
+                    Priority.DEFAULT,
+                    null
+                );
+                file_icon = file_info.get_icon ();
+            } catch (Error e) {
+                warning (e.message);
+            }
+            return file_icon;
         }
     }
 }

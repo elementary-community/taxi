@@ -295,20 +295,16 @@ namespace Taxi {
         }
 
         private void setup_styles () {
-            try {
-                Granite.Widgets.Utils.set_theming_for_screen (
-                    Gdk.Screen.get_default (),
-                    FALLBACK_STYLE,
-                    Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
-                );
-                Granite.Widgets.Utils.set_theming_for_screen (
-                    Gdk.Screen.get_default (),
-                    APPLICATION_STYLE,
-                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-                );
-            } catch (FileError e) {
-                warning (e.message);
-            }
+            Granite.Widgets.Utils.set_theming_for_screen (
+                Gdk.Screen.get_default (),
+                FALLBACK_STYLE,
+                Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
+            );
+            Granite.Widgets.Utils.set_theming_for_screen (
+                Gdk.Screen.get_default (),
+                APPLICATION_STYLE,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            );
         }
 
         private void setup_window () {

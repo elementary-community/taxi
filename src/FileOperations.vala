@@ -29,7 +29,6 @@ namespace Taxi {
             if (file_type == FileType.DIRECTORY) {
                 string file_path = file.get_path ();
                 var file_list = yield get_file_list (file);
-                bool delete_success;
                 foreach (FileInfo file_info in file_list) {
                     yield trash_file (
                         File.new_for_path (Path.build_filename (file_path, file_info.get_name ())),

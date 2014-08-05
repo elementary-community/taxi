@@ -22,6 +22,6 @@ namespace Taxi {
 
         public abstract string get_file_name ();
 
-        public async abstract Icon get_file_icon ();
+        public async abstract Icon? get_file_icon ();
     }
 }

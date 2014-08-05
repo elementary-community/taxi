@@ -55,7 +55,7 @@ namespace Taxi {
             }
         }
 
-        public virtual async List<FileInfo> get_file_list () {
+        public override async List<FileInfo> get_file_list () {
             try {
                 return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
