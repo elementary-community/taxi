@@ -72,9 +72,6 @@ namespace Taxi {
                 border-bottom-width: 1px;
                 border-image: none;
             }
-            GtkHeaderBar GtkComboBox {
-                padding-left: 6px;
-            }
         """;
 
         public GUI (
@@ -106,10 +103,44 @@ namespace Taxi {
             connect_box = new ConnectBox ();
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
+            header_bar.pack_start (new_bookmark_list_button ());
             header_bar.pack_start (connect_box);
             connect_box.connect_initiated.connect (this.connect_init);
             connect_box.ask_hostname.connect (this.on_ask_hostname);
             connect_box.bookmarked.connect (this.bookmark);
+        }
+
+        private Gtk.ToggleButton new_bookmark_list_button () {
+            var button = new Gtk.ToggleButton();
+            var button_image = new Gtk.Image.from_icon_name (
+                "starred-symbolic",
+                Gtk.IconSize.BUTTON
+            );
+            button.add (button_image);
+            var bookmark_popover = new Gtk.Popover (button);
+            bookmark_popover.closed.connect (() => (button.set_active (false)));
+            button.toggled.connect (() => {
+                on_booklist_button_toggle (button.get_active (), bookmark_popover);
+            });
+            return button;
+        }
+
+        private void on_booklist_button_toggle (bool active, Gtk.Popover bookmark_popover) {
+            if (active) {
+                if (bookmark_popover.get_child () != null) {
+                    bookmark_popover.remove (bookmark_popover.get_child ());
+                }
+                var bookmark_grid = new Gtk.Grid ();
+                bookmark_popover.add (bookmark_grid);
+                bookmark_grid.set_orientation (Gtk.Orientation.VERTICAL);
+                foreach (string uri in conn_saver.get_saved_conns ()) {
+                    var menu_item = new Gtk.MenuItem.with_label (uri);
+                    bookmark_grid.add (menu_item);
+                }
+                bookmark_popover.show_all ();
+            } else {
+                bookmark_popover.hide ();
+            }
         }
 
         private void add_outerbox () {

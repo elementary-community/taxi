@@ -73,6 +73,7 @@ namespace Taxi {
             list_box = new Gtk.ListBox ();
             list_box.hexpand = true;
             list_box.vexpand = true;
+            list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
 
             list_box.row_activated.connect ((row) => {
                 row_clicked (row.get_data ("name"));
