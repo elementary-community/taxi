@@ -52,7 +52,7 @@ namespace Taxi {
         }
 
         public async override bool connect_to_device (
-            IConnInfo connect_info,
+            Soup.URI uri,
             Gtk.Window window
         ) {
             return true;

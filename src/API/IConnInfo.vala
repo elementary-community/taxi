@@ -16,7 +16,23 @@
 
 namespace Taxi {
 
-    public enum Protocol { FTP = 0, SFTP = 1, DAV = 2, AFP = 587; }
+    public enum Protocol {
+
+        FTP = 0,
+        SFTP = 1,
+        DAV = 2,
+        AFP = 3;
+
+        public string to_plain_text () {
+            switch (this) {
+                case Protocol.FTP: return "ftp";
+                case Protocol.SFTP: return "sftp";
+                case Protocol.DAV: return "dav";
+                case Protocol.AFP: return "afp";
+                default: return "ftp";
+            }
+        }
+    }
 
     public interface IConnInfo : Object {
 

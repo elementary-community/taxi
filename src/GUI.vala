@@ -33,7 +33,7 @@ namespace Taxi {
         IFileAccess remote_access;
         IFileAccess local_access;
         IFileOperations file_operation;
-        IConnInfo conn_info;
+        Soup.URI conn_uri;
 
         private const string FALLBACK_STYLE = """
             .h1 { font: open sans 24; }
@@ -105,7 +105,7 @@ namespace Taxi {
             header_bar.set_custom_title (new Gtk.Label (null));
             header_bar.pack_start (new_bookmark_list_button ());
             header_bar.pack_start (connect_box);
-            connect_box.connect_initiated.connect (this.connect_init);
+            connect_box.connect_initiated.connect (this.on_connect_initiated);
             connect_box.ask_hostname.connect (this.on_ask_hostname);
             connect_box.bookmarked.connect (this.bookmark);
         }
@@ -159,9 +159,9 @@ namespace Taxi {
             outer_box.add (welcome);
         }
 
-        private void connect_init (IConnInfo conn) {
+        private void on_connect_initiated (Soup.URI uri) {
             show_spinner ();
-            remote_access.connect_to_device.begin (conn, window, (obj, res) => {
+            remote_access.connect_to_device.begin (uri, window, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
                     if (local_pane == null) {
                         outer_box.remove (welcome);
@@ -172,12 +172,11 @@ namespace Taxi {
                     connect_box.show_favorite_icon (
                         conn_saver.is_bookmarked (remote_access.get_uri ())
                     );
-                    conn_info = conn;
+                    conn_uri = uri;
                     window.show_all ();
                 } else {
-                    welcome.title = _("Could not connect to '%s:%s'").printf (
-                        conn.hostname,
-                        conn.port.to_string ()
+                    welcome.title = _("Could not connect to '%s'").printf (
+                        uri.to_string (false)
                     );
                 }
                 hide_spinner ();
@@ -301,8 +300,8 @@ namespace Taxi {
             });
         }
 
-        private void on_ask_hostname () {
-            connect_box.reply_hostname (conn_info.hostname + ":" + conn_info.port.to_string ());
+        private Soup.URI on_ask_hostname () {
+            return conn_uri;
         }
 
         private void add_popover () {

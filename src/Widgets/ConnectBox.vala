@@ -19,7 +19,7 @@ namespace Taxi {
     class ConnectBox : Gtk.Box {
 
         Gtk.ComboBoxText protocol_combobox;
-        Gtk.Entry hostname_entry;
+        Gtk.Entry path_entry;
         ulong? handler;
         bool show_fav_icon = false;
         bool added = false;
@@ -31,9 +31,9 @@ namespace Taxi {
             build ();
         }
 
-        public signal void connect_initiated (IConnInfo connect_details);
+        public signal void connect_initiated (Soup.URI uri);
         public signal void bookmarked ();
-        public signal void ask_hostname ();
+        public signal Soup.URI ask_hostname ();
 
         private void build () {
             pack_start (protocol_field (), true, true, 0);
@@ -44,37 +44,25 @@ namespace Taxi {
         private Gtk.ComboBoxText protocol_field () {
             protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
             protocol_combobox.set_valign (Gtk.Align.CENTER);
-            //if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.LTR) {
-            //    protocol_combobox.set_direction (Gtk.TextDirection.RTL);
-            //} else {
-            //    protocol_combobox.set_direction (Gtk.TextDirection.LTR);
-            //}
             return protocol_combobox;
         }
 
         private Gtk.Entry hostname_field () {
-            hostname_entry = new Gtk.Entry ();
-            hostname_entry.placeholder_text = _("hostname:port");
-            hostname_entry.set_max_width_chars (100000);
-            hostname_entry.set_hexpand (true);
-            hostname_entry.activate.connect (this.submit_form);
-            hostname_entry.changed.connect (this.on_changed);
-            hostname_entry.focus_out_event.connect (this.on_focus_out);
-            return hostname_entry;
+            path_entry = new Gtk.Entry ();
+            path_entry.placeholder_text = _("hostname:port/folder");
+            path_entry.set_max_width_chars (100000);
+            path_entry.set_hexpand (true);
+            path_entry.activate.connect (this.submit_form);
+            path_entry.changed.connect (this.on_changed);
+            path_entry.focus_out_event.connect (this.on_focus_out);
+            return path_entry;
         }
 
         private void submit_form () {
-            var connect_data      = new ConnInfo ();
-            var protocol          = (Protocol) protocol_combobox.get_active ();
-            var hostname_port     = hostname_entry.get_text ().split (":", 2);
-            var hostname          = hostname_port [0];
-            var port              = (hostname_port.length == 2)?
-                                      int.parse (hostname_port [1]) :
-                                      connect_data.get_default_port (protocol);
-            connect_data.protocol = protocol;
-            connect_data.hostname = hostname;
-            connect_data.port     = port;
-            connect_initiated (connect_data);
+            var protocol = ((Protocol) protocol_combobox.get_active ()).to_plain_text ();
+            var path = path_entry.get_text ();
+            var uri = new Soup.URI (protocol + "://" + path);
+            connect_initiated (uri);
         }
 
         private Gtk.ComboBoxText combobox (string[] entries) {
@@ -87,17 +75,17 @@ namespace Taxi {
         }
 
         private void on_changed () {
-            var host_icon = hostname_entry.get_icon_name (Gtk.EntryIconPosition.SECONDARY);
+            var host_icon = path_entry.get_icon_name (Gtk.EntryIconPosition.SECONDARY);
             if (host_icon != "go-jump-symbolic") {
-                hostname_entry.set_icon_from_icon_name (
+                path_entry.set_icon_from_icon_name (
                     Gtk.EntryIconPosition.SECONDARY,
                     "go-jump-symbolic"
                 );
                 if (handler != null) {
-                    hostname_entry.disconnect (handler);
+                    path_entry.disconnect (handler);
                 }
-                hostname_entry.icon_press.connect (this.submit_form);
-            } else if (hostname_entry.get_text () == "") {
+                path_entry.icon_press.connect (this.submit_form);
+            } else if (path_entry.get_text () == "") {
                 if (show_fav_icon) {
                     show_favorite_icon (added);
                 } else {
@@ -107,40 +95,35 @@ namespace Taxi {
         }
 
         private bool on_focus_out () {
-            if (hostname_entry.get_text () == "" && show_fav_icon) {
-                ask_hostname ();
+            if (path_entry.get_text () == "" && show_fav_icon) {
+                var uri_reply = ask_hostname ();
+                // TODO: Handle text changes in a less lazy way
+                path_entry.changed.disconnect (this.on_changed);
+                path_entry.set_text (uri_reply.to_string (false));
+                path_entry.changed.connect (this.on_changed);
             }
             return false;
         }
 
         private void hide_host_icon () {
-            hostname_entry.set_icon_from_icon_name (
+            path_entry.set_icon_from_icon_name (
                 Gtk.EntryIconPosition.SECONDARY,
                 null
             );
         }
 
-        public void reply_hostname (string hostname) {
-            // TODO: Handle text changes in a less lazy way
-            hostname_entry.changed.disconnect (this.on_changed);
-            hostname_entry.set_text (hostname);
-            hostname_entry.changed.connect (this.on_changed);
-        }
-
         public void show_favorite_icon (bool added = false) {
             show_fav_icon = true;
             this.added = added;
-            var icon_name = added ?
-                "starred-symbolic" :
-                "non-starred-symbolic";
-            hostname_entry.set_icon_from_icon_name (
+            var icon_name = added ? "starred-symbolic" : "non-starred-symbolic";
+            path_entry.set_icon_from_icon_name (
                 Gtk.EntryIconPosition.SECONDARY,
                 icon_name
             );
             if (handler != null) {
-                hostname_entry.disconnect (handler);
+                path_entry.disconnect (handler);
             }
-            handler = hostname_entry.icon_press.connect (() => bookmarked ());
+            handler = path_entry.icon_press.connect (() => bookmarked ());
         }
     }
 }

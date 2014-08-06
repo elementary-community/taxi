@@ -18,7 +18,7 @@ namespace Taxi {
 
     class RemoteFileAccess : FileAccess {
 
-        private IConnInfo connect_info;
+        private Soup.URI uri;
         private Gtk.Window window;
 
         public RemoteFileAccess () {
@@ -26,13 +26,13 @@ namespace Taxi {
         }
 
         public async override bool connect_to_device (
-            IConnInfo connect_info,
+            Soup.URI uri,
             Gtk.Window window
         ) {
             this.window = window;
-            var mount = mount_operation_from_connect (connect_info);
-            var uri = connect_info.get_uri ();
-            file_handle = File.new_for_uri (uri);
+            var mount = mount_operation_from_uri (uri);
+            this.uri = uri;
+            file_handle = File.new_for_uri (uri.to_string (false));
             try {
                 return yield file_handle.mount_enclosing_volume (
                     MountMountFlags.NONE,
@@ -62,7 +62,7 @@ namespace Taxi {
 
                 // Unmounted
                 if (e.code == 16) {
-                    if (yield connect_to_device (connect_info, window)) {
+                    if (yield connect_to_device (uri, window)) {
                         return yield get_file_list ();
                     }
                 }
@@ -82,22 +82,10 @@ namespace Taxi {
             file_handle = file_handle.resolve_relative_path ("/" + path);
         }
 
-        private Gtk.MountOperation mount_operation_from_connect (IConnInfo connect_info) {
+        private Gtk.MountOperation mount_operation_from_uri (Soup.URI uri) {
             var mount = new Gtk.MountOperation (window);
-            mount.set_domain (connect_info.hostname);
-            stdout.printf ("MOUNT HOST: " + connect_info.hostname + "\n");
-            mount.set_anonymous (connect_info.anonymous);
-            mount.set_password_save (PasswordSave.FOR_SESSION);
-            mount.set_choice (0);
-            if (!connect_info.anonymous) {
-                stdout.printf ("Got here\n");
-                mount.set_username (connect_info.username);
-                mount.set_password (connect_info.password);
-            }
-            mount.ask_password.connect ((message, user, domain, flags) => {
-                stdout.printf ("ENTER PASSWORD %s %s\n", message, domain);
-                mount.set_password (connect_info.password);
-            });
+            mount.set_domain (uri.get_host ());
+            debug ("MOUNT HOST: " + uri.get_host ());
             return mount;
         }
     }

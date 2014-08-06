@@ -27,7 +27,7 @@ namespace Taxi {
          * @return true if successful at connecting
          */
         public async abstract bool connect_to_device (
-            IConnInfo conn_info,
+            Soup.URI uri,
             Gtk.Window window
         );
 

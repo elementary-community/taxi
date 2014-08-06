@@ -22,7 +22,7 @@ namespace Taxi {
         protected virtual IFileOperations file_operation { get; set; }
 
         public abstract async bool connect_to_device (
-            IConnInfo connect_info,
+            Soup.URI uri,
             Gtk.Window window
         );
 
