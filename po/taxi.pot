@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-02 22:21+0100\n"
+"POT-Creation-Date: 2014-08-07 16:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,28 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/Widgets/ConnectBox.vala:54
-msgid "hostname:port"
+#: ../src/Widgets/ConnectBox.vala:52
+msgid "hostname:port/folder"
 msgstr ""
 
-#: ../src/Widgets/FilePane.vala:81
+#: ../src/Widgets/FilePane.vala:82
 msgid "This folder is empty."
 msgstr ""
 
-#: ../src/GUI.vala:119
+#: ../src/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr ""
+
+#: ../src/GUI.vala:138
 msgid "Connect"
 msgstr ""
 
-#: ../src/GUI.vala:120
+#: ../src/GUI.vala:139
 msgid ""
-"Type an URL and press 'Enter' to\n"
+"Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr ""
 
-#: ../src/GUI.vala:140
-msgid "Could not connect to '%s:%s'"
+#: ../src/GUI.vala:161
+msgid "Could not connect to '%s'"
 msgstr ""

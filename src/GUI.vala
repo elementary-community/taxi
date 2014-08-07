@@ -136,7 +136,7 @@ namespace Taxi {
         private void add_welcome () {
             welcome = new Granite.Widgets.Welcome (
                 _("Connect"),
-                _("Type an URL and press 'Enter' to\nconnect to a server.")
+                _("Type a URL and press 'Enter' to\nconnect to a server.")
             );
             welcome.vexpand = true;
             outer_box.add (welcome);
