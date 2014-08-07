@@ -110,37 +110,26 @@ namespace Taxi {
             connect_box.bookmarked.connect (this.bookmark);
         }
 
-        private Gtk.ToggleButton new_bookmark_list_button () {
-            var button = new Gtk.ToggleButton();
+        private Gtk.MenuButton new_bookmark_list_button () {
+            var button = new Gtk.MenuButton();
             var button_image = new Gtk.Image.from_icon_name (
                 "user-bookmarks-symbolic",
                 Gtk.IconSize.BUTTON
             );
             button.add (button_image);
-            var bookmark_popover = new Gtk.Popover (button);
-            bookmark_popover.closed.connect (() => (button.set_active (false)));
-            button.toggled.connect (() => {
-                on_booklist_button_toggle (button.get_active (), bookmark_popover);
+            var menu = new Menu ();
+            button.enter.connect (() => {
+                if (!button.get_active ()) {
+                    menu.remove_all ();
+                    foreach (string uri in conn_saver.get_saved_conns ()) {
+                        menu.append (uri, null);
+                    }
+                }
             });
-            return button;
-        }
+            button.set_menu_model (menu);
+            button.set_use_popover (true);
 
-        private void on_booklist_button_toggle (bool active, Gtk.Popover bookmark_popover) {
-            if (active) {
-                if (bookmark_popover.get_child () != null) {
-                    bookmark_popover.remove (bookmark_popover.get_child ());
-                }
-                var bookmark_grid = new Gtk.Grid ();
-                bookmark_popover.add (bookmark_grid);
-                bookmark_grid.set_orientation (Gtk.Orientation.VERTICAL);
-                foreach (string uri in conn_saver.get_saved_conns ()) {
-                    var menu_item = new Gtk.MenuItem.with_label (uri);
-                    bookmark_grid.add (menu_item);
-                }
-                bookmark_popover.show_all ();
-            } else {
-                bookmark_popover.hide ();
-            }
+            return button;
         }
 
         private void add_outerbox () {
