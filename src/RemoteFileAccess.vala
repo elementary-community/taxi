@@ -56,20 +56,24 @@ namespace Taxi {
         }
 
         public override async List<FileInfo> get_file_list () {
+            return yield get_file_list_helper (5);
+        }
+
+        private async List<FileInfo> get_file_list_helper (int attempts_left = 5) {
             try {
                 return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
 
                 // Unmounted
-                if (e.code == 16) {
+                if (e.code == 16 && attempts_left > 0) {
                     if (yield connect_to_device (uri, window)) {
-                        return yield get_file_list ();
+                        return yield get_file_list_helper (--attempts_left);
                     }
                 }
 
                 // Host closed conn
-                if (e.code == 0) {
-                    // Try some more times
+                if (e.code == 0 && attempts_left > 0) {
+                    return yield get_file_list_helper (--attempts_left);
                 }
 
                 message (e.message);
@@ -85,7 +89,6 @@ namespace Taxi {
         private Gtk.MountOperation mount_operation_from_uri (Soup.URI uri) {
             var mount = new Gtk.MountOperation (window);
             mount.set_domain (uri.get_host ());
-            debug ("MOUNT HOST: " + uri.get_host ());
             return mount;
         }
     }
