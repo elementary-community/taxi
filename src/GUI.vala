@@ -24,6 +24,7 @@ namespace Taxi {
         Gtk.Grid outer_box;
         Gtk.Grid pane_inner;
         Gtk.Spinner spinner;
+        Gtk.MenuButton bookmark_menu_button;
         ConnectBox connect_box;
         Granite.Widgets.Welcome welcome;
         FilePane local_pane;
@@ -34,6 +35,7 @@ namespace Taxi {
         IFileAccess local_access;
         IFileOperations file_operation;
         Soup.URI conn_uri;
+        Menu bookmark_menu;
 
         private const string FALLBACK_STYLE = """
             .h1 { font: open sans 24; }
@@ -111,25 +113,17 @@ namespace Taxi {
         }
 
         private Gtk.MenuButton new_bookmark_list_button () {
-            var button = new Gtk.MenuButton();
+            bookmark_menu_button = new Gtk.MenuButton ();
             var button_image = new Gtk.Image.from_icon_name (
                 "user-bookmarks-symbolic",
                 Gtk.IconSize.BUTTON
             );
-            button.add (button_image);
-            var menu = new Menu ();
-            button.enter.connect (() => {
-                if (!button.get_active ()) {
-                    menu.remove_all ();
-                    foreach (string uri in conn_saver.get_saved_conns ()) {
-                        menu.append (uri, null);
-                    }
-                }
-            });
-            button.set_menu_model (menu);
-            button.set_use_popover (true);
-
-            return button;
+            bookmark_menu_button.add (button_image);
+            bookmark_menu = new Menu ();
+            bookmark_menu_button.set_menu_model (bookmark_menu);
+            bookmark_menu_button.set_use_popover (true);
+            update_bookmark_menu ();
+            return bookmark_menu_button;
         }
 
         private void add_outerbox () {
@@ -190,6 +184,20 @@ namespace Taxi {
             connect_box.show_favorite_icon (
                 conn_saver.is_bookmarked (remote_access.get_uri ())
             );
+            update_bookmark_menu ();
+        }
+
+        private void update_bookmark_menu () {
+            bookmark_menu.remove_all ();
+            var uri_list = conn_saver.get_saved_conns ();
+            if (uri_list.length () == 0) {
+                bookmark_menu_button.set_sensitive (false);
+            } else {
+                foreach (string uri in uri_list) {
+                    bookmark_menu.append (uri, null);
+                }
+                bookmark_menu_button.set_sensitive (true);
+            }
         }
 
         private void add_panes () {
