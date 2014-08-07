@@ -113,7 +113,7 @@ namespace Taxi {
         private Gtk.ToggleButton new_bookmark_list_button () {
             var button = new Gtk.ToggleButton();
             var button_image = new Gtk.Image.from_icon_name (
-                "starred-symbolic",
+                "user-bookmarks-symbolic",
                 Gtk.IconSize.BUTTON
             );
             button.add (button_image);
