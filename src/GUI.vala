@@ -150,6 +150,7 @@ namespace Taxi {
                         outer_box.remove (welcome);
                         add_panes ();
                     }
+                    debug ("Test here!");
                     update_local_pane ();
                     update_remote_pane ();
                     connect_box.show_favorite_icon (

@@ -113,6 +113,7 @@ namespace Taxi {
         }
 
         public void show_favorite_icon (bool added = false) {
+            path_entry.icon_press.disconnect (this.submit_form);
             show_fav_icon = true;
             this.added = added;
             var icon_name = added ? "starred-symbolic" : "non-starred-symbolic";
@@ -123,7 +124,9 @@ namespace Taxi {
             if (handler != null) {
                 path_entry.disconnect (handler);
             }
-            handler = path_entry.icon_press.connect (() => bookmarked ());
+            handler = path_entry.icon_press.connect (() => {
+                bookmarked ();
+            });
         }
     }
 }
