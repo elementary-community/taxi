@@ -150,7 +150,6 @@ namespace Taxi {
                         outer_box.remove (welcome);
                         add_panes ();
                     }
-                    debug ("Test here!");
                     update_local_pane ();
                     update_remote_pane ();
                     connect_box.show_favorite_icon (
@@ -177,13 +176,14 @@ namespace Taxi {
         }
 
         private void bookmark () {
-            if (conn_saver.is_bookmarked (remote_access.get_uri ())) {
-                conn_saver.remove (remote_access.get_uri ());
+            var uri_string = conn_uri.to_string (false);
+            if (conn_saver.is_bookmarked (uri_string)) {
+                conn_saver.remove (uri_string);
             } else {
-                conn_saver.save (remote_access.get_uri ());
+                conn_saver.save (uri_string);
             }
             connect_box.show_favorite_icon (
-                conn_saver.is_bookmarked (remote_access.get_uri ())
+                conn_saver.is_bookmarked (uri_string)
             );
             update_bookmark_menu ();
         }
