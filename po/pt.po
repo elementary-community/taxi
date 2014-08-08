@@ -1,4 +1,39 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-07 16:33+0100\n"
+"PO-Revision-Date: 2014-08-02 22:07+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-08-08 07:12+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#: ../src/Widgets/ConnectBox.vala:52
+msgid "hostname:port/folder"
+msgstr ""
+
+#: ../src/Widgets/FilePane.vala:82
+msgid "This folder is empty."
+msgstr ""
+
+#: ../src/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr ""
+
+#: ../src/GUI.vala:138
+msgid "Connect"
+msgstr ""
+
+#: ../src/GUI.vala:139
+msgid ""
+"Type a URL and press 'Enter' to\n"
+"connect to a server."
+msgstr ""
+
+#: ../src/GUI.vala:161
+msgid "Could not connect to '%s'"
+msgstr ""
