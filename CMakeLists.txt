@@ -39,19 +39,18 @@ include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
     src/Taxi.vala
     src/ConnectionSaver.vala
-    src/ConnInfo.vala
     src/FileOperations.vala
     src/GUI.vala
     src/FileAccess.vala
     src/LocalFileAccess.vala
     src/RemoteFileAccess.vala
     src/OperationInfo.vala
+    src/Protocol.vala
     src/Widgets/ConnectBox.vala
     src/Widgets/FilePane.vala
     src/Widgets/PathBar.vala
     src/Widgets/OperationsPopover.vala
     src/API/IConnectionSaver.vala
-    src/API/IConnInfo.vala
     src/API/IFileAccess.vala
     src/API/IFileOperations.vala
     src/API/IOperationInfo.vala

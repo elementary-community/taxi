@@ -33,49 +33,4 @@ namespace Taxi {
             }
         }
     }
-
-    public interface IConnInfo : Object {
-
-        /**
-         *
-         */
-        public abstract Protocol protocol { get; set; default = Protocol.FTP; }
-
-        /**
-         *
-         */
-        public abstract string hostname { get; set; }
-
-        /**
-         *
-         */
-        public abstract int port { get; set; }
-
-        /**
-         *
-         */
-        public abstract string username { get; set; }
-
-        /**
-         *
-         */
-        public abstract string password { get; set; }
-
-        /**
-         *
-         */
-        public abstract bool anonymous { get; set; }
-
-        /**
-         *
-         */
-        public abstract bool remember { get; set; }
-
-        /**
-         *
-         */
-        public abstract string get_uri ();
-
-        public abstract int get_default_port (Protocol protocol);
-    }
 }
