@@ -55,6 +55,7 @@ namespace Taxi {
             path_entry.activate.connect (this.submit_form);
             path_entry.changed.connect (this.on_changed);
             path_entry.focus_out_event.connect (this.on_focus_out);
+            path_entry.grab_focus.connect_after (this.on_grab_focus);
             return path_entry;
         }
 
@@ -127,6 +128,18 @@ namespace Taxi {
             handler = path_entry.icon_press.connect (() => {
                 bookmarked ();
             });
+        }
+
+        public bool on_key_press_event (Gdk.EventKey event) {
+            if (!path_entry.has_visible_focus ()) {
+                path_entry.grab_focus ();
+            }
+            return false;
+        }
+
+        private void on_grab_focus () {
+            path_entry.select_region (0, 0);
+            path_entry.set_position (-1);
         }
     }
 }

@@ -140,6 +140,12 @@ namespace Taxi {
             );
             welcome.vexpand = true;
             outer_box.add (welcome);
+            window.key_press_event.connect (connect_box.on_key_press_event);
+        }
+
+        private void remove_welcome () {
+            outer_box.remove (welcome);
+            window.key_press_event.disconnect (connect_box.on_key_press_event);
         }
 
         private void on_connect_initiated (Soup.URI uri) {
@@ -147,7 +153,7 @@ namespace Taxi {
             remote_access.connect_to_device.begin (uri, window, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
                     if (local_pane == null) {
-                        outer_box.remove (welcome);
+                        remove_welcome ();
                         add_panes ();
                     }
                     update_local_pane ();
