@@ -63,9 +63,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
         )
 
 add_subdirectory (po)
-
-include (GSettings)
-add_schema ("org.khampal.taxi.gschema.xml")
+add_subdirectory (data)
 
 add_executable (${EXEC_NAME} ${VALA_C})
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)
