@@ -36,6 +36,7 @@ namespace Taxi {
         IFileOperations file_operation;
         Soup.URI conn_uri;
         Menu bookmark_menu;
+        SavedState saved_state;
 
         private const string FALLBACK_STYLE = """
             .h1 { font: open sans 24; }
@@ -342,12 +343,37 @@ namespace Taxi {
         }
 
         private void setup_window () {
-            window.default_width = 650;
-            window.default_height = 550;
+            saved_state = new SavedState ();
+            window.default_width = saved_state.window_width;
+            window.default_height = saved_state.window_height;
+            window.move (saved_state.opening_x, saved_state.opening_y);
+            if (saved_state.maximized) {
+                window.maximize ();
+            }
             window.set_titlebar (header_bar);
             window.show_all ();
 
+            window.delete_event.connect (this.on_delete_window);
             window.destroy.connect (Gtk.main_quit);
+        }
+
+        private bool on_delete_window () {
+            if ((window.get_window ().get_state () & Gdk.WindowState.MAXIMIZED) == 0) {
+                int window_width, window_height;
+                window.get_size (out window_width, out window_height);
+                saved_state.window_width = window_width;
+                saved_state.window_height = window_height;
+                saved_state.maximized = false;
+            } else {
+                saved_state.maximized = true;
+            }
+
+            int x_pos, y_pos;
+            window.get_position (out x_pos, out y_pos);
+            saved_state.opening_x = x_pos;
+            saved_state.opening_y = y_pos;
+
+            return false;
         }
     }
 }
