@@ -23,7 +23,6 @@ namespace Taxi {
         public PathBar () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
             set_layout (Gtk.ButtonBoxStyle.START);
-            get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
             homogeneous = false;
             spacing = 0;
         }
@@ -42,10 +41,18 @@ namespace Taxi {
         }
 
         private void add_path_frag (string child, string path) {
-            var button = (path == "/") ?
-                new Gtk.Button.from_icon_name (
-                    child, Gtk.IconSize.MENU) :
-                new Gtk.Button.with_label (child);
+            Gtk.Button button;
+            if (path == "/") {
+                button = new Gtk.Button.from_icon_name (
+                    child,
+                    Gtk.IconSize.MENU
+                );
+            } else {
+                button = new Gtk.Button.with_label (child);
+                var sep = new Gtk.Label ("⏴");
+                pack_start (sep);
+                set_child_non_homogeneous (sep, true);
+            }
             button.get_style_context ().add_class ("path-button");
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {
