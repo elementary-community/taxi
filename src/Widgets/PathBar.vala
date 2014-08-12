@@ -49,7 +49,7 @@ namespace Taxi {
                 );
             } else {
                 button = new Gtk.Button.with_label (child);
-                var sep = new Gtk.Label ("⏴");
+                var sep = new Gtk.Label ("▸");
                 pack_start (sep);
                 set_child_non_homogeneous (sep, true);
             }
