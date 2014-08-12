@@ -241,7 +241,15 @@ namespace Taxi {
         }
 
         private void on_drag_begin (Gtk.Widget widget, Gdk.DragContext context) {
-            debug ("BEGIN WIDGET %s\n", widget.name);
+            var widget_window = widget.get_window ();
+            var pixbuf = Gdk.pixbuf_get_from_window (
+                widget_window,
+                0,
+                0,
+                widget_window.get_width (),
+                widget_window.get_height ()
+            );
+            Gtk.drag_set_icon_pixbuf (context, pixbuf, 0, 0);
         }
 
         private bool on_drag_drop (
