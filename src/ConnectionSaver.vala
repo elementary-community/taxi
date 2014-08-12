@@ -18,8 +18,15 @@ namespace Taxi {
 
     class ConnectionSaver : IConnectionSaver, Object {
 
-        string file_dir  = Path.build_filename (Environment.get_user_config_dir (), "shift");
-        string file_name = Path.build_filename (Environment.get_user_config_dir (), "shift", "servers.xbel");
+        string file_dir  = Path.build_filename (
+            Environment.get_user_config_dir (),
+            "taxi"
+        );
+        string file_name = Path.build_filename (
+            Environment.get_user_config_dir (),
+            "taxi",
+            "servers.xbel"
+        );
 
         public bool save (string uri) {
             var data_folder = File.new_for_path (file_dir);
@@ -41,7 +48,7 @@ namespace Taxi {
                         return true;
                     }
                 }
-                bookmark.add_application (uri, "shift", "shift-ftp");
+                bookmark.add_application (uri, "taxi", "taxi");
                 return bookmark.to_file (file_name);
             } catch (BookmarkFileError e) {
                 message (e.message);
@@ -55,7 +62,7 @@ namespace Taxi {
             if (bookmark_file.query_exists ()) {
                 try {
                     bookmark.load_from_file (file_name);
-                    bookmark.remove_application (uri, "shift");
+                    bookmark.remove_application (uri, "taxi");
                     return bookmark.to_file (file_name);
                 } catch (BookmarkFileError e) {
                     message (e.message);
