@@ -53,6 +53,7 @@ namespace Taxi {
                 pack_start (sep);
                 set_child_non_homogeneous (sep, true);
             }
+            button.get_style_context ().remove_class ("button");
             button.get_style_context ().add_class ("path-button");
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {

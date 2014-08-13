@@ -58,22 +58,14 @@ namespace Taxi {
         """;
 
         private const string APPLICATION_STYLE = """
-            GtkButton.path-button {
-                background: none;
-                border-radius: 0;
-                border-width: 0;
-                border-image: none;
-            }
             TaxiPathBar GtkButton.path-button {
-                background: none;
-                border-radius: 0;
-                border-width: 0;
-                border-image: none;
+		padding: 3px;
             }
             TaxiPathBar.button {
                 border-width: 0px;
-                border-bottom-width: 1px;
+		border-bottom-width: 1px;
                 border-image: none;
+		border-radius: 0;
             }
         """;
 
