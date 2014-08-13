@@ -59,13 +59,16 @@ namespace Taxi {
 
         private const string APPLICATION_STYLE = """
             TaxiPathBar GtkButton.path-button {
-		padding: 3px;
+                background: none;
+                border-radius: 0;
+                border-width: 0;
+                border-image: none;
             }
             TaxiPathBar.button {
                 border-width: 0px;
-		border-bottom-width: 1px;
+                border-bottom-width: 1px;
                 border-image: none;
-		border-radius: 0;
+                border-radius: 0;
             }
         """;
 
