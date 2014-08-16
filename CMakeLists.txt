@@ -36,25 +36,25 @@ ensure_vala_version("0.16" MINIMUM)
 
 include (ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
+    src/config.vala
     src/Taxi.vala
-    src/ConnectionSaver.vala
-    src/FileOperations.vala
-    src/GUI.vala
-    src/FileAccess.vala
-    src/LocalFileAccess.vala
-    src/RemoteFileAccess.vala
-    src/OperationInfo.vala
     src/Protocol.vala
-    src/SavedState.vala
-    src/Widgets/ConnectBox.vala
-    src/Widgets/FilePane.vala
-    src/Widgets/PathBar.vala
-    src/Widgets/OperationsPopover.vala
     src/API/IConnectionSaver.vala
     src/API/IFileAccess.vala
     src/API/IFileOperations.vala
     src/API/IOperationInfo.vala
-    src/config.vala
+    src/Backend/ConnectionSaver.vala
+    src/Backend/FileOperations.vala
+    src/Backend/FileAccess.vala
+    src/Backend/LocalFileAccess.vala
+    src/Backend/OperationInfo.vala
+    src/Backend/RemoteFileAccess.vala
+    src/Frontend/GUI.vala
+    src/Frontend/Widgets/ConnectBox.vala
+    src/Frontend/Widgets/FilePane.vala
+    src/Frontend/Widgets/OperationsPopover.vala
+    src/Frontend/Widgets/PathBar.vala
+    src/Settings/SavedState.vala
     PACKAGES
         gtk+-3.0
         granite
