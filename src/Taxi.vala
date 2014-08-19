@@ -28,18 +28,18 @@ namespace Taxi {
             exec_name          = Constants.EXEC_NAME;
             app_copyright      = "2014";
             app_years          = "2014";
-            app_icon           = "";
+            app_icon           = "taxi";
             app_launcher       = Constants.APP_LAUNCHER;
             main_url           = "http://launchpad.net/taxi";
             bug_url            = "http://bugs.launchpad.net/taxi";
             help_url           = "http://answers.launchpad.net/taxi";
             translate_url      = "http://translations.launchpad.net/taxi";
             about_authors      = {
-                                    "Kiran John Hampal <kiran@hamp.al>"
+                                    "Kiran John Hampal <kiran@elementaryos.org>"
                                  };
             about_documenters  = {};
             about_artists      = {
-                                    "Kiran John Hampal <kiran@hamp.al>",
+                                    "Kiran John Hampal <kiran@elementaryos.org>",
                                     "Daniel Fore <daniel@elementaryos.org>"
                                  };
             about_comments     = "";

@@ -8,3 +8,8 @@ Icon=taxi
 Keywords=ftp;sftp;dav;afp;transfer;
 Terminal=false
 Categories=Network;
+Actions=AboutDialog;
+
+[Desktop Action AboutDialog]
+Name=About Taxi
+Exec=taxi --about
