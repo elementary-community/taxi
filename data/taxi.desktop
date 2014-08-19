@@ -9,6 +9,7 @@ Keywords=ftp;sftp;dav;afp;transfer;
 Terminal=false
 Categories=Network;
 Actions=AboutDialog;
+X-GNOME-Gettext-Domain=taxi
 
 [Desktop Action AboutDialog]
 Name=About Taxi
