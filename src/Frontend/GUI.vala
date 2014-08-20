@@ -23,6 +23,7 @@ namespace Taxi {
         Gtk.EventBox spinner_parent;
         Gtk.Grid outer_box;
         Gtk.Grid pane_inner;
+        Gtk.InfoBar infobar;
         Gtk.Spinner spinner;
         Gtk.MenuButton bookmark_menu_button;
         ConnectBox connect_box;
@@ -273,7 +274,8 @@ namespace Taxi {
         }
 
         private void new_infobar (string message, Gtk.MessageType message_type) {
-            var infobar = new Gtk.InfoBar ();
+            remove_existing_infobar ();
+            infobar = new Gtk.InfoBar ();
             var content = infobar.get_content_area ();
             content.add (new Gtk.Label (message));
             infobar.set_message_type (message_type);
@@ -281,6 +283,14 @@ namespace Taxi {
             outer_box.attach_next_to (infobar, pane_inner, Gtk.PositionType.TOP, 1, 1);
             outer_box.show_all ();
             infobar.response.connect (() => outer_box.remove (infobar));
+        }
+
+        private void remove_existing_infobar () {
+            foreach (Gtk.Widget outer_box_child in outer_box.get_children ()) {
+                if (outer_box_child == infobar) {
+                    outer_box.remove (infobar);
+                }
+            }
         }
 
         private void update_local_pane () {
