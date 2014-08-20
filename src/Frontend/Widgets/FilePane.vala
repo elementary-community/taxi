@@ -173,8 +173,21 @@ namespace Taxi {
             eventboxrow.set_data ("name", file_info.get_name ());
             eventboxrow.drag_begin.connect (on_drag_begin);
             eventboxrow.drag_data_get.connect (on_drag_data_get);
+            eventboxrow.button_press_event.connect ((event) =>
+                on_ebr_button_press (event, checkbox)
+            );
 
             return listboxrow;
+        }
+
+        private bool on_ebr_button_press (
+            Gdk.EventButton event,
+            Gtk.CheckButton checkbox
+        ) {
+            if (event.button == Gdk.BUTTON_SECONDARY) {
+                checkbox.clicked ();
+            }
+            return false;
         }
 
         private Gtk.Image row_icon (FileInfo file_info) {
