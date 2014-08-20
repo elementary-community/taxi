@@ -39,6 +39,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/config.vala
     src/Taxi.vala
     src/Protocol.vala
+    src/ConflictFlag.vala
     src/API/IConnectionSaver.vala
     src/API/IFileAccess.vala
     src/API/IFileOperations.vala

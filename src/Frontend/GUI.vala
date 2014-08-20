@@ -93,6 +93,7 @@ namespace Taxi {
             setup_window ();
             setup_styles ();
             setup_spinner ();
+            setup_other_connects ();
             add_popover ();
             Gtk.main ();
         }
@@ -259,7 +260,7 @@ namespace Taxi {
             file_operation.copy_recursive.begin (
                 source_file,
                 dest_file,
-                FileCopyFlags.OVERWRITE,
+                FileCopyFlags.NONE,
                 new Cancellable (),
                 (obj, res) => {
                     try {
@@ -345,6 +346,31 @@ namespace Taxi {
                 APPLICATION_STYLE,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
+        }
+
+        private void setup_other_connects () {
+            file_operation.ask_overwrite.connect (on_ask_overwrite);
+        }
+
+        private int on_ask_overwrite (File destination) {
+            var dialog = new Gtk.MessageDialog (
+                window,
+                Gtk.DialogFlags.MODAL,
+                Gtk.MessageType.QUESTION,
+                Gtk.ButtonsType.NONE,
+                _("Replace existing file?")
+            );
+            dialog.format_secondary_markup (
+                _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ()))
+            );
+            dialog.add_button (_("Replace All Conflicts"), 2);
+            dialog.add_button (_("Skip"), 0);
+            dialog.add_button (_("Replace"), 1);
+            dialog.get_widget_for_response (1).get_style_context ().add_class ("suggested-action");
+
+            var response = dialog.run ();
+            dialog.destroy ();
+            return response;
         }
 
         private void setup_window () {

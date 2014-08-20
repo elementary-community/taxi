@@ -63,7 +63,12 @@ namespace Taxi {
             var operation = new OperationInfo (source, cancellable);
             operation_added (operation);
             try {
-                yield copy_recursive_helper (source, destination, flags, cancellable);
+                yield copy_recursive_helper (
+                    source,
+                    destination,
+                    &flags,
+                    cancellable
+                );
             } catch (Error e) {
                 warning (e.message);
                 throw e;
@@ -75,7 +80,7 @@ namespace Taxi {
         private async void copy_recursive_helper (
             File source,
             File destination,
-            FileCopyFlags flags = FileCopyFlags.NONE,
+            FileCopyFlags* flags,
             Cancellable? cancellable = null
         ) throws Error {
             var file_type = source.query_file_type (
@@ -85,7 +90,7 @@ namespace Taxi {
             if (file_type == FileType.DIRECTORY) {
                 if (!destination.query_exists ()) {
                     yield destination.make_directory_async (Priority.DEFAULT, cancellable);
-                    source.copy_attributes (destination, flags, cancellable);
+                    source.copy_attributes (destination, *flags, cancellable);
                 }
                 string source_path = source.get_path ();
                 string destination_path = destination.get_path ();
@@ -105,9 +110,24 @@ namespace Taxi {
                     );
                 }
             } else if (file_type == FileType.REGULAR) {
+                var tmp_flag = *flags;
+                if (*flags == FileCopyFlags.NONE && destination.query_exists ()) {
+                    switch ((ConflictFlag)ask_overwrite (destination)) {
+                        case ConflictFlag.REPLACE_ALL:
+                            *flags = FileCopyFlags.OVERWRITE;
+                            tmp_flag = *flags;
+                            break;
+                        case ConflictFlag.REPLACE:
+                            tmp_flag = FileCopyFlags.OVERWRITE;
+                            break;
+                        case ConflictFlag.SKIP:
+                        default:
+                            return;
+                    }
+                }
                 yield source.copy_async (
                     destination,
-                    flags,
+                    tmp_flag,
                     Priority.DEFAULT,
                     cancellable
                 );
