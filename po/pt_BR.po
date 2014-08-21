@@ -2,33 +2,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-07 16:33+0100\n"
+"POT-Creation-Date: 2014-08-20 14:56+0100\n"
 "PO-Revision-Date: 2014-08-19 23:28+0000\n"
 "Last-Translator: Leonardo Lemos <leonardolemos@live.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-20 06:26+0000\n"
+"X-Launchpad-Export-Date: 2014-08-21 06:51+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
 
-#: ../src/Widgets/ConnectBox.vala:52
+#: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
 msgstr "nome_da_máquina:porta/pasta"
 
-#: ../src/Widgets/FilePane.vala:82
+#: ../src/Frontend/Widgets/FilePane.vala:82
 msgid "This folder is empty."
 msgstr "Esta pasta está vazia."
 
-#: ../src/Widgets/OperationsPopover.vala:33
+#: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
 msgstr "Nenhuma operação de arquivo está em progresso"
 
-#: ../src/GUI.vala:138
+#: ../src/Frontend/GUI.vala:136
 msgid "Connect"
 msgstr "Conectar"
 
-#: ../src/GUI.vala:139
+#: ../src/Frontend/GUI.vala:137
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
@@ -36,6 +36,28 @@ msgstr ""
 "Digite uma URL e pressione 'Enter' para\n"
 "conectar à um servidor."
 
-#: ../src/GUI.vala:161
+#: ../src/Frontend/GUI.vala:165
 msgid "Could not connect to '%s'"
 msgstr "Não foi possível conectar à '%s'"
+
+#: ../src/Frontend/GUI.vala:361
+msgid "Replace existing file?"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:364
+msgid ""
+"<i>\"%s\"</i> already exists. You can replace this file, replace all "
+"conflicting files or choose not to replace the file by skipping."
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:366
+msgid "Replace All Conflicts"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:367
+msgid "Skip"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:368
+msgid "Replace"
+msgstr ""
