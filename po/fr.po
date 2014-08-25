@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 14:56+0100\n"
-"PO-Revision-Date: 2014-08-20 09:54+0000\n"
+"PO-Revision-Date: 2014-08-24 19:16+0000\n"
 "Last-Translator: RM <l4rt1st-1nc0nnu@laposte.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-21 06:51+0000\n"
+"X-Launchpad-Export-Date: 2014-08-25 10:02+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
@@ -42,22 +42,25 @@ msgstr "Impossible de se connecter à '%s'"
 
 #: ../src/Frontend/GUI.vala:361
 msgid "Replace existing file?"
-msgstr ""
+msgstr "Remplacer le fichier existant ?"
 
 #: ../src/Frontend/GUI.vala:364
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
+"<i>\"%s\"</i> existe déjà. Vous pouvez remplacer ce fichier, remplacer tous "
+"les fichiers conflictuels ou choisir de ne pas remplacer le fichier en "
+"ignorant."
 
 #: ../src/Frontend/GUI.vala:366
 msgid "Replace All Conflicts"
-msgstr ""
+msgstr "Remplacer tous les conflits"
 
 #: ../src/Frontend/GUI.vala:367
 msgid "Skip"
-msgstr ""
+msgstr "Ignorer"
 
 #: ../src/Frontend/GUI.vala:368
 msgid "Replace"
-msgstr ""
+msgstr "Remplacer"
