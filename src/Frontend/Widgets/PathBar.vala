@@ -51,7 +51,8 @@ namespace Taxi {
                 );
             } else {
                 button = new Gtk.Button.with_label (child);
-                var sep = new Gtk.Label ("▸");
+                //var sep = new Gtk.Label ("▸");
+                var sep = new PathBarSeparator ();
                 add (sep);
             }
             button.set_relief (Gtk.ReliefStyle.NONE);

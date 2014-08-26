@@ -55,6 +55,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/Frontend/Widgets/ConnectBox.vala
     src/Frontend/Widgets/FilePane.vala
     src/Frontend/Widgets/OperationsPopover.vala
+    src/Frontend/Widgets/PathBarSeparator.vala
     src/Frontend/Widgets/PathBar.vala
     src/Settings/SavedState.vala
     PACKAGES
