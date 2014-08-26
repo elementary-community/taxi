@@ -29,18 +29,18 @@ namespace Taxi {
             cr.set_antialias (Cairo.Antialias.SUBPIXEL);
             cr.set_line_cap (Cairo.LineCap.SQUARE);
 
-            cr.set_source_rgba (1d, 1d, 1d, 0.6);
+            cr.set_source_rgba (1d, 1d, 1d, 0.8);
             cr.set_line_width (2);
             cr.move_to (0, 2);
-            cr.line_to (width - 1, height/2 + 2);
+            cr.line_to (width, height/2 + 1);
             cr.line_to (0, height);
             cr.stroke ();
 
-            cr.set_source_rgba (0.757d, 0.757d, 0.757d, 0.8);
+            cr.set_source_rgba (0.7d, 0.7d, 0.7d, 0.8);
             cr.set_line_width (1);
             cr.move_to (0, 0);
             cr.line_to (width - 1, height/2);
-            cr.line_to (0, height - 2);
+            cr.line_to (0, height - 1);
             cr.stroke ();
 
             return true;
