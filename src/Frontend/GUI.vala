@@ -215,6 +215,7 @@ namespace Taxi {
             local_pane.row_clicked.connect (this.on_local_row_clicked);
             local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
             local_pane.file_dragged.connect (this.on_local_file_dragged);
+            local_pane.transfer.connect (this.on_remote_file_dragged);
             local_access.directory_changed.connect (this.update_local_pane);
 
             remote_pane = new FilePane ();
@@ -222,6 +223,7 @@ namespace Taxi {
             remote_pane.row_clicked.connect (this.on_remote_row_clicked);
             remote_pane.pathbar_activated.connect (this.on_remote_pathbar_activated);
             remote_pane.file_dragged.connect (this.on_remote_file_dragged);
+            remote_pane.transfer.connect (this.on_local_file_dragged);
 
             outer_box.add (pane_inner);
         }

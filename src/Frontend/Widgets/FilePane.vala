@@ -38,6 +38,7 @@ namespace Taxi {
         public signal void row_clicked (string name);
         public signal void pathbar_activated (string path);
         public signal void file_dragged (string uri);
+        public signal void transfer (string uri);
 
         public FilePane (bool show_sep = false) {
             set_orientation (Gtk.Orientation.HORIZONTAL);
@@ -60,13 +61,25 @@ namespace Taxi {
 
         private PathBar new_path_bar () {
             path_bar = new PathBar ();
+            path_bar.hexpand = true;
+            path_bar.set_halign (Gtk.Align.FILL);
             path_bar.get_style_context ().add_class ("button");
 
             path_bar.navigate.connect ((path) => {
                 pathbar_activated (path);
             });
 
+            path_bar.transfer.connect (on_pathbar_transfer);
+
             return path_bar;
+        }
+
+        private void on_pathbar_transfer () {
+            foreach (Gtk.Widget row in list_box.get_children ()) {
+                if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
+                    transfer (current_uri + "/" + row.get_data<string> ("name"));
+                }
+            }
         }
 
         private Gtk.ScrolledWindow new_list_box () {
@@ -162,6 +175,7 @@ namespace Taxi {
             listboxrow.hexpand = true;
             listboxrow.add (eventboxrow);
             listboxrow.set_data ("name", file_info.get_name ());
+            listboxrow.set_data ("checkbutton", checkbox);
 
             Gtk.drag_source_set (
                 eventboxrow,

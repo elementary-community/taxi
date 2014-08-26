@@ -16,13 +16,15 @@
 
 namespace Taxi {
 
-    class PathBar : Gtk.ButtonBox {
+    class PathBar : Gtk.Box {
+
+        Location location = Location.LOCAL;
 
         public signal void navigate (string path);
+        public signal void transfer ();
 
         public PathBar () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
-            set_layout (Gtk.ButtonBoxStyle.START);
             homogeneous = false;
             spacing = 0;
         }
@@ -50,17 +52,16 @@ namespace Taxi {
             } else {
                 button = new Gtk.Button.with_label (child);
                 var sep = new Gtk.Label ("▸");
-                pack_start (sep);
-                set_child_non_homogeneous (sep, true);
+                add (sep);
             }
+            button.set_relief (Gtk.ReliefStyle.NONE);
             button.get_style_context ().add_class ("path-button");
             button.set_data<string> ("path", path);
             button.clicked.connect (() => {
                 navigate (button.get_data<string> ("path"));
                 debug ("PROPERTY: " + button.get_data<string> ("path") + "\n");
             });
-            pack_start (button);
-            set_child_non_homogeneous (button, true);
+            add (button);
         }
 
         public void set_path (string uri) {
@@ -70,14 +71,17 @@ namespace Taxi {
             switch (uri_obj.get_scheme ()) {
                 case "file":
                     add_path_frag ("drive-harddisk-symbolic", "/");
+                    location = Location.LOCAL;
                     break;
                 case "ftp":
                 case "sftp":
                 default:
                     add_path_frag ("folder-remote-symbolic", "/");
+                    location = Location.REMOTE;
                     break;
             }
             set_path_helper (uri_obj.get_path ());
+            pack_end (new_xfer_button ());
         }
 
         private void set_path_helper (string path) {
@@ -94,6 +98,20 @@ namespace Taxi {
                 remove (child);
             }
             margin = 0;
+        }
+
+        private Gtk.Button new_xfer_button () {
+            var xfer_icon_name = (location == Location.LOCAL)  ?
+                                    "document-export-symbolic" :
+                                    "document-import-symbolic" ;
+            var xfer_button = new Gtk.Button.from_icon_name (
+                xfer_icon_name,
+                Gtk.IconSize.MENU
+            );
+            xfer_button.set_halign (Gtk.Align.END);
+            xfer_button.set_relief (Gtk.ReliefStyle.NONE);
+            xfer_button.clicked.connect (() => transfer ());
+            return xfer_button;
         }
     }
 }
