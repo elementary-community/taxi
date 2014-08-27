@@ -153,6 +153,7 @@ namespace Taxi {
                     if (local_pane == null) {
                         remove_welcome ();
                         add_panes ();
+                        window.show_all ();
                     }
                     update_local_pane ();
                     update_remote_pane ();
@@ -160,7 +161,6 @@ namespace Taxi {
                         conn_saver.is_bookmarked (remote_access.get_uri ())
                     );
                     conn_uri = uri;
-                    window.show_all ();
                 } else {
                     welcome.title = _("Could not connect to '%s'").printf (
                         uri.to_string (false)
@@ -305,9 +305,11 @@ namespace Taxi {
         }
 
         private void update_pane (IFileAccess file_access, FilePane file_pane) {
+            file_pane.start_spinner ();
             var file_uri = file_access.get_uri ();
             file_access.get_file_list.begin ((obj, res) => {
-                var file_files = file_access.get_file_list.end (res);
+            var file_files = file_access.get_file_list.end (res);
+                file_pane.stop_spinner ();
                 file_pane.update_list (file_files);
                 file_pane.update_pathbar (file_uri);
             });

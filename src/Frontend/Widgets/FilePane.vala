@@ -32,8 +32,9 @@ namespace Taxi {
         PathBar path_bar;
         Gtk.Label placeholder_label;
         Gtk.ListBox list_box;
-        Gtk.Spinner spinner;
+        Gtk.Spinner? spinner;
         Gtk.ScrolledWindow scrolled_pane;
+        Gtk.Grid inner_grid;
 
         public signal void row_clicked (string name);
         public signal void pathbar_activated (string path);
@@ -46,11 +47,12 @@ namespace Taxi {
         }
 
         private void build (bool show_sep) {
-            var inner_grid = new Gtk.Grid ();
+            inner_grid = new Gtk.Grid ();
             inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
             inner_grid.add (new_path_bar ());
             inner_grid.add (new_list_box ());
             add (inner_grid);
+            inner_grid.show_all ();
 
             if (show_sep) {
                 var sep = new Gtk.Separator (Gtk.Orientation.VERTICAL);
@@ -248,20 +250,25 @@ namespace Taxi {
         }
 
         public void start_spinner () {
-            path_bar.hide ();
+            //path_bar.hide ();
             scrolled_pane.hide ();
-            spinner = new Gtk.Spinner ();
-            spinner.set_hexpand (true);
-            spinner.set_vexpand (true);
-            spinner.set_halign (Gtk.Align.FILL);
-            spinner.start ();
-            add (spinner);
+            if (spinner == null) {
+                spinner = new Gtk.Spinner ();
+                spinner.set_hexpand (true);
+                spinner.set_vexpand (true);
+                spinner.set_halign (Gtk.Align.FILL);
+                spinner.start ();
+                inner_grid.add (spinner);
+            }
             spinner.show ();
         }
 
         public void stop_spinner () {
-            remove (spinner);
-            path_bar.show ();
+            if (spinner != null) {
+                inner_grid.remove (spinner);
+                spinner = null;
+            }
+            //path_bar.show ();
             scrolled_pane.show ();
         }
 
