@@ -75,11 +75,19 @@ namespace Taxi {
         }
 
         private void on_pathbar_transfer () {
+            foreach (string uri in get_marked_row_uris ()) {
+                transfer (uri);
+            }
+        }
+
+        private Gee.List<string> get_marked_row_uris () {
+            var uri_list = new Gee.ArrayList<string> ();
             foreach (Gtk.Widget row in list_box.get_children ()) {
                 if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
-                    transfer (current_uri + "/" + row.get_data<string> ("name"));
+                    uri_list.add (current_uri + "/" + row.get_data<string> ("name"));
                 }
             }
+            return uri_list;
         }
 
         private Gtk.ScrolledWindow new_list_box () {
