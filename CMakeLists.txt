@@ -26,6 +26,12 @@ pkg_check_modules (DEPS REQUIRED
 
 add_definitions (${DEPS_CFLAGS})
 add_definitions ("-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"")
+
+if (ADWAITA_FIXES)
+    message ("TEST ADWAITA")
+    set (VALAFLAGS ${VALAFLAGS} -D HAVE_ADWAITA_FIXES)
+endif ()
+
 link_libraries (${DEPS_LIBRARIES})
 link_directories (${DEPS_LIBRARY_DIRS})
 
@@ -63,7 +69,9 @@ vala_precompile(VALA_C ${EXEC_NAME}
         granite
         posix
         libsoup-2.4
-        )
+    OPTIONS
+        ${VALAFLAGS}
+)
 
 add_subdirectory (po)
 add_subdirectory (data)

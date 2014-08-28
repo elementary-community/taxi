@@ -71,7 +71,20 @@ namespace Taxi {
                 border-image: none;
                 border-radius: 0;
             }
-        """;
+    """
+#if HAVE_ADWAITA_FIXES
+    + """
+            .linked .button:insensitive:first-child,
+            .linked > GtkComboBox:first-child > .button {
+                border-right-width: 0;
+                border-left-width: 1px;
+                border-image-width: 3px 0 4px 3px;
+                border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+            }
+    """
+#endif
+    ;
 
         public GUI (
             IFileAccess local_access,
