@@ -230,6 +230,7 @@ namespace Taxi {
             local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
             local_pane.file_dragged.connect (this.on_local_file_dragged);
             local_pane.transfer.connect (this.on_remote_file_dragged);
+            local_pane.@delete.connect (this.on_file_delete);
             local_access.directory_changed.connect (this.update_local_pane);
 
             remote_pane = new FilePane ();
@@ -270,7 +271,11 @@ namespace Taxi {
             on_file_dragged (uri, local_pane, local_access);
         }
 
-        private void on_file_dragged (string uri, FilePane file_pane, IFileAccess file_access) {
+        private void on_file_dragged (
+            string uri,
+            FilePane file_pane,
+            IFileAccess file_access
+        ) {
             var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
             var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
             file_operation.copy_recursive.begin (
@@ -280,7 +285,6 @@ namespace Taxi {
                 new Cancellable (),
                 (obj, res) => {
                     try {
-                        file_operation.copy_recursive.end (res);
                         update_pane (file_access, file_pane);
                         debug ("Recursive file copy finished!");
                     } catch (Error e) {
@@ -288,6 +292,21 @@ namespace Taxi {
                     }
                 }
              );
+        }
+
+        private void on_file_delete (Soup.URI uri) {
+            var file = File.new_for_uri (uri.to_string (false));
+            file_operation.delete_recursive.begin (
+                file,
+                new Cancellable (),
+                (obj, res) => {
+                    try {
+                        debug ("Delete file finished!");
+                    } catch (Error e) {
+                        new_infobar (e.message, Gtk.MessageType.ERROR);
+                    }
+                }
+            );
         }
 
         private void new_infobar (string message, Gtk.MessageType message_type) {

@@ -18,7 +18,23 @@ namespace Taxi {
 
     class FileOperations : IFileOperations, Object {
 
-        public async bool trash_file (
+        public async bool delete_recursive (
+            File file,
+            Cancellable? cancellable = null
+        ) throws Error {
+            var operation = new OperationInfo (file, cancellable);
+            operation_added (operation);
+            try {
+                return yield delete_recursive_helper (file, cancellable);
+            } catch (Error e) {
+                warning (e.message);
+                throw e;
+            } finally {
+                operation_removed (operation);
+            }
+        }
+
+        public async bool delete_recursive_helper (
             File file,
             Cancellable? cancellable = null
         ) throws Error {
@@ -30,7 +46,7 @@ namespace Taxi {
                 string file_path = file.get_path ();
                 var file_list = yield get_file_list (file);
                 foreach (FileInfo file_info in file_list) {
-                    yield trash_file (
+                    yield delete_recursive_helper (
                         File.new_for_path (Path.build_filename (
                             file_path,
                             file_info.get_name ()
@@ -38,10 +54,8 @@ namespace Taxi {
                         cancellable
                     );
                 }
-                return yield file.delete_async (Priority.DEFAULT, cancellable);
-            } else {
-                return yield file.delete_async (Priority.DEFAULT, cancellable);
             }
+            return yield file.delete_async (Priority.DEFAULT, cancellable);
         }
 
         public async List<FileInfo> get_file_list (File file) throws Error {

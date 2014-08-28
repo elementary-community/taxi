@@ -40,6 +40,10 @@ namespace Taxi {
         public signal void pathbar_activated (string path);
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
+        public signal void @delete (Soup.URI uri);
+        public signal void rename (Soup.URI uri);
+
+        delegate void ActivateFunc (Soup.URI uri);
 
         public FilePane (bool show_sep = false) {
             set_orientation (Gtk.Orientation.HORIZONTAL);
@@ -198,20 +202,54 @@ namespace Taxi {
             eventboxrow.drag_begin.connect (on_drag_begin);
             eventboxrow.drag_data_get.connect (on_drag_data_get);
             eventboxrow.button_press_event.connect ((event) =>
-                on_ebr_button_press (event, checkbox)
+                on_ebr_button_press (event, eventboxrow, listboxrow)
             );
+            eventboxrow.popup_menu.connect (() => on_ebr_popup_menu (eventboxrow));
 
             return listboxrow;
         }
 
         private bool on_ebr_button_press (
             Gdk.EventButton event,
-            Gtk.CheckButton checkbox
+            Gtk.EventBox event_box,
+            Gtk.ListBoxRow list_box_row
         ) {
             if (event.button == Gdk.BUTTON_SECONDARY) {
-                checkbox.clicked ();
+                list_box.select_row (list_box_row);
+                event_box.popup_menu ();
             }
             return false;
+        }
+
+
+        private bool on_ebr_popup_menu (Gtk.EventBox event_box) {
+            var uri = new Soup.URI.with_base (
+                current_uri_soup (),
+                event_box.get_data<string> ("name")
+            );
+            var menu = new Gtk.Menu ();
+            add_menu_item ("Delete", menu, u => @delete (u), uri);
+            //add_menu_item ("Rename", menu, u => rename (u), uri);
+            menu.attach_to_widget (event_box, null);
+            menu.popup (null, null, null, 0, Gtk.get_current_event_time ());
+            menu.deactivate.connect (() => list_box.select_row (null));
+            return true;
+        }
+
+        private void add_menu_item (
+            string label,
+            Gtk.Menu menu,
+            ActivateFunc activate_fn,
+            Soup.URI uri
+        ) {
+            var menu_item = new Gtk.MenuItem.with_label (label);
+            menu.append (menu_item);
+            menu_item.activate.connect (() => activate_fn (uri));
+            menu_item.show ();
+        }
+
+        private Soup.URI current_uri_soup () {
+            return new Soup.URI (current_uri + "/");
         }
 
         private Gtk.Image row_icon (FileInfo file_info) {
@@ -250,7 +288,6 @@ namespace Taxi {
         }
 
         public void start_spinner () {
-            //path_bar.hide ();
             scrolled_pane.hide ();
             if (spinner == null) {
                 spinner = new Gtk.Spinner ();
@@ -268,7 +305,6 @@ namespace Taxi {
                 inner_grid.remove (spinner);
                 spinner = null;
             }
-            //path_bar.show ();
             scrolled_pane.show ();
         }
 
