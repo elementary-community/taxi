@@ -286,8 +286,8 @@ namespace Taxi {
                 new Cancellable (),
                 (obj, res) => {
                     try {
+                        file_operation.copy_recursive.end (res);
                         update_pane (pane);
-                        debug ("Recursive file copy finished!");
                     } catch (Error e) {
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
@@ -302,9 +302,10 @@ namespace Taxi {
                 new Cancellable (),
                 (obj, res) => {
                     try {
-                        debug ("Delete file finished!");
+                        file_operation.delete_recursive.end (res);
                         update_pane (pane);
                     } catch (Error e) {
+                        debug (e.message);
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
                 }

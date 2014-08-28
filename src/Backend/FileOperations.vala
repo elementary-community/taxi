@@ -27,6 +27,7 @@ namespace Taxi {
             try {
                 return yield delete_recursive_helper (file, cancellable);
             } catch (Error e) {
+                debug ("test %s", e.message);
                 throw e;
             } finally {
                 operation_removed (operation);
