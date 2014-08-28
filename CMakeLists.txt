@@ -14,6 +14,10 @@ set (VERSION "0.1")
 set (VERSION_INFO "Initial release of Taxi.")
 set (APP_LAUNCHER "taxi.desktop")
 set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
+if (ADWAITA_FIXES)
+    set (VALAFLAGS ${VALAFLAGS} -D HAVE_ADWAITA_FIXES)
+endif ()
+
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
 
 find_package (PkgConfig)
@@ -26,11 +30,6 @@ pkg_check_modules (DEPS REQUIRED
 
 add_definitions (${DEPS_CFLAGS})
 add_definitions ("-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"")
-
-if (ADWAITA_FIXES)
-    message ("TEST ADWAITA")
-    set (VALAFLAGS ${VALAFLAGS} -D HAVE_ADWAITA_FIXES)
-endif ()
 
 link_libraries (${DEPS_LIBRARIES})
 link_directories (${DEPS_LIBRARY_DIRS})
