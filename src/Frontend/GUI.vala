@@ -169,8 +169,8 @@ namespace Taxi {
                         add_panes ();
                         window.show_all ();
                     }
-                    update_local_pane ();
-                    update_remote_pane ();
+                    update_pane (Location.LOCAL);
+                    update_pane (Location.REMOTE);
                     connect_box.show_favorite_icon (
                         conn_saver.is_bookmarked (remote_access.get_uri ())
                     );
@@ -230,8 +230,8 @@ namespace Taxi {
             local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
             local_pane.file_dragged.connect (this.on_local_file_dragged);
             local_pane.transfer.connect (this.on_remote_file_dragged);
-            local_pane.@delete.connect (this.on_file_delete);
-            local_access.directory_changed.connect (this.update_local_pane);
+            local_pane.@delete.connect (uri => on_file_delete (uri, Location.LOCAL));
+            local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
 
             remote_pane = new FilePane ();
             pane_inner.add (remote_pane);
@@ -239,41 +239,42 @@ namespace Taxi {
             remote_pane.pathbar_activated.connect (this.on_remote_pathbar_activated);
             remote_pane.file_dragged.connect (this.on_remote_file_dragged);
             remote_pane.transfer.connect (this.on_local_file_dragged);
+            remote_pane.@delete.connect (uri => on_file_delete (uri, Location.REMOTE));
 
             outer_box.add (pane_inner);
         }
 
         private void on_local_pathbar_activated (string path) {
             local_access.goto_path (path);
-            update_local_pane ();
+            update_pane (Location.LOCAL);
         }
 
         private void on_local_row_clicked (string name) {
             local_access.goto_child (name);
-            update_local_pane ();
+            update_pane (Location.LOCAL);
         }
 
         private void on_remote_pathbar_activated (string path) {
             remote_access.goto_path (path);
-            update_remote_pane ();
+            update_pane (Location.REMOTE);
         }
 
         private void on_remote_row_clicked (string name) {
             remote_access.goto_child (name);
-            update_remote_pane ();
+            update_pane (Location.REMOTE);
         }
 
         private void on_remote_file_dragged (string uri) {
-            on_file_dragged (uri, remote_pane, remote_access);
+            on_file_dragged (uri, Location.REMOTE, remote_access);
         }
 
         private void on_local_file_dragged (string uri) {
-            on_file_dragged (uri, local_pane, local_access);
+            on_file_dragged (uri, Location.LOCAL, local_access);
         }
 
         private void on_file_dragged (
             string uri,
-            FilePane file_pane,
+            Location pane,
             IFileAccess file_access
         ) {
             var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
@@ -285,7 +286,7 @@ namespace Taxi {
                 new Cancellable (),
                 (obj, res) => {
                     try {
-                        update_pane (file_access, file_pane);
+                        update_pane (pane);
                         debug ("Recursive file copy finished!");
                     } catch (Error e) {
                         new_infobar (e.message, Gtk.MessageType.ERROR);
@@ -294,7 +295,7 @@ namespace Taxi {
              );
         }
 
-        private void on_file_delete (Soup.URI uri) {
+        private void on_file_delete (Soup.URI uri, Location pane) {
             var file = File.new_for_uri (uri.to_string (false));
             file_operation.delete_recursive.begin (
                 file,
@@ -302,6 +303,7 @@ namespace Taxi {
                 (obj, res) => {
                     try {
                         debug ("Delete file finished!");
+                        update_pane (pane);
                     } catch (Error e) {
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
@@ -329,15 +331,20 @@ namespace Taxi {
             }
         }
 
-        private void update_local_pane () {
-            update_pane (local_access, local_pane);
-        }
-
-        private void update_remote_pane () {
-            update_pane (remote_access, remote_pane);
-        }
-
-        private void update_pane (IFileAccess file_access, FilePane file_pane) {
+        private void update_pane (Location pane) {
+            IFileAccess file_access;
+            FilePane file_pane;
+            switch (pane) {
+                case Location.REMOTE:
+                    file_access = remote_access;
+                    file_pane = remote_pane;
+                    break;
+                case Location.LOCAL:
+                default:
+                    file_access = local_access;
+                    file_pane = local_pane;
+                    break;
+            }
             file_pane.start_spinner ();
             var file_uri = file_access.get_uri ();
             file_access.get_file_list.begin ((obj, res) => {
