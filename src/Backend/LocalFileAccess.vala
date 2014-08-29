@@ -36,7 +36,6 @@ namespace Taxi {
                         null
                     );
                     file_monitor.changed.connect (() => {
-                        debug ("File directory changed!");
                         directory_changed ();
                     });
                 } catch (Error e) {

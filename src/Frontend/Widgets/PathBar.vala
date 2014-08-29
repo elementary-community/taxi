@@ -19,8 +19,9 @@ namespace Taxi {
     class PathBar : Gtk.Box {
 
         Location location = Location.LOCAL;
+        Soup.URI current_uri;
 
-        public signal void navigate (string path);
+        public signal void navigate (Soup.URI uri);
         public signal void transfer ();
 
         public PathBar () {
@@ -29,9 +30,9 @@ namespace Taxi {
             spacing = 0;
         }
 
-        public PathBar.from_uri (string uri) {
+        public PathBar.from_uri (Soup.URI uri) {
             this ();
-            set_path_helper (uri);
+            set_path (uri);
         }
 
         private string concat_until (string[] words, int n) {
@@ -57,19 +58,18 @@ namespace Taxi {
             }
             button.set_relief (Gtk.ReliefStyle.NONE);
             button.get_style_context ().add_class ("path-button");
-            button.set_data<string> ("path", path);
             button.clicked.connect (() => {
-                navigate (button.get_data<string> ("path"));
-                debug ("PROPERTY: " + button.get_data<string> ("path") + "\n");
+                current_uri.set_path (path);
+                navigate (current_uri);
             });
             add (button);
         }
 
-        public void set_path (string uri) {
+        public void set_path (Soup.URI uri) {
             clear_path ();
-            //margin = 6;
-            var uri_obj = new Soup.URI (uri);
-            switch (uri_obj.get_scheme ()) {
+            current_uri = uri;
+            var scheme = uri.get_scheme ();
+            switch (scheme) {
                 case "file":
                     add_path_frag ("drive-harddisk-symbolic", "/");
                     location = Location.LOCAL;
@@ -81,7 +81,7 @@ namespace Taxi {
                     location = Location.REMOTE;
                     break;
             }
-            set_path_helper (uri_obj.get_path ());
+            set_path_helper (uri.get_path ());
             pack_end (new_xfer_button ());
         }
 

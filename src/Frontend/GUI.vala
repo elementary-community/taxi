@@ -11,7 +11,7 @@
   PURPOSE. See the GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License along
-  with this program. If not, see <http://www.gnu.org/licenses>
+  with program. If not, see <http://www.gnu.org/licenses>
 ***/
 
 namespace Taxi {
@@ -119,9 +119,9 @@ namespace Taxi {
             header_bar.set_custom_title (new Gtk.Label (null));
             header_bar.pack_start (new_bookmark_list_button ());
             header_bar.pack_start (connect_box);
-            connect_box.connect_initiated.connect (this.on_connect_initiated);
-            connect_box.ask_hostname.connect (this.on_ask_hostname);
-            connect_box.bookmarked.connect (this.bookmark);
+            connect_box.connect_initiated.connect (on_connect_initiated);
+            connect_box.ask_hostname.connect (on_ask_hostname);
+            connect_box.bookmarked.connect (bookmark);
         }
 
         private Gtk.MenuButton new_bookmark_list_button () {
@@ -172,7 +172,7 @@ namespace Taxi {
                     update_pane (Location.LOCAL);
                     update_pane (Location.REMOTE);
                     connect_box.show_favorite_icon (
-                        conn_saver.is_bookmarked (remote_access.get_uri ())
+                        conn_saver.is_bookmarked (remote_access.get_uri ().to_string (false))
                     );
                     conn_uri = uri;
                 } else {
@@ -225,54 +225,62 @@ namespace Taxi {
 
             local_pane = new FilePane (true);
             pane_inner.add (local_pane);
-
-            local_pane.row_clicked.connect (this.on_local_row_clicked);
-            local_pane.pathbar_activated.connect (this.on_local_pathbar_activated);
-            local_pane.file_dragged.connect (this.on_local_file_dragged);
-            local_pane.transfer.connect (this.on_remote_file_dragged);
-            local_pane.@delete.connect (uri => on_file_delete (uri, Location.LOCAL));
+            local_pane.open.connect (on_local_open);
+            local_pane.navigate.connect (on_local_navigate);
+            local_pane.file_dragged.connect (on_local_file_dragged);
+            local_pane.transfer.connect (on_remote_file_dragged);
+            local_pane.@delete.connect (on_local_file_delete);
             local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
 
             remote_pane = new FilePane ();
             pane_inner.add (remote_pane);
-            remote_pane.row_clicked.connect (this.on_remote_row_clicked);
-            remote_pane.pathbar_activated.connect (this.on_remote_pathbar_activated);
-            remote_pane.file_dragged.connect (this.on_remote_file_dragged);
-            remote_pane.transfer.connect (this.on_local_file_dragged);
-            remote_pane.@delete.connect (uri => on_file_delete (uri, Location.REMOTE));
+            remote_pane.open.connect (on_remote_open);
+            remote_pane.navigate.connect (on_remote_navigate);
+            remote_pane.file_dragged.connect (on_remote_file_dragged);
+            remote_pane.transfer.connect (on_local_file_dragged);
+            remote_pane.@delete.connect (on_remote_file_delete);
 
             outer_box.add (pane_inner);
         }
 
-        private void on_local_pathbar_activated (string path) {
-            local_access.goto_path (path);
-            update_pane (Location.LOCAL);
+        private void on_local_navigate (Soup.URI uri) {
+            navigate (uri, local_access, Location.LOCAL);
         }
 
-        private void on_local_row_clicked (string name) {
-            local_access.goto_child (name);
-            update_pane (Location.LOCAL);
+        private void on_local_open (Soup.URI uri) {
+            local_access.open_file (uri);
         }
 
-        private void on_remote_pathbar_activated (string path) {
-            remote_access.goto_path (path);
-            update_pane (Location.REMOTE);
+        private void on_remote_navigate (Soup.URI uri) {
+            navigate (uri, remote_access, Location.REMOTE);
         }
 
-        private void on_remote_row_clicked (string name) {
-            remote_access.goto_child (name);
-            update_pane (Location.REMOTE);
+        private void on_remote_open (Soup.URI uri) {
+            remote_access.open_file (uri);
         }
 
         private void on_remote_file_dragged (string uri) {
-            on_file_dragged (uri, Location.REMOTE, remote_access);
+            file_dragged (uri, Location.REMOTE, remote_access);
         }
 
         private void on_local_file_dragged (string uri) {
-            on_file_dragged (uri, Location.LOCAL, local_access);
+            file_dragged (uri, Location.LOCAL, local_access);
         }
 
-        private void on_file_dragged (
+        private void on_local_file_delete (Soup.URI uri) {
+            file_delete (uri, Location.LOCAL);
+        }
+
+        private void on_remote_file_delete (Soup.URI uri) {
+            file_delete (uri, Location.REMOTE);
+        }
+
+        private void navigate (Soup.URI uri, IFileAccess file_access, Location pane) {
+            file_access.goto_dir (uri);
+            update_pane (pane);
+        }
+
+        private void file_dragged (
             string uri,
             Location pane,
             IFileAccess file_access
@@ -295,7 +303,7 @@ namespace Taxi {
              );
         }
 
-        private void on_file_delete (Soup.URI uri, Location pane) {
+        private void file_delete (Soup.URI uri, Location pane) {
             var file = File.new_for_uri (uri.to_string (false));
             file_operation.delete_recursive.begin (
                 file,
@@ -305,7 +313,6 @@ namespace Taxi {
                         file_operation.delete_recursive.end (res);
                         update_pane (pane);
                     } catch (Error e) {
-                        debug (e.message);
                         new_infobar (e.message, Gtk.MessageType.ERROR);
                     }
                 }
@@ -351,8 +358,8 @@ namespace Taxi {
             file_access.get_file_list.begin ((obj, res) => {
             var file_files = file_access.get_file_list.end (res);
                 file_pane.stop_spinner ();
-                file_pane.update_list (file_files);
                 file_pane.update_pathbar (file_uri);
+                file_pane.update_list (file_files);
             });
         }
 
@@ -362,8 +369,8 @@ namespace Taxi {
 
         private void add_popover () {
             popover = new OperationsPopover (spinner);
-            popover.operations_pending.connect (this.show_spinner);
-            popover.operations_finished.connect (this.hide_spinner);
+            popover.operations_pending.connect (show_spinner);
+            popover.operations_finished.connect (hide_spinner);
             file_operation.operation_added.connect (popover.add_operation);
             file_operation.operation_removed.connect (popover.remove_operation);
             spinner_parent.button_press_event.connect (() => {
@@ -429,7 +436,7 @@ namespace Taxi {
             window.set_titlebar (header_bar);
             window.show_all ();
 
-            window.delete_event.connect (this.on_delete_window);
+            window.delete_event.connect (on_delete_window);
             window.destroy.connect (Gtk.main_quit);
         }
 

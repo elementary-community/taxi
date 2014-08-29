@@ -35,30 +35,29 @@ namespace Taxi {
             }
         }
 
-        public virtual string get_uri () {
-            return file_handle.get_uri ();
+        public virtual Soup.URI get_uri () {
+            var uri = file_handle.get_uri ();
+            if (!uri.has_suffix ("/")) {
+                uri += "/";
+            }
+            return new Soup.URI (uri);
         }
 
-        public virtual string get_path () {
-            return file_handle.get_path ();
+        public virtual void goto_dir (Soup.URI uri) {
+            var uri_string = uri.to_string (false);
+            file_handle = File.new_for_uri (uri_string);
         }
 
-        public virtual void goto_child (string name) {
-            var child_file = file_handle.get_child (name);
-            var child_file_type = child_file.query_file_type (FileQueryInfoFlags.NONE);
-            if (child_file_type == FileType.DIRECTORY) {
-                file_handle = child_file;
-            } else if (child_file_type == FileType.REGULAR) {
-                try {
-                    AppInfo.launch_default_for_uri (child_file.get_uri (), null);
-                } catch (Error e) {
-                    message (e.message);
-                }
+        public virtual void open_file (Soup.URI uri) {
+            var uri_string = uri.to_string (false);
+            try {
+                AppInfo.launch_default_for_uri (uri_string, null);
+            } catch (Error e) {
+                message (e.message);
             }
         }
 
-        public virtual void goto_path (string path) {
-            file_handle = File.new_for_path (path);
+        public virtual void edit_file (Soup.URI uri) {
         }
 
         public virtual File get_current_file () {

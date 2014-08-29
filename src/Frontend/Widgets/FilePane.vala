@@ -28,7 +28,7 @@ namespace Taxi {
 
     class FilePane : Gtk.Grid {
 
-        string current_uri;
+        Soup.URI current_uri;
         PathBar path_bar;
         Gtk.Label placeholder_label;
         Gtk.ListBox list_box;
@@ -36,12 +36,13 @@ namespace Taxi {
         Gtk.ScrolledWindow scrolled_pane;
         Gtk.Grid inner_grid;
 
-        public signal void row_clicked (string name);
-        public signal void pathbar_activated (string path);
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
+        public signal void navigate (Soup.URI uri);
         public signal void @delete (Soup.URI uri);
         public signal void rename (Soup.URI uri);
+        public signal void open (Soup.URI uri);
+        public signal void edit (Soup.URI uri);
 
         delegate void ActivateFunc (Soup.URI uri);
 
@@ -70,13 +71,8 @@ namespace Taxi {
             path_bar.hexpand = true;
             path_bar.set_halign (Gtk.Align.FILL);
             path_bar.get_style_context ().add_class ("button");
-
-            path_bar.navigate.connect ((path) => {
-                pathbar_activated (path);
-            });
-
+            path_bar.navigate.connect (uri => navigate (uri));
             path_bar.transfer.connect (on_pathbar_transfer);
-
             return path_bar;
         }
 
@@ -90,7 +86,7 @@ namespace Taxi {
             var uri_list = new Gee.ArrayList<string> ();
             foreach (Gtk.Widget row in list_box.get_children ()) {
                 if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
-                    uri_list.add (current_uri + "/" + row.get_data<string> ("name"));
+                    uri_list.add (current_uri.to_string (false) + "/" + row.get_data<string> ("name"));
                 }
             }
             return uri_list;
@@ -103,7 +99,13 @@ namespace Taxi {
             list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
 
             list_box.row_activated.connect ((row) => {
-                row_clicked (row.get_data ("name"));
+                var uri = row.get_data<Soup.URI> ("uri");
+                var type = row.get_data<FileType> ("type");
+                if (type == FileType.DIRECTORY) {
+                    navigate (uri);
+                } else {
+                    open (uri);
+                }
             });
 
             placeholder_label = new Gtk.Label (_("This folder is empty."));
@@ -182,31 +184,35 @@ namespace Taxi {
                 row.pack_end (row_size (file_info));
             }
 
-            var eventboxrow = new Gtk.EventBox ();
-            eventboxrow.add (row);
+            var uri = new Soup.URI.with_base (current_uri, file_info.get_name ());
 
-            var listboxrow = new Gtk.ListBoxRow ();
-            listboxrow.hexpand = true;
-            listboxrow.add (eventboxrow);
-            listboxrow.set_data ("name", file_info.get_name ());
-            listboxrow.set_data ("checkbutton", checkbox);
+            var ebrow = new Gtk.EventBox ();
+            ebrow.add (row);
+
+            var lbrow = new Gtk.ListBoxRow ();
+            lbrow.hexpand = true;
+            lbrow.add (ebrow);
+            lbrow.set_data ("uri", uri);
+            lbrow.set_data ("type", file_info.get_file_type ());
+            lbrow.set_data ("checkbutton", checkbox);
 
             Gtk.drag_source_set (
-                eventboxrow,
+                ebrow,
                 Gdk.ModifierType.BUTTON1_MASK,
                 target_list,
                 Gdk.DragAction.COPY
             );
 
-            eventboxrow.set_data ("name", file_info.get_name ());
-            eventboxrow.drag_begin.connect (on_drag_begin);
-            eventboxrow.drag_data_get.connect (on_drag_data_get);
-            eventboxrow.button_press_event.connect ((event) =>
-                on_ebr_button_press (event, eventboxrow, listboxrow)
+            ebrow.set_data ("name", file_info.get_name ());
+            ebrow.set_data ("type", file_info.get_file_type ());
+            ebrow.drag_begin.connect (on_drag_begin);
+            ebrow.drag_data_get.connect (on_drag_data_get);
+            ebrow.button_press_event.connect ((event) =>
+                on_ebr_button_press (event, ebrow, lbrow)
             );
-            eventboxrow.popup_menu.connect (() => on_ebr_popup_menu (eventboxrow));
+            ebrow.popup_menu.connect (() => on_ebr_popup_menu (ebrow));
 
-            return listboxrow;
+            return lbrow;
         }
 
         private bool on_ebr_button_press (
@@ -224,32 +230,35 @@ namespace Taxi {
 
         private bool on_ebr_popup_menu (Gtk.EventBox event_box) {
             var uri = new Soup.URI.with_base (
-                current_uri_soup (),
+                current_uri,
                 event_box.get_data<string> ("name")
             );
+            var type = event_box.get_data<FileType> ("type");
             var menu = new Gtk.Menu ();
-            add_menu_item ("Delete", menu, u => @delete (u), uri);
+            if (type == FileType.DIRECTORY) {
+                menu.add (new_menu_item (_("Open"), u => navigate (u), uri));
+            } else {
+                menu.add (new_menu_item (_("Open"), u => open (u), uri));
+                //menu.add (new_menu_item ("Edit", u => edit (u), uri));
+            }
+            menu.add (new Gtk.SeparatorMenuItem ());
+            menu.add (new_menu_item (_("Delete"), u => @delete (u), uri));
             //add_menu_item ("Rename", menu, u => rename (u), uri);
+            menu.show_all ();
             menu.attach_to_widget (event_box, null);
             menu.popup (null, null, null, 0, Gtk.get_current_event_time ());
             menu.deactivate.connect (() => list_box.select_row (null));
             return true;
         }
 
-        private void add_menu_item (
+        private Gtk.MenuItem new_menu_item (
             string label,
-            Gtk.Menu menu,
             ActivateFunc activate_fn,
             Soup.URI uri
         ) {
             var menu_item = new Gtk.MenuItem.with_label (label);
-            menu.append (menu_item);
             menu_item.activate.connect (() => activate_fn (uri));
-            menu_item.show ();
-        }
-
-        private Soup.URI current_uri_soup () {
-            return new Soup.URI (current_uri + "/");
+            return menu_item;
         }
 
         private Gtk.Image row_icon (FileInfo file_info) {
@@ -275,7 +284,7 @@ namespace Taxi {
             return size;
         }
 
-        public void update_pathbar (string uri) {
+        public void update_pathbar (Soup.URI uri) {
             current_uri = uri;
             path_bar.set_path (uri);
             path_bar.show_all ();
@@ -337,7 +346,6 @@ namespace Taxi {
             int y,
             uint time
         ) {
-            debug ("RECEIVED WIDGET %s\n", widget.name);
             var target_type = (Gdk.Atom) context.list_targets ().nth_data (Target.URI_LIST);
             Gtk.drag_get_data (widget, context, target_type, time);
             return true;
@@ -351,15 +359,13 @@ namespace Taxi {
             uint time
         ) {
             string file_name = widget.get_data ("name");
-            string file_uri = current_uri + "/" + file_name;
+            string file_uri = current_uri.to_string (false) + "/" + file_name;
             switch (target_type) {
                 case Target.URI_LIST:
                     selection_data.set_uris ({ file_uri });
-                    debug ("URI TX" + file_uri);
                     break;
                 case Target.STRING:
                     selection_data.set_uris ({ file_uri });
-                    debug ("STR TX" + file_uri);
                     break;
                 default:
                     assert_not_reached ();
@@ -377,11 +383,9 @@ namespace Taxi {
         ) {
             switch (target_type) {
                 case Target.URI_LIST:
-                    debug ("URI RX " + (string) selection_data.get_data ());
                     file_dragged ((string) selection_data.get_data ());
                     break;
                 case Target.STRING:
-                    debug ("STR RX" + (string) selection_data.get_data ());
                     break;
                 default:
                     message ("Data received not accepted");

@@ -82,9 +82,9 @@ namespace Taxi {
             }
         }
 
-        public override void goto_path (string path) {
+        /*public override void goto_path (string path) {
             file_handle = file_handle.resolve_relative_path ("/" + path);
-        }
+        }*/
 
         private Gtk.MountOperation mount_operation_from_uri (Soup.URI uri) {
             var mount = new Gtk.MountOperation (window);

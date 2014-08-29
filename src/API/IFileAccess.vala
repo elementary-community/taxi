@@ -38,13 +38,13 @@ namespace Taxi {
          */
         public async abstract List<FileInfo> get_file_list ();
 
-        public abstract string get_uri ();
+        public abstract Soup.URI get_uri ();
 
-        public abstract string get_path ();
+        public abstract void goto_dir (Soup.URI uri);
 
-        public abstract void goto_child (string name);
+        public abstract void open_file (Soup.URI uri);
 
-        public abstract void goto_path (string path);
+        public abstract void edit_file (Soup.URI uri);
 
         public abstract File get_current_file ();
     }
