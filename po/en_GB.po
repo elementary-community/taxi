@@ -7,34 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Taxi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 14:56+0100\n"
+"POT-Creation-Date: 2014-08-29 16:36+0100\n"
 "PO-Revision-Date: 2014-08-24 19:18+0000\n"
 "Last-Translator: RM <l4rt1st-1nc0nnu@laposte.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-25 10:02+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-30 08:35+0000\n"
+"X-Generator: Launchpad (build 17176)\n"
 "Language: en_gb\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
 msgstr "hostname:port/folder"
 
-#: ../src/Frontend/Widgets/FilePane.vala:82
+#: ../src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
 msgstr "This folder is empty."
+
+#: ../src/Frontend/Widgets/FilePane.vala:239
+#: ../src/Frontend/Widgets/FilePane.vala:241
+msgid "Open"
+msgstr ""
+
+#: ../src/Frontend/Widgets/FilePane.vala:245
+msgid "Delete"
+msgstr ""
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
 msgstr "No file operations are in progress"
 
-#: ../src/Frontend/GUI.vala:136
+#: ../src/Frontend/GUI.vala:150
 msgid "Connect"
 msgstr "Connect"
 
-#: ../src/Frontend/GUI.vala:137
+#: ../src/Frontend/GUI.vala:151
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
@@ -42,15 +51,15 @@ msgstr ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 
-#: ../src/Frontend/GUI.vala:165
+#: ../src/Frontend/GUI.vala:179
 msgid "Could not connect to '%s'"
 msgstr "Could not connect to '%s'"
 
-#: ../src/Frontend/GUI.vala:361
+#: ../src/Frontend/GUI.vala:413
 msgid "Replace existing file?"
 msgstr "Replace existing file?"
 
-#: ../src/Frontend/GUI.vala:364
+#: ../src/Frontend/GUI.vala:416
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
@@ -58,14 +67,14 @@ msgstr ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 
-#: ../src/Frontend/GUI.vala:366
+#: ../src/Frontend/GUI.vala:418
 msgid "Replace All Conflicts"
 msgstr "Replace all conflicts"
 
-#: ../src/Frontend/GUI.vala:367
+#: ../src/Frontend/GUI.vala:419
 msgid "Skip"
 msgstr "Skip"
 
-#: ../src/Frontend/GUI.vala:368
+#: ../src/Frontend/GUI.vala:420
 msgid "Replace"
 msgstr "Replace"

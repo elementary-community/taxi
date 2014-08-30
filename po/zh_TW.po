@@ -2,60 +2,69 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 14:56+0100\n"
+"POT-Creation-Date: 2014-08-29 16:36+0100\n"
 "PO-Revision-Date: 2014-08-20 14:57+0000\n"
 "Last-Translator: Yu-Hung Ou <xanatosou@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-21 06:51+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-30 08:35+0000\n"
+"X-Generator: Launchpad (build 17176)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
 msgstr "主機名稱:連接埠/資料夾"
 
-#: ../src/Frontend/Widgets/FilePane.vala:82
+#: ../src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
 msgstr "這個資料夾是空的。"
+
+#: ../src/Frontend/Widgets/FilePane.vala:239
+#: ../src/Frontend/Widgets/FilePane.vala:241
+msgid "Open"
+msgstr ""
+
+#: ../src/Frontend/Widgets/FilePane.vala:245
+msgid "Delete"
+msgstr ""
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
 msgstr "沒有進行中的檔案操作"
 
-#: ../src/Frontend/GUI.vala:136
+#: ../src/Frontend/GUI.vala:150
 msgid "Connect"
 msgstr "連接"
 
-#: ../src/Frontend/GUI.vala:137
+#: ../src/Frontend/GUI.vala:151
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr "輸入URL並按下\"Enter\"以連接至伺服器。"
 
-#: ../src/Frontend/GUI.vala:165
+#: ../src/Frontend/GUI.vala:179
 msgid "Could not connect to '%s'"
 msgstr "無法連接至'%s'"
 
-#: ../src/Frontend/GUI.vala:361
+#: ../src/Frontend/GUI.vala:413
 msgid "Replace existing file?"
 msgstr "要覆蓋已存在的檔案嗎?"
 
-#: ../src/Frontend/GUI.vala:364
+#: ../src/Frontend/GUI.vala:416
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr "<i>\"%s\"</i> 已經存在。你可以取代檔案、取代所有衝突檔案或者略過此步驟。"
 
-#: ../src/Frontend/GUI.vala:366
+#: ../src/Frontend/GUI.vala:418
 msgid "Replace All Conflicts"
 msgstr "取代所有衝突"
 
-#: ../src/Frontend/GUI.vala:367
+#: ../src/Frontend/GUI.vala:419
 msgid "Skip"
 msgstr "略過"
 
-#: ../src/Frontend/GUI.vala:368
+#: ../src/Frontend/GUI.vala:420
 msgid "Replace"
 msgstr "取代"
