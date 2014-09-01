@@ -70,6 +70,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
         libsoup-2.4
     OPTIONS
         ${VALAFLAGS}
+        --thread
+        --enable-experimental
 )
 
 add_subdirectory (po)
