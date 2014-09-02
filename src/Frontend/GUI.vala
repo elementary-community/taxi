@@ -134,6 +134,7 @@ namespace Taxi {
             bookmark_menu = new Menu ();
             bookmark_menu_button.set_menu_model (bookmark_menu);
             bookmark_menu_button.set_use_popover (true);
+            bookmark_menu_button.set_tooltip_text (_("Access Bookmarks"));
             update_bookmark_menu ();
             return bookmark_menu_button;
         }

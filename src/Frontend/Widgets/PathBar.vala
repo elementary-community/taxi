@@ -111,6 +111,7 @@ namespace Taxi {
                 Gtk.IconSize.MENU
             );
             xfer_button.set_sensitive (false);
+            xfer_button.set_tooltip_text (_("Transfer"));
             xfer_button.set_halign (Gtk.Align.END);
             xfer_button.set_relief (Gtk.ReliefStyle.NONE);
             xfer_button.clicked.connect (() => transfer ());

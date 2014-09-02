@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-29 16:36+0100\n"
+"POT-Creation-Date: 2014-09-02 19:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,12 +25,12 @@ msgstr ""
 msgid "This folder is empty."
 msgstr ""
 
-#: ../src/Frontend/Widgets/FilePane.vala:239
-#: ../src/Frontend/Widgets/FilePane.vala:241
+#: ../src/Frontend/Widgets/FilePane.vala:249
+#: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
 msgstr ""
 
-#: ../src/Frontend/Widgets/FilePane.vala:245
+#: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
 msgstr ""
 
@@ -38,38 +38,46 @@ msgstr ""
 msgid "No file operations are in progress"
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:150
-msgid "Connect"
+#: ../src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:137
+msgid "Access Bookmarks"
 msgstr ""
 
 #: ../src/Frontend/GUI.vala:151
+msgid "Connect"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:179
+#: ../src/Frontend/GUI.vala:180
 msgid "Could not connect to '%s'"
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:413
+#: ../src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:416
+#: ../src/Frontend/GUI.vala:417
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:418
+#: ../src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:419
+#: ../src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr ""
 
-#: ../src/Frontend/GUI.vala:420
+#: ../src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr ""
