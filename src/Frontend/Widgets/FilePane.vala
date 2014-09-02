@@ -175,6 +175,7 @@ namespace Taxi {
 
             var checkbox = new Gtk.CheckButton ();
             checkbox.margin_end = 6;
+            checkbox.toggled.connect (on_checkbutton_toggle);
             row.add (checkbox);
 
             row.add (row_icon (file_info));
@@ -214,6 +215,14 @@ namespace Taxi {
             ebrow.popup_menu.connect (() => on_ebr_popup_menu (ebrow));
 
             return lbrow;
+        }
+
+        private void on_checkbutton_toggle () {
+            if (get_marked_row_uris ().size > 0) {
+                path_bar.set_transfer_button_sensitive (true);
+            } else {
+                path_bar.set_transfer_button_sensitive (false);
+            }
         }
 
         private bool on_ebr_button_press (

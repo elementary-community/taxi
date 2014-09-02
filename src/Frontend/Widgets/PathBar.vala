@@ -20,6 +20,7 @@ namespace Taxi {
 
         Location location = Location.LOCAL;
         Soup.URI current_uri;
+        Gtk.Button xfer_button;
 
         public signal void navigate (Soup.URI uri);
         public signal void transfer ();
@@ -105,14 +106,23 @@ namespace Taxi {
             var xfer_icon_name = (location == Location.LOCAL)  ?
                                     "document-export-symbolic" :
                                     "document-import-symbolic" ;
-            var xfer_button = new Gtk.Button.from_icon_name (
+            xfer_button = new Gtk.Button.from_icon_name (
                 xfer_icon_name,
                 Gtk.IconSize.MENU
             );
+            xfer_button.set_sensitive (false);
             xfer_button.set_halign (Gtk.Align.END);
             xfer_button.set_relief (Gtk.ReliefStyle.NONE);
             xfer_button.clicked.connect (() => transfer ());
             return xfer_button;
+        }
+
+        public void set_transfer_button_sensitive (bool sensitive) {
+            xfer_button.set_sensitive (sensitive);
+        }
+
+        public bool get_transfer_button_sensitive () {
+            return xfer_button.get_sensitive ();
         }
     }
 }
