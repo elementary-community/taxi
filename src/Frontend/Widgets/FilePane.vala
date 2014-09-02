@@ -193,6 +193,7 @@ namespace Taxi {
             lbrow.hexpand = true;
             lbrow.add (ebrow);
             lbrow.set_data ("uri", uri);
+            lbrow.set_data ("name", file_info.get_name ());
             lbrow.set_data ("type", file_info.get_file_type ());
             lbrow.set_data ("checkbutton", checkbox);
 
