@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-29 16:36+0100\n"
+"POT-Creation-Date: 2014-09-02 19:16+0100\n"
 "PO-Revision-Date: 2014-08-20 14:57+0000\n"
 "Last-Translator: Yu-Hung Ou <xanatosou@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-30 08:35+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-09-03 07:28+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
@@ -20,12 +20,12 @@ msgstr "主機名稱:連接埠/資料夾"
 msgid "This folder is empty."
 msgstr "這個資料夾是空的。"
 
-#: ../src/Frontend/Widgets/FilePane.vala:239
-#: ../src/Frontend/Widgets/FilePane.vala:241
+#: ../src/Frontend/Widgets/FilePane.vala:249
+#: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
 msgstr ""
 
-#: ../src/Frontend/Widgets/FilePane.vala:245
+#: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
 msgstr ""
 
@@ -33,38 +33,46 @@ msgstr ""
 msgid "No file operations are in progress"
 msgstr "沒有進行中的檔案操作"
 
-#: ../src/Frontend/GUI.vala:150
+#: ../src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:137
+msgid "Access Bookmarks"
+msgstr ""
+
+#: ../src/Frontend/GUI.vala:151
 msgid "Connect"
 msgstr "連接"
 
-#: ../src/Frontend/GUI.vala:151
+#: ../src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr "輸入URL並按下\"Enter\"以連接至伺服器。"
 
-#: ../src/Frontend/GUI.vala:179
+#: ../src/Frontend/GUI.vala:180
 msgid "Could not connect to '%s'"
 msgstr "無法連接至'%s'"
 
-#: ../src/Frontend/GUI.vala:413
+#: ../src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr "要覆蓋已存在的檔案嗎?"
 
-#: ../src/Frontend/GUI.vala:416
+#: ../src/Frontend/GUI.vala:417
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr "<i>\"%s\"</i> 已經存在。你可以取代檔案、取代所有衝突檔案或者略過此步驟。"
 
-#: ../src/Frontend/GUI.vala:418
+#: ../src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr "取代所有衝突"
 
-#: ../src/Frontend/GUI.vala:419
+#: ../src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr "略過"
 
-#: ../src/Frontend/GUI.vala:420
+#: ../src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr "取代"
