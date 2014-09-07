@@ -59,7 +59,7 @@ namespace Taxi {
 
         public async List<FileInfo> get_file_list (File file) throws Error {
             var file_enum = yield file.enumerate_children_async (
-                "*",
+                "standard::*",
                 FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
                 Priority.DEFAULT,
                 null

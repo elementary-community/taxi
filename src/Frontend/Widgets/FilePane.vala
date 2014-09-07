@@ -272,14 +272,7 @@ namespace Taxi {
         }
 
         private Gtk.Image row_icon (FileInfo file_info) {
-            var thumbnail = file_info.get_attribute_byte_string (FileAttribute.THUMBNAIL_PATH);
-            Gtk.Image icon;
-            if (thumbnail != null && thumbnail != "") {
-                var pixbuf = new Gdk.Pixbuf.from_file_at_scale (thumbnail, 32, 32, true);
-                icon = new Gtk.Image.from_pixbuf (pixbuf);
-            } else {
-                icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
-            }
+            var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
             icon.set_halign (Gtk.Align.START);
             icon.set_alignment (0f, 0.5f);
             icon.margin_end = 6;
