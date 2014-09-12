@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-02 19:16+0100\n"
-"PO-Revision-Date: 2014-08-28 14:48+0000\n"
-"Last-Translator: Phillip Sz <Unknown>\n"
+"PO-Revision-Date: 2014-09-11 18:45+0000\n"
+"Last-Translator: Flix <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-03 07:28+0000\n"
+"X-Launchpad-Export-Date: 2014-09-12 07:42+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
@@ -23,11 +23,11 @@ msgstr "Dieser Ordner ist leer."
 #: ../src/Frontend/Widgets/FilePane.vala:249
 #: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
-msgstr ""
+msgstr "Öffnen"
 
 #: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
@@ -35,11 +35,11 @@ msgstr "Keine Dateioperationen sind in Arbeit"
 
 #: ../src/Frontend/Widgets/PathBar.vala:114
 msgid "Transfer"
-msgstr ""
+msgstr "Transferiere"
 
 #: ../src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
-msgstr ""
+msgstr "Lesezeichen öffnen"
 
 #: ../src/Frontend/GUI.vala:151
 msgid "Connect"
