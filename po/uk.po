@@ -3,76 +3,79 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-02 19:16+0100\n"
-"PO-Revision-Date: 2014-08-03 22:38+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-23 11:27+0000\n"
+"Last-Translator: Vladislav <dyde.core@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-03 07:28+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-24 07:01+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
-msgstr ""
+msgstr "сервер:порт/тека"
 
 #: ../src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
-msgstr ""
+msgstr "Ця тека є порожньою."
 
 #: ../src/Frontend/Widgets/FilePane.vala:249
 #: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
-msgstr ""
+msgstr "Відкрити"
 
 #: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
-msgstr ""
+msgstr "Видалити"
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
-msgstr ""
+msgstr "Файлові операції не виконуються"
 
 #: ../src/Frontend/Widgets/PathBar.vala:114
 msgid "Transfer"
-msgstr ""
+msgstr "Переміщення"
 
 #: ../src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
-msgstr ""
+msgstr "Закладки доступу"
 
 #: ../src/Frontend/GUI.vala:151
 msgid "Connect"
-msgstr ""
+msgstr "З’єднатись"
 
 #: ../src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr ""
+"Введіть адресу сервера та натисніть 'Enter', щоб підключитись до нього."
 
 #: ../src/Frontend/GUI.vala:180
 msgid "Could not connect to '%s'"
-msgstr ""
+msgstr "Немає з’єднання з '%s'"
 
 #: ../src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
-msgstr ""
+msgstr "Замінити наявні файли?"
 
 #: ../src/Frontend/GUI.vala:417
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
+"<i>\"%s\"</i> уже існує. Ви можете замінити цей файл, замінити всі "
+"конфліктні файли або пропустити файл, не замінюючи його."
 
 #: ../src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
-msgstr ""
+msgstr "Замінити всі проблемні файли"
 
 #: ../src/Frontend/GUI.vala:420
 msgid "Skip"
-msgstr ""
+msgstr "Пропустити"
 
 #: ../src/Frontend/GUI.vala:421
 msgid "Replace"
-msgstr ""
+msgstr "Замінити"
