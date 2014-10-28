@@ -8,7 +8,7 @@ while [ $# != 0 ]; do
         --adwaita)
             ARGS="-DADWAITA_FIXES=1"
             ;;
-        --run-taxi)
+        --run)
             RUN_TAXI=true
             ;;
         *)
