@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-02 19:16+0100\n"
-"PO-Revision-Date: 2014-08-03 22:38+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-02-17 07:53+0000\n"
+"Last-Translator: Adolfo Jayme <fitoschido@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-05 07:37+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
+"X-Launchpad-Export-Date: 2015-02-19 05:41+0000\n"
+"X-Generator: Launchpad (build 17341)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
@@ -18,16 +18,16 @@ msgstr ""
 
 #: ../src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
-msgstr ""
+msgstr "Karpeta hau hutsik dago."
 
 #: ../src/Frontend/Widgets/FilePane.vala:249
 #: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
-msgstr ""
+msgstr "Ireki"
 
 #: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
-msgstr ""
+msgstr "Ezabatu"
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: ../src/Frontend/GUI.vala:151
 msgid "Connect"
-msgstr ""
+msgstr "Konektatu"
 
 #: ../src/Frontend/GUI.vala:152
 msgid ""
