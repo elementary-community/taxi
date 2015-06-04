@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-02 19:16+0100\n"
-"PO-Revision-Date: 2015-01-14 20:23+0000\n"
-"Last-Translator: Nikos <Unknown>\n"
+"PO-Revision-Date: 2015-06-03 14:24+0000\n"
+"Last-Translator: nado <nado@troglodyte.be>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-15 06:09+0000\n"
-"X-Generator: Launchpad (build 17303)\n"
+"X-Launchpad-Export-Date: 2015-06-04 05:35+0000\n"
+"X-Generator: Launchpad (build 17540)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
@@ -43,7 +43,7 @@ msgstr "Accéder à vos marques-pages"
 
 #: ../src/Frontend/GUI.vala:151
 msgid "Connect"
-msgstr "Connection"
+msgstr "Se connecter"
 
 #: ../src/Frontend/GUI.vala:152
 msgid ""
