@@ -3,76 +3,80 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-02 19:16+0100\n"
-"PO-Revision-Date: 2014-08-03 22:38+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2017-07-30 19:18+0000\n"
+"Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-05 07:38+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
+"X-Launchpad-Export-Date: 2017-07-31 06:08+0000\n"
+"X-Generator: Launchpad (build 18441)\n"
 
 #: ../src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
-msgstr ""
+msgstr "kompiuterio_vardas:prievadas/aplankas"
 
 #: ../src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
-msgstr ""
+msgstr "Šis aplankas yra tuščias."
 
 #: ../src/Frontend/Widgets/FilePane.vala:249
 #: ../src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
-msgstr ""
+msgstr "Atverti"
 
 #: ../src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
-msgstr ""
+msgstr "Ištrinti"
 
 #: ../src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
-msgstr ""
+msgstr "Eigoje nėra jokių failų operacijų"
 
 #: ../src/Frontend/Widgets/PathBar.vala:114
 msgid "Transfer"
-msgstr ""
+msgstr "Persiųsti"
 
 #: ../src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
-msgstr ""
+msgstr "Gauti prieigą prie adresyno įrašų"
 
 #: ../src/Frontend/GUI.vala:151
 msgid "Connect"
-msgstr ""
+msgstr "Prisijungti"
 
 #: ../src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr ""
+"Norėdami prisijungti prie serverio,\n"
+"įrašykite URL ir paspauskite \"Enter\"."
 
 #: ../src/Frontend/GUI.vala:180
 msgid "Could not connect to '%s'"
-msgstr ""
+msgstr "Nepavyko prisijungti prie \"%s\""
 
 #: ../src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
-msgstr ""
+msgstr "Pakeisti esamą failą?"
 
 #: ../src/Frontend/GUI.vala:417
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
+"<i>\"%s\"</i> jau yra. Jūs galite pakeisti šį failą, pakeisti visus "
+"konfliktuojančius failus arba pasirinkti nekeisti failų, juos praleidžiant."
 
 #: ../src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
-msgstr ""
+msgstr "Pakeisti visus konfliktuojančius"
 
 #: ../src/Frontend/GUI.vala:420
 msgid "Skip"
-msgstr ""
+msgstr "Praleisti"
 
 #: ../src/Frontend/GUI.vala:421
 msgid "Replace"
-msgstr ""
+msgstr "Pakeisti"
