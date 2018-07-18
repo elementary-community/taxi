@@ -3,14 +3,13 @@ Type=Application
 Name=Taxi
 Comment=Transfer local and remotes files
 GenericName=FTP Client
-Exec=taxi
-Icon=taxi
+Exec=com.github.Alecaddd.taxi
+Icon=com.github.Alecaddd.taxi
 Keywords=ftp;sftp;dav;afp;transfer;
 Terminal=false
 Categories=Network;
 Actions=AboutDialog;
-X-GNOME-Gettext-Domain=taxi
 
 [Desktop Action AboutDialog]
 Name=About Taxi
-Exec=taxi --about
+Exec=com.github.Alecaddd.taxi --about
