@@ -39,54 +39,6 @@ namespace Taxi {
         Menu bookmark_menu;
         SavedState saved_state;
 
-        private const string FALLBACK_STYLE = """
-            .h1 { font: open sans 24; }
-            .h2 { font: open sans light 18; }
-            .h3 { font: open sans 12; }
-            GraniteWidgetsWelcome {
-                background-color: #FFF;
-            }
-            GraniteWidgetsWelcome GtkLabel {
-                color: shade(#333, 2.5);
-                font: open sans 11;
-                text-shadow: none;
-            }
-
-            GraniteWidgetsWelcome .h1,
-            GraniteWidgetsWelcome .h3 {
-                color: alpha(#333, 0.9);
-            }
-        """;
-
-        private const string APPLICATION_STYLE = """
-            TaxiPathBar GtkButton.path-button {
-                background: none;
-                border-radius: 0;
-                border-width: 0;
-                border-image: none;
-            }
-            TaxiPathBar.button {
-                border-width: 0px;
-                border-bottom-width: 1px;
-                border-image: none;
-                border-radius: 0;
-            }
-        """
-
-#if HAVE_ADWAITA_FIXES
-        + """
-            .linked .button:insensitive:first-child,
-            .linked > GtkComboBox:first-child > .button {
-                border-right-width: 0;
-                border-left-width: 1px;
-                border-image-width: 3px 0 4px 3px;
-                border-bottom-right-radius: 0;
-                border-top-right-radius: 0;
-            }
-        """
-#endif
-        ;
-
         public GUI (
             IFileAccess local_access,
             IFileAccess remote_access,
@@ -389,16 +341,9 @@ namespace Taxi {
         }
 
         private void setup_styles () {
-            Granite.Widgets.Utils.set_theming_for_screen (
-                Gdk.Screen.get_default (),
-                FALLBACK_STYLE,
-                Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK
-            );
-            Granite.Widgets.Utils.set_theming_for_screen (
-                Gdk.Screen.get_default (),
-                APPLICATION_STYLE,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-            );
+            var provider = new Gtk.CssProvider ();
+            provider.load_from_resource ("com/github/Alecaddd/taxi/Application.css");
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
 
         private void setup_other_connects () {
