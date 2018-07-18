@@ -1,42 +1,44 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.Alecaddd.taxi package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: com.github.Alecaddd.taxi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-18 16:32-0700\n"
-"PO-Revision-Date: 2014-10-06 06:32+0000\n"
-"Last-Translator: Jiri Grönroos <Unknown>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-05 07:37+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
 
 #: src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
-msgstr "Kirjanmerkit"
+msgstr ""
 
 #: src/Frontend/GUI.vala:151
 msgid "Connect"
-msgstr "Yhdistä"
+msgstr ""
 
 #: src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr ""
-"Kirjoita osoite ja paina Enter\n"
-"yhdistääksesi palvelimeen."
 
 #: src/Frontend/GUI.vala:180
 #, c-format
 msgid "Could not connect to '%s'"
-msgstr "Yhteys kohteeseen '%s' epäonnistui"
+msgstr ""
 
 #: src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
-msgstr "Korvataanko olemassa oleva tiedosto?"
+msgstr ""
 
 #: src/Frontend/GUI.vala:417
 #, c-format
@@ -44,42 +46,40 @@ msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
-"<i>\"%s\"</i> on jo olemassa. Voit korvata tiedoston, korvata kaikki "
-"ristiriitoja aiheuttavat tiedostot tai ohittaa tiedoston korvaamisen."
 
 #: src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
-msgstr "Korvaa kaikki ristiriidat"
+msgstr ""
 
 #: src/Frontend/GUI.vala:420
 msgid "Skip"
-msgstr "Ohita"
+msgstr ""
 
 #: src/Frontend/GUI.vala:421
 msgid "Replace"
-msgstr "Korvaa"
+msgstr ""
 
 #: src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
-msgstr "konenimi:portti/kansio"
+msgstr ""
 
 #: src/Frontend/Widgets/FilePane.vala:111
 msgid "This folder is empty."
-msgstr "Tämä kansio on tyhjä."
+msgstr ""
 
 #: src/Frontend/Widgets/FilePane.vala:249
 #: src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
-msgstr "Avaa"
+msgstr ""
 
 #: src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
-msgstr "Poista"
+msgstr ""
 
 #: src/Frontend/Widgets/OperationsPopover.vala:33
 msgid "No file operations are in progress"
-msgstr "Tiedostotoimintoja ei ole meneillään"
+msgstr ""
 
 #: src/Frontend/Widgets/PathBar.vala:114
 msgid "Transfer"
-msgstr "Siirrä"
+msgstr ""

@@ -2,50 +2,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 19:16+0100\n"
+"POT-Creation-Date: 2018-07-18 16:32-0700\n"
 "PO-Revision-Date: 2014-10-17 00:08+0000\n"
 "Last-Translator: MinSik CHO <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-11-05 07:38+0000\n"
 "X-Generator: Launchpad (build 17223)\n"
 
-#: ../src/Frontend/Widgets/ConnectBox.vala:52
-msgid "hostname:port/folder"
-msgstr "호스트이름:포트/폴더"
-
-#: ../src/Frontend/Widgets/FilePane.vala:111
-msgid "This folder is empty."
-msgstr "폴더가 비어 있습니다."
-
-#: ../src/Frontend/Widgets/FilePane.vala:249
-#: ../src/Frontend/Widgets/FilePane.vala:251
-msgid "Open"
-msgstr "열기"
-
-#: ../src/Frontend/Widgets/FilePane.vala:255
-msgid "Delete"
-msgstr "삭제"
-
-#: ../src/Frontend/Widgets/OperationsPopover.vala:33
-msgid "No file operations are in progress"
-msgstr "진행 중인 파일 작업이 없습니다."
-
-#: ../src/Frontend/Widgets/PathBar.vala:114
-msgid "Transfer"
-msgstr "전송"
-
-#: ../src/Frontend/GUI.vala:137
+#: src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
 msgstr "북마크 접근"
 
-#: ../src/Frontend/GUI.vala:151
+#: src/Frontend/GUI.vala:151
 msgid "Connect"
 msgstr "접속"
 
-#: ../src/Frontend/GUI.vala:152
+#: src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
@@ -53,30 +29,57 @@ msgstr ""
 "URL을 입력하고 '엔터'키를 눌러서\n"
 "서버에 연결하세요."
 
-#: ../src/Frontend/GUI.vala:180
+#: src/Frontend/GUI.vala:180
+#, c-format
 msgid "Could not connect to '%s'"
 msgstr "'%s'에 연결할 수 없음"
 
-#: ../src/Frontend/GUI.vala:414
+#: src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr "존재하는 파일을 바꿀까요?"
 
-#: ../src/Frontend/GUI.vala:417
+#: src/Frontend/GUI.vala:417
+#, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
-"<i> \"%s\" </i>가 이미 존재합니다. 이 파일을 대체하거나, 모든 충돌하는 파일을 대체하거나, 대체하지 않고 건너뛸 수 "
-"있습니다."
+"<i> \"%s\" </i>가 이미 존재합니다. 이 파일을 대체하거나, 모든 충돌하는 파일"
+"을 대체하거나, 대체하지 않고 건너뛸 수 있습니다."
 
-#: ../src/Frontend/GUI.vala:419
+#: src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr "모든 충돌 대체하기"
 
-#: ../src/Frontend/GUI.vala:420
+#: src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr "건너뛰기"
 
-#: ../src/Frontend/GUI.vala:421
+#: src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr "대체하기"
+
+#: src/Frontend/Widgets/ConnectBox.vala:52
+msgid "hostname:port/folder"
+msgstr "호스트이름:포트/폴더"
+
+#: src/Frontend/Widgets/FilePane.vala:111
+msgid "This folder is empty."
+msgstr "폴더가 비어 있습니다."
+
+#: src/Frontend/Widgets/FilePane.vala:249
+#: src/Frontend/Widgets/FilePane.vala:251
+msgid "Open"
+msgstr "열기"
+
+#: src/Frontend/Widgets/FilePane.vala:255
+msgid "Delete"
+msgstr "삭제"
+
+#: src/Frontend/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr "진행 중인 파일 작업이 없습니다."
+
+#: src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr "전송"

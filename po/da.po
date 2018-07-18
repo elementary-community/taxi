@@ -2,64 +2,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 19:16+0100\n"
+"POT-Creation-Date: 2018-07-18 16:32-0700\n"
 "PO-Revision-Date: 2014-12-07 21:04+0000\n"
 "Last-Translator: Mickas Jensen <qrank@live.dk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-12-08 06:43+0000\n"
 "X-Generator: Launchpad (build 17274)\n"
 
-#: ../src/Frontend/Widgets/ConnectBox.vala:52
-msgid "hostname:port/folder"
-msgstr "værtsnavn:port/mappe"
-
-#: ../src/Frontend/Widgets/FilePane.vala:111
-msgid "This folder is empty."
-msgstr "Denne mappe er tom."
-
-#: ../src/Frontend/Widgets/FilePane.vala:249
-#: ../src/Frontend/Widgets/FilePane.vala:251
-msgid "Open"
-msgstr "Åbn"
-
-#: ../src/Frontend/Widgets/FilePane.vala:255
-msgid "Delete"
-msgstr "Slet"
-
-#: ../src/Frontend/Widgets/OperationsPopover.vala:33
-msgid "No file operations are in progress"
-msgstr "Ingen fil handlinger er i gang"
-
-#: ../src/Frontend/Widgets/PathBar.vala:114
-msgid "Transfer"
-msgstr "Overfør"
-
-#: ../src/Frontend/GUI.vala:137
+#: src/Frontend/GUI.vala:137
 msgid "Access Bookmarks"
 msgstr "Administrer bogmærker"
 
-#: ../src/Frontend/GUI.vala:151
+#: src/Frontend/GUI.vala:151
 msgid "Connect"
 msgstr "Opret forbindelse"
 
-#: ../src/Frontend/GUI.vala:152
+#: src/Frontend/GUI.vala:152
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
 msgstr "Skriv en URL og tryk 'Enter' for at tilslutte til en server."
 
-#: ../src/Frontend/GUI.vala:180
+#: src/Frontend/GUI.vala:180
+#, c-format
 msgid "Could not connect to '%s'"
 msgstr "Kunne ikke forbinde til '%s'"
 
-#: ../src/Frontend/GUI.vala:414
+#: src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr "Udskift eksisterende filer?"
 
-#: ../src/Frontend/GUI.vala:417
+#: src/Frontend/GUI.vala:417
+#, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
@@ -68,14 +46,39 @@ msgstr ""
 "modstridende filer eller vælg ikke at erstatte denne fil ved at springe den "
 "over."
 
-#: ../src/Frontend/GUI.vala:419
+#: src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr "Udskift alle konflikter"
 
-#: ../src/Frontend/GUI.vala:420
+#: src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr "Spring over"
 
-#: ../src/Frontend/GUI.vala:421
+#: src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr "Erstat"
+
+#: src/Frontend/Widgets/ConnectBox.vala:52
+msgid "hostname:port/folder"
+msgstr "værtsnavn:port/mappe"
+
+#: src/Frontend/Widgets/FilePane.vala:111
+msgid "This folder is empty."
+msgstr "Denne mappe er tom."
+
+#: src/Frontend/Widgets/FilePane.vala:249
+#: src/Frontend/Widgets/FilePane.vala:251
+msgid "Open"
+msgstr "Åbn"
+
+#: src/Frontend/Widgets/FilePane.vala:255
+msgid "Delete"
+msgstr "Slet"
+
+#: src/Frontend/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr "Ingen fil handlinger er i gang"
+
+#: src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr "Overfør"
