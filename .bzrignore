@@ -1,9 +1,0 @@
-app
-[._]*.s[a-w][a-z]
-[._]s[a-w][a-z]
-*~
-cmake/.*
-build/
-taxi
-src/config.vala
-po/*.mo
