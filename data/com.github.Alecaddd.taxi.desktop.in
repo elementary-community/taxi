@@ -8,8 +8,3 @@ Icon=com.github.Alecaddd.taxi
 Keywords=ftp;sftp;dav;afp;transfer;
 Terminal=false
 Categories=Network;
-Actions=AboutDialog;
-
-[Desktop Action AboutDialog]
-Name=About Taxi
-Exec=com.github.Alecaddd.taxi --about
