@@ -17,37 +17,6 @@
 namespace Taxi {
 
     class Taxi : Granite.Application {
-
-        construct {
-            build_data_dir     = Constants.DATADIR;
-            build_pkg_data_dir = Constants.PKGDATADIR;
-            build_release_name = Constants.RELEASE_NAME;
-            build_version      = Constants.VERSION;
-            build_version_info = Constants.VERSION_INFO;
-            program_name       = Constants.PROGRAM_NAME;
-            exec_name          = Constants.EXEC_NAME;
-            app_copyright      = "2014";
-            app_years          = "2014";
-            app_icon           = "taxi";
-            app_launcher       = Constants.APP_LAUNCHER;
-            main_url           = "http://launchpad.net/taxi";
-            bug_url            = "http://bugs.launchpad.net/taxi";
-            help_url           = "http://answers.launchpad.net/taxi";
-            translate_url      = "http://translations.launchpad.net/taxi";
-            about_authors      = {
-                                    "Kiran John Hampal <kiran@elementaryos.org>"
-                                 };
-            about_documenters  = {};
-            about_artists      = {
-                                    "Kiran John Hampal <kiran@elementaryos.org>",
-                                    "Daniel Fore <daniel@elementaryos.org>"
-                                 };
-            about_comments     = "";
-            about_translators  = "";
-            about_license      = "";
-            about_license_type = Gtk.License.GPL_3_0;
-        }
-
         public Taxi () {
             Granite.Services.Logger.initialize (exec_name);
             Granite.Services.Logger.DisplayLevel = Granite.Services.LogLevel.DEBUG;
