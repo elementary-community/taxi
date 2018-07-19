@@ -27,6 +27,7 @@ namespace Taxi {
         private Gtk.Grid pane_inner;
         private Gtk.InfoBar infobar;
         private Gtk.MenuButton bookmark_menu_button;
+        private Gtk.Stack alert_stack;
         private ConnectBox connect_box;
         private Granite.Widgets.Welcome welcome;
         private FilePane local_pane;
@@ -85,10 +86,34 @@ namespace Taxi {
             );
             welcome.vexpand = true;
 
+            local_pane = new FilePane (true);
+            local_pane.open.connect (on_local_open);
+            local_pane.navigate.connect (on_local_navigate);
+            local_pane.file_dragged.connect (on_local_file_dragged);
+            local_pane.transfer.connect (on_remote_file_dragged);
+            local_pane.@delete.connect (on_local_file_delete);
+            local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
+
+            remote_pane = new FilePane ();
+            remote_pane.open.connect (on_remote_open);
+            remote_pane.navigate.connect (on_remote_navigate);
+            remote_pane.file_dragged.connect (on_remote_file_dragged);
+            remote_pane.transfer.connect (on_local_file_dragged);
+            remote_pane.@delete.connect (on_remote_file_delete);
+
+            pane_inner = new Gtk.Grid ();
+            pane_inner.set_column_homogeneous (true);
+            pane_inner.add (local_pane);
+            pane_inner.add (remote_pane);
+
             outer_box = new Gtk.Grid ();
             outer_box.orientation = Gtk.Orientation.VERTICAL;
             outer_box.column_homogeneous = true;
-            outer_box.add (welcome);
+            outer_box.add (pane_inner);
+
+            alert_stack = new Gtk.Stack ();
+            alert_stack.add (welcome);
+            alert_stack.add (outer_box);
 
             saved_state = new SavedState ();
 
@@ -98,9 +123,10 @@ namespace Taxi {
             if (saved_state.maximized) {
                 maximize ();
             }
-            set_titlebar (header_bar);
-            add (outer_box);
-            show_all ();
+
+            window.set_titlebar (header_bar);
+            window.add (alert_stack);
+            window.show_all ();
 
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
@@ -126,19 +152,13 @@ namespace Taxi {
             });
         }
 
-        private void remove_welcome () {
-            outer_box.remove (welcome);
-            key_press_event.disconnect (connect_box.on_key_press_event);
-        }
-
         private void on_connect_initiated (Soup.URI uri) {
             show_spinner ();
             remote_access.connect_to_device.begin (uri, this, (obj, res) => {
                 if (remote_access.connect_to_device.end (res)) {
+                    alert_stack.visible_child = outer_box;
                     if (local_pane == null) {
-                        remove_welcome ();
-                        add_panes ();
-                        show_all ();
+                        window.key_press_event.disconnect (connect_box.on_key_press_event);
                     }
                     update_pane (Location.LOCAL);
                     update_pane (Location.REMOTE);
@@ -147,9 +167,8 @@ namespace Taxi {
                     );
                     conn_uri = uri;
                 } else {
-                    welcome.title = _("Could not connect to '%s'").printf (
-                        uri.to_string (false)
-                    );
+                    alert_stack.visible_child = welcome;
+                    welcome.title = _("Could not connect to '%s'").printf (uri.to_string (false));
                 }
                 hide_spinner ();
             });
@@ -188,30 +207,6 @@ namespace Taxi {
                 }
                 bookmark_menu_button.set_sensitive (true);
             }
-        }
-
-        private void add_panes () {
-            pane_inner = new Gtk.Grid ();
-            pane_inner.set_column_homogeneous (true);
-
-            local_pane = new FilePane (true);
-            pane_inner.add (local_pane);
-            local_pane.open.connect (on_local_open);
-            local_pane.navigate.connect (on_local_navigate);
-            local_pane.file_dragged.connect (on_local_file_dragged);
-            local_pane.transfer.connect (on_remote_file_dragged);
-            local_pane.@delete.connect (on_local_file_delete);
-            local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
-
-            remote_pane = new FilePane ();
-            pane_inner.add (remote_pane);
-            remote_pane.open.connect (on_remote_open);
-            remote_pane.navigate.connect (on_remote_navigate);
-            remote_pane.file_dragged.connect (on_remote_file_dragged);
-            remote_pane.transfer.connect (on_local_file_dragged);
-            remote_pane.@delete.connect (on_remote_file_delete);
-
-            outer_box.add (pane_inner);
         }
 
         private void on_local_navigate (Soup.URI uri) {

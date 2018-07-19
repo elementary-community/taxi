@@ -15,48 +15,41 @@
 ***/
 
 namespace Taxi {
-
-    class ConnectBox : Gtk.Box {
-
-        Gtk.ComboBoxText protocol_combobox;
-        Gtk.Entry path_entry;
-        ulong? handler;
-        bool show_fav_icon = false;
-        bool added = false;
-
-        public ConnectBox () {
-            set_orientation (Gtk.Orientation.HORIZONTAL);
-            set_spacing (0);
-            set_homogeneous (false);
-            build ();
-        }
+    public class ConnectBox : Gtk.Grid {
+        private Gtk.ComboBoxText protocol_combobox;
+        private Gtk.Entry path_entry;
+        private ulong? handler;
+        private bool show_fav_icon = false;
+        private bool added = false;
 
         public signal void connect_initiated (Soup.URI uri);
         public signal void bookmarked ();
         public signal Soup.URI ask_hostname ();
 
-        private void build () {
-            pack_start (protocol_field (), true, true, 0);
-            pack_start (hostname_field (), true, true, 0);
-            get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
-        }
+        construct {
+            string[] entries = {"FTP", "SFTP", "DAV", "AFP"};
 
-        private Gtk.ComboBoxText protocol_field () {
-            protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
-            protocol_combobox.set_valign (Gtk.Align.CENTER);
-            return protocol_combobox;
-        }
+            protocol_combobox = new Gtk.ComboBoxText ();
+            foreach (var entry in entries) {
+                protocol_combobox.append_text (entry);
+            }
+            protocol_combobox.active = 0;
+            protocol_combobox.valign = Gtk.Align.CENTER;
 
-        private Gtk.Entry hostname_field () {
             path_entry = new Gtk.Entry ();
             path_entry.placeholder_text = _("hostname:port/folder");
-            path_entry.set_max_width_chars (100000);
-            path_entry.set_hexpand (true);
-            path_entry.activate.connect (this.submit_form);
-            path_entry.changed.connect (this.on_changed);
-            path_entry.focus_out_event.connect (this.on_focus_out);
-            path_entry.grab_focus.connect_after (this.on_grab_focus);
-            return path_entry;
+            path_entry.hexpand = true;
+            path_entry.max_width_chars = 10000;
+
+            orientation = Gtk.Orientation.HORIZONTAL;
+            add (protocol_combobox);
+            add (path_entry );
+            get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
+
+            path_entry.activate.connect (submit_form);
+            path_entry.changed.connect (on_changed);
+            path_entry.focus_out_event.connect (on_focus_out);
+            path_entry.grab_focus.connect_after (on_grab_focus);
         }
 
         private void submit_form () {
@@ -64,15 +57,6 @@ namespace Taxi {
             var path = path_entry.get_text ();
             var uri = new Soup.URI (protocol + "://" + path);
             connect_initiated (uri);
-        }
-
-        private Gtk.ComboBoxText combobox (string[] entries) {
-            var combobox = new Gtk.ComboBoxText ();
-            foreach (var entry in entries) {
-                combobox.append_text (entry);
-            }
-            combobox.active = 0;
-            return combobox;
         }
 
         private void on_changed () {
