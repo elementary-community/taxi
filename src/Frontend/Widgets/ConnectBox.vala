@@ -97,6 +97,29 @@ namespace Taxi {
             );
         }
 
+        public void go_to_uri (string uri) {
+            string [] split = uri.split ("://");
+
+            switch (split[0].up ()) {
+                case "FTP":
+                    protocol_combobox.active = 0;
+                    break;
+                case "SFTP":
+                    protocol_combobox.active = 1;
+                    break;
+                case "DAV":
+                    protocol_combobox.active = 2;
+                    break;
+                case "AFP":
+                    protocol_combobox.active = 3;
+                    break;
+            }
+
+            path_entry.text = split[1];
+
+            connect_initiated (new Soup.URI (uri));
+        }
+
         public void show_favorite_icon (bool added = false) {
             path_entry.icon_press.disconnect (this.submit_form);
             show_fav_icon = true;
