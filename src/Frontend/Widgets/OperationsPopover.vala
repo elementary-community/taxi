@@ -71,6 +71,7 @@ namespace Taxi {
             row.add (cancel_container);
 
             grid.add (row);
+            grid.show_all ();
         }
 
         public void remove_operation (IOperationInfo operation) {

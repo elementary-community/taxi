@@ -21,8 +21,7 @@ namespace Taxi {
         public IFileAccess local_access { get; construct; }
         public IFileAccess remote_access { get; construct; }
 
-        private Gtk.HeaderBar header_bar;
-        private Gtk.EventBox spinner_parent;
+        private Gtk.Revealer spinner_revealer;
         private Gtk.Grid outer_box;
         private Gtk.Grid pane_inner;
         private Gtk.InfoBar infobar;
@@ -58,12 +57,18 @@ namespace Taxi {
 
             var spinner = new Gtk.Spinner ();
             spinner.start ();
-            spinner.margin_end = 6;
-
-            spinner_parent = new Gtk.EventBox ();
-            spinner_parent.add (spinner);
 
             var popover = new OperationsPopover (spinner);
+
+            var operations_button = new Gtk.MenuButton ();
+            operations_button.popover = popover;
+            operations_button.valign = Gtk.Align.CENTER;
+            operations_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+            operations_button.add (spinner);
+
+            spinner_revealer = new Gtk.Revealer ();
+            spinner_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
+            spinner_revealer.add (operations_button);
 
             bookmark_menu = new Menu ();
 
@@ -75,10 +80,11 @@ namespace Taxi {
 
             update_bookmark_menu ();
 
-            header_bar = new Gtk.HeaderBar ();
+            var header_bar = new Gtk.HeaderBar ();
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
             header_bar.pack_start (connect_box);
+            header_bar.pack_start (spinner_revealer);
             header_bar.pack_start (bookmark_menu_button);
 
             welcome = new Granite.Widgets.Welcome (
@@ -151,11 +157,6 @@ namespace Taxi {
             popover.operations_finished.connect (hide_spinner);
             file_operation.operation_added.connect (popover.add_operation);
             file_operation.operation_removed.connect (popover.remove_operation);
-
-            spinner_parent.button_press_event.connect (() => {
-                popover.show_all ();
-                return false;
-            });
         }
 
         private void on_connect_initiated (Soup.URI uri) {
@@ -181,12 +182,11 @@ namespace Taxi {
         }
 
         private void show_spinner () {
-            spinner_parent.show_all ();
-            header_bar.pack_end (spinner_parent);
+            spinner_revealer.reveal_child = true;
         }
 
         private void hide_spinner () {
-            header_bar.remove (spinner_parent);
+            spinner_revealer.reveal_child = false;
         }
 
         private void bookmark () {
