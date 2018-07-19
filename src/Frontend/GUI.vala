@@ -15,29 +15,26 @@
 ***/
 
 namespace Taxi {
-
     class GUI : Object {
+        public IConnectionSaver conn_saver { get; construct; }
+        public IFileOperations file_operation { get; construct; }
+        public IFileAccess local_access { get; construct; }
+        public IFileAccess remote_access { get; construct; }
 
-        Gtk.Window window;
-        Gtk.HeaderBar header_bar;
-        Gtk.EventBox spinner_parent;
-        Gtk.Grid outer_box;
-        Gtk.Grid pane_inner;
-        Gtk.InfoBar infobar;
-        Gtk.Spinner spinner;
-        Gtk.MenuButton bookmark_menu_button;
-        ConnectBox connect_box;
-        Granite.Widgets.Welcome welcome;
-        FilePane local_pane;
-        FilePane remote_pane;
-        OperationsPopover popover;
-        IConnectionSaver conn_saver;
-        IFileAccess remote_access;
-        IFileAccess local_access;
-        IFileOperations file_operation;
-        Soup.URI conn_uri;
-        Menu bookmark_menu;
-        SavedState saved_state;
+        private Gtk.Window window;
+        private Gtk.HeaderBar header_bar;
+        private Gtk.EventBox spinner_parent;
+        private Gtk.Grid outer_box;
+        private Gtk.Grid pane_inner;
+        private Gtk.InfoBar infobar;
+        private Gtk.MenuButton bookmark_menu_button;
+        private ConnectBox connect_box;
+        private Granite.Widgets.Welcome welcome;
+        private FilePane local_pane;
+        private FilePane remote_pane;
+        private Soup.URI conn_uri;
+        private Menu bookmark_menu;
+        private SavedState saved_state;
 
         public GUI (
             IFileAccess local_access,
@@ -45,67 +42,91 @@ namespace Taxi {
             IFileOperations file_operation,
             IConnectionSaver conn_saver
         ) {
-            this.local_access = local_access;
-            this.remote_access = remote_access;
-            this.file_operation = file_operation;
-            this.conn_saver = conn_saver;
-        }
-
-        public void build () {
-            window = new Gtk.Window ();
-            add_header_bar ();
-            add_outerbox ();
-            add_welcome ();
-            setup_window ();
-            setup_styles ();
-            setup_spinner ();
-            setup_other_connects ();
-            add_popover ();
-            Gtk.main ();
-        }
-
-        private void add_header_bar () {
-            header_bar = new Gtk.HeaderBar ();
-            connect_box = new ConnectBox ();
-            header_bar.set_show_close_button (true);
-            header_bar.set_custom_title (new Gtk.Label (null));
-            header_bar.pack_start (new_bookmark_list_button ());
-            header_bar.pack_start (connect_box);
-            connect_box.connect_initiated.connect (on_connect_initiated);
-            connect_box.ask_hostname.connect (on_ask_hostname);
-            connect_box.bookmarked.connect (bookmark);
-        }
-
-        private Gtk.MenuButton new_bookmark_list_button () {
-            bookmark_menu_button = new Gtk.MenuButton ();
-            var button_image = new Gtk.Image.from_icon_name (
-                "user-bookmarks-symbolic",
-                Gtk.IconSize.BUTTON
+            Object (
+                conn_saver: conn_saver,
+                file_operation: file_operation,
+                local_access: local_access,
+                remote_access: remote_access
             );
-            bookmark_menu_button.add (button_image);
+        }
+
+        construct {
+            connect_box = new ConnectBox ();
+
+            var spinner = new Gtk.Spinner ();
+            spinner.start ();
+            spinner.margin_end = 6;
+
+            spinner_parent = new Gtk.EventBox ();
+            spinner_parent.add (spinner);
+
+            var popover = new OperationsPopover (spinner);
+
             bookmark_menu = new Menu ();
+
+            bookmark_menu_button = new Gtk.MenuButton ();
+            bookmark_menu_button.image = new Gtk.Image.from_icon_name ("user-bookmarks-symbolic", Gtk.IconSize.BUTTON);
             bookmark_menu_button.set_menu_model (bookmark_menu);
             bookmark_menu_button.set_use_popover (true);
             bookmark_menu_button.set_tooltip_text (_("Access Bookmarks"));
+
             update_bookmark_menu ();
-            return bookmark_menu_button;
-        }
 
-        private void add_outerbox () {
-            outer_box = new Gtk.Grid ();
-            outer_box.set_orientation (Gtk.Orientation.VERTICAL);
-            outer_box.set_column_homogeneous (true);
-            window.add (outer_box);
-        }
+            header_bar = new Gtk.HeaderBar ();
+            header_bar.set_show_close_button (true);
+            header_bar.set_custom_title (new Gtk.Label (null));
+            header_bar.pack_start (bookmark_menu_button);
+            header_bar.pack_start (connect_box);
 
-        private void add_welcome () {
             welcome = new Granite.Widgets.Welcome (
                 _("Connect"),
                 _("Type a URL and press 'Enter' to\nconnect to a server.")
             );
             welcome.vexpand = true;
+
+            outer_box = new Gtk.Grid ();
+            outer_box.orientation = Gtk.Orientation.VERTICAL;
+            outer_box.column_homogeneous = true;
             outer_box.add (welcome);
+
+            saved_state = new SavedState ();
+
+            window = new Gtk.Window ();
+            window.default_width = saved_state.window_width;
+            window.default_height = saved_state.window_height;
+            window.move (saved_state.opening_x, saved_state.opening_y);
+            if (saved_state.maximized) {
+                window.maximize ();
+            }
+            window.set_titlebar (header_bar);
+            window.add (outer_box);
+            window.show_all ();
+
+            var provider = new Gtk.CssProvider ();
+            provider.load_from_resource ("com/github/Alecaddd/taxi/Application.css");
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+            connect_box.connect_initiated.connect (on_connect_initiated);
+            connect_box.ask_hostname.connect (on_ask_hostname);
+            connect_box.bookmarked.connect (bookmark);
+
+            file_operation.ask_overwrite.connect (on_ask_overwrite);
+
+            window.delete_event.connect (on_delete_window);
+            window.destroy.connect (Gtk.main_quit);
             window.key_press_event.connect (connect_box.on_key_press_event);
+
+            popover.operations_pending.connect (show_spinner);
+            popover.operations_finished.connect (hide_spinner);
+            file_operation.operation_added.connect (popover.add_operation);
+            file_operation.operation_removed.connect (popover.remove_operation);
+
+            spinner_parent.button_press_event.connect (() => {
+                popover.show_all ();
+                return false;
+            });
+
+            Gtk.main ();
         }
 
         private void remove_welcome () {
@@ -320,36 +341,6 @@ namespace Taxi {
             return conn_uri;
         }
 
-        private void add_popover () {
-            popover = new OperationsPopover (spinner);
-            popover.operations_pending.connect (show_spinner);
-            popover.operations_finished.connect (hide_spinner);
-            file_operation.operation_added.connect (popover.add_operation);
-            file_operation.operation_removed.connect (popover.remove_operation);
-            spinner_parent.button_press_event.connect (() => {
-                popover.show_all ();
-                return false;
-            });
-        }
-
-        private void setup_spinner () {
-            spinner = new Gtk.Spinner ();
-            spinner.start ();
-            spinner.margin_end = 6;
-            spinner_parent = new Gtk.EventBox ();
-            spinner_parent.add (spinner);
-        }
-
-        private void setup_styles () {
-            var provider = new Gtk.CssProvider ();
-            provider.load_from_resource ("com/github/Alecaddd/taxi/Application.css");
-            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-        }
-
-        private void setup_other_connects () {
-            file_operation.ask_overwrite.connect (on_ask_overwrite);
-        }
-
         private int on_ask_overwrite (File destination) {
             var dialog = new Gtk.MessageDialog (
                 window,
@@ -369,21 +360,6 @@ namespace Taxi {
             var response = dialog.run ();
             dialog.destroy ();
             return response;
-        }
-
-        private void setup_window () {
-            saved_state = new SavedState ();
-            window.default_width = saved_state.window_width;
-            window.default_height = saved_state.window_height;
-            window.move (saved_state.opening_x, saved_state.opening_y);
-            if (saved_state.maximized) {
-                window.maximize ();
-            }
-            window.set_titlebar (header_bar);
-            window.show_all ();
-
-            window.delete_event.connect (on_delete_window);
-            window.destroy.connect (Gtk.main_quit);
         }
 
         private bool on_delete_window () {
