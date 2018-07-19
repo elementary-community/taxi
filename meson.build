@@ -13,7 +13,7 @@ asresources = gnome.compile_resources(
 
 executable(
     meson.project_name(),
-    'src/Taxi.vala',
+    'src/Application.vala',
     'src/Enum/Protocol.vala',
     'src/Enum/ConflictFlag.vala',
     'src/Enum/Location.vala',
