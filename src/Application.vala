@@ -17,7 +17,7 @@
 public class Taxi.Taxi : Gtk.Application {
     public Taxi () {
         Object (
-            application_id: "com.github.alecaddd.lookbook",
+            application_id: "com.github.alecaddd.taxi",
             flags: ApplicationFlags.FLAGS_NONE
         );
     }
