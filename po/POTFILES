@@ -12,7 +12,7 @@ src/Backend/FileAccess.vala
 src/Backend/LocalFileAccess.vala
 src/Backend/OperationInfo.vala
 src/Backend/RemoteFileAccess.vala
-src/Frontend/GUI.vala
+src/Frontend/MainWindow.vala
 src/Frontend/Widgets/ConnectBox.vala
 src/Frontend/Widgets/FilePane.vala
 src/Frontend/Widgets/OperationsPopover.vala

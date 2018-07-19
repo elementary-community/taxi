@@ -23,7 +23,7 @@ public class Taxi.Taxi : Gtk.Application {
     }
 
     protected override void activate () {
-        var main_window = new GUI (
+        var main_window = new MainWindow (
             this,
             new LocalFileAccess (),
             new RemoteFileAccess (),
