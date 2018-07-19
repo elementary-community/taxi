@@ -1,4 +1,4 @@
-src/Taxi.vala
+src/Application.vala
 src/Enum/Protocol.vala
 src/Enum/ConflictFlag.vala
 src/Enum/Location.vala
@@ -18,4 +18,3 @@ src/Frontend/Widgets/FilePane.vala
 src/Frontend/Widgets/OperationsPopover.vala
 src/Frontend/Widgets/PathBarSeparator.vala
 src/Frontend/Widgets/PathBar.vala
-src/Settings/SavedState.vala

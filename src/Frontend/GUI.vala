@@ -34,7 +34,7 @@ namespace Taxi {
         private FilePane remote_pane;
         private Soup.URI conn_uri;
         private Menu bookmark_menu;
-        private SavedState saved_state;
+        private GLib.Settings saved_state;
 
         public GUI (
             Gtk.Application application,
@@ -116,18 +116,28 @@ namespace Taxi {
             alert_stack.add (welcome);
             alert_stack.add (outer_box);
 
-            saved_state = new SavedState ();
-
-            default_width = saved_state.window_width;
-            default_height = saved_state.window_height;
-            move (saved_state.opening_x, saved_state.opening_y);
-            if (saved_state.maximized) {
-                maximize ();
-            }
-
             set_titlebar (header_bar);
             add (alert_stack);
-            show_all ();
+
+            saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
+
+            var window_height = saved_state.get_int ("window-height");
+            var window_width = saved_state.get_int ("window-width");
+            var window_x = saved_state.get_int ("opening-x");
+            var window_y = saved_state.get_int ("opening-y");
+
+            if (window_x != -1 ||  window_y != -1) {
+                move (window_x, window_y);
+            }
+
+            if (window_height != -1 ||  window_width != -1) {
+                default_height = window_height;
+                default_width = window_width;
+            }
+
+            if (saved_state.get_boolean ("maximized")) {
+                maximize ();
+            }
 
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
@@ -139,7 +149,6 @@ namespace Taxi {
 
             file_operation.ask_overwrite.connect (on_ask_overwrite);
 
-            delete_event.connect (on_delete_window);
             key_press_event.connect (connect_box.on_key_press_event);
 
             popover.operations_pending.connect (show_spinner);
@@ -355,23 +364,24 @@ namespace Taxi {
             return response;
         }
 
-        private bool on_delete_window () {
-            if ((get_window ().get_state () & Gdk.WindowState.MAXIMIZED) == 0) {
+        public override bool configure_event (Gdk.EventConfigure event) {
+            if (is_maximized) {
+                saved_state.set_boolean ("maximized", true);
+            } else {
+                saved_state.set_boolean ("maximized", false);
+
                 int window_width, window_height;
                 get_size (out window_width, out window_height);
-                saved_state.window_width = window_width;
-                saved_state.window_height = window_height;
-                saved_state.maximized = false;
-            } else {
-                saved_state.maximized = true;
+                saved_state.set_int ("window-height", window_height);
+                saved_state.set_int ("window-width", window_width);
+
+                int x_pos, y_pos;
+                get_position (out x_pos, out y_pos);
+                saved_state.set_int ("opening-x", x_pos);
+                saved_state.set_int ("opening-y", y_pos);
             }
 
-            int x_pos, y_pos;
-            get_position (out x_pos, out y_pos);
-            saved_state.opening_x = x_pos;
-            saved_state.opening_y = y_pos;
-
-            return false;
+            return base.configure_event (event);
         }
     }
 }

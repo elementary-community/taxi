@@ -30,6 +30,7 @@ public class Taxi.Taxi : Gtk.Application {
             new FileOperations (),
             new ConnectionSaver ()
         );
+        main_window.show_all ();
     }
 
     public static int main (string[] args) {

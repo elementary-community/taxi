@@ -33,7 +33,6 @@ executable(
     'src/Frontend/Widgets/OperationsPopover.vala',
     'src/Frontend/Widgets/PathBarSeparator.vala',
     'src/Frontend/Widgets/PathBar.vala',
-    'src/Settings/SavedState.vala',
     asresources,
     dependencies: [
         dependency('glib-2.0'),
