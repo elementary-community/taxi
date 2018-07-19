@@ -25,7 +25,7 @@ namespace Taxi {
         public bool maximized { get; set; }
 
         public SavedState () {
-            base ("com.github.Alecaddd.taxi.state");
+            base ("com.github.alecaddd.taxi.state");
         }
     }
 }

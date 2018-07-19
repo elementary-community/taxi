@@ -1,4 +1,4 @@
-project('com.github.Alecaddd.taxi', 'vala', 'c')
+project('com.github.alecaddd.taxi', 'vala', 'c')
 
 gnome = import('gnome')
 i18n = import('i18n')
@@ -59,4 +59,3 @@ subdir('data')
 subdir('po')
 
 meson.add_install_script('meson/post_install.py')
-

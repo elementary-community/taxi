@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.Alecaddd.taxi package.
+# This file is distributed under the same license as the com.github.alecaddd.taxi package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: com.github.Alecaddd.taxi\n"
+"Project-Id-Version: com.github.alecaddd.taxi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-18 16:32-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
