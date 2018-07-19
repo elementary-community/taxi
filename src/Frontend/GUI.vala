@@ -125,9 +125,9 @@ namespace Taxi {
                 maximize ();
             }
 
-            window.set_titlebar (header_bar);
-            window.add (alert_stack);
-            window.show_all ();
+            set_titlebar (header_bar);
+            add (alert_stack);
+            show_all ();
 
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
@@ -159,7 +159,7 @@ namespace Taxi {
                 if (remote_access.connect_to_device.end (res)) {
                     alert_stack.visible_child = outer_box;
                     if (local_pane == null) {
-                        window.key_press_event.disconnect (connect_box.on_key_press_event);
+                        key_press_event.disconnect (connect_box.on_key_press_event);
                     }
                     update_pane (Location.LOCAL);
                     update_pane (Location.REMOTE);
