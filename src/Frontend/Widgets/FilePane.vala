@@ -315,9 +315,10 @@ namespace Taxi {
             scrolled_pane.hide ();
             if (spinner == null) {
                 spinner = new Gtk.Spinner ();
-                spinner.set_hexpand (true);
-                spinner.set_vexpand (true);
-                spinner.set_halign (Gtk.Align.FILL);
+                spinner.hexpand = true;
+                spinner.vexpand = true;
+                spinner.halign = Gtk.Align.CENTER;
+                spinner.valign = Gtk.Align.CENTER;
                 spinner.start ();
                 inner_grid.add (spinner);
             }
