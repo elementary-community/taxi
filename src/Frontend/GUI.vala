@@ -23,6 +23,7 @@ namespace Taxi {
 
         private Granite.Widgets.Toast toast;
         private Gtk.Revealer spinner_revealer;
+        private Gtk.Grid bookmark_list;
         private Gtk.Grid outer_box;
         private Gtk.MenuButton bookmark_menu_button;
         private Gtk.Stack alert_stack;
@@ -31,7 +32,6 @@ namespace Taxi {
         private FilePane local_pane;
         private FilePane remote_pane;
         private Soup.URI conn_uri;
-        private Menu bookmark_menu;
         private GLib.Settings saved_state;
 
         public GUI (
@@ -69,13 +69,24 @@ namespace Taxi {
             spinner_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
             spinner_revealer.add (operations_button);
 
-            bookmark_menu = new Menu ();
+            bookmark_list = new Gtk.Grid ();
+            bookmark_list.margin_top = bookmark_list.margin_bottom = 3;
+            bookmark_list.orientation = Gtk.Orientation.VERTICAL;
+
+            var bookmark_scrollbox = new Gtk.ScrolledWindow (null, null);
+            bookmark_scrollbox.hscrollbar_policy = Gtk.PolicyType.NEVER;
+            bookmark_scrollbox.max_content_height = 500;
+            bookmark_scrollbox.propagate_natural_height = true;
+            bookmark_scrollbox.add (bookmark_list);
+            bookmark_scrollbox.show ();
+
+            var bookmark_popover = new Gtk.Popover (null);
+            bookmark_popover.add (bookmark_scrollbox);
 
             bookmark_menu_button = new Gtk.MenuButton ();
             bookmark_menu_button.image = new Gtk.Image.from_icon_name ("user-bookmarks", Gtk.IconSize.LARGE_TOOLBAR);
-            bookmark_menu_button.set_menu_model (bookmark_menu);
-            bookmark_menu_button.set_use_popover (true);
-            bookmark_menu_button.set_tooltip_text (_("Access Bookmarks"));
+            bookmark_menu_button.popover = bookmark_popover;
+            bookmark_menu_button.tooltip_text = _("Access Bookmarks");
 
             update_bookmark_menu ();
 
@@ -203,15 +214,26 @@ namespace Taxi {
         }
 
         private void update_bookmark_menu () {
-            bookmark_menu.remove_all ();
+            foreach (Gtk.Widget child in bookmark_list.get_children ()) {
+                child.destroy ();
+            }
+
             var uri_list = conn_saver.get_saved_conns ();
             if (uri_list.length () == 0) {
-                bookmark_menu_button.set_sensitive (false);
+                bookmark_menu_button.sensitive = false;
             } else {
                 foreach (string uri in uri_list) {
-                    bookmark_menu.append (uri, null);
+                    var bookmark_item = new Gtk.ModelButton ();
+                    bookmark_item.text = uri;
+
+                    bookmark_list.add (bookmark_item);
+
+                    bookmark_item.clicked.connect (() => {
+                        connect_box.go_to_uri (uri);
+                    });
                 }
-                bookmark_menu_button.set_sensitive (true);
+                bookmark_list.show_all ();
+                bookmark_menu_button.sensitive = true;
             }
         }
 
