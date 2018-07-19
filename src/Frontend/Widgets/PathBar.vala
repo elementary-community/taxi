@@ -45,20 +45,25 @@ namespace Taxi {
         }
 
         private void add_path_frag (string child, string path) {
-            Gtk.Button button;
+            var button = new Gtk.Button ();
+
             if (path == "/") {
-                button = new Gtk.Button.from_icon_name (
-                    child,
-                    Gtk.IconSize.MENU
-                );
+                button.image = new Gtk.Image.from_icon_name (child, Gtk.IconSize.MENU);
             } else {
-                button = new Gtk.Button.with_label (child);
-                //var sep = new Gtk.Label ("▸");
+                var label = new Gtk.Label (child);
+                label.ellipsize = Pango.EllipsizeMode.MIDDLE;
+
+                button.tooltip_text = child;
+                button.add (label);
+
                 var sep = new PathBarSeparator ();
                 add (sep);
             }
-            button.set_relief (Gtk.ReliefStyle.NONE);
-            button.get_style_context ().add_class ("path-button");
+
+            var button_style_context = button.get_style_context ();
+            button_style_context.add_class (Gtk.STYLE_CLASS_FLAT);
+            button_style_context.add_class ("path-button");
+
             button.clicked.connect (() => {
                 current_uri.set_path (path);
                 navigate (current_uri);
