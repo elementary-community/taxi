@@ -34,7 +34,6 @@ namespace Taxi {
                 new FileOperations (),
                 new ConnectionSaver ()
             );
-            gui.build ();
         }
     }
 }
