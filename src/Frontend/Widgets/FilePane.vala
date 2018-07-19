@@ -46,24 +46,18 @@ namespace Taxi {
 
         delegate void ActivateFunc (Soup.URI uri);
 
-        public FilePane (bool show_sep = false) {
+        public FilePane () {
             set_orientation (Gtk.Orientation.HORIZONTAL);
-            build (show_sep);
+            build ();
         }
 
-        private void build (bool show_sep) {
+        private void build () {
             inner_grid = new Gtk.Grid ();
             inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
             inner_grid.add (new_path_bar ());
             inner_grid.add (new_list_box ());
             add (inner_grid);
             inner_grid.show_all ();
-
-            if (show_sep) {
-                var sep = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-                sep.get_style_context ().add_class ("pane-separator");
-                add (sep);
-            }
         }
 
         private PathBar new_path_bar () {
