@@ -5,9 +5,9 @@
 
 Taxi is a native Linux FTP client built in Vala and Gtk originally created by Kiran John Hampal. It allows you to connect to a remote server with various Protocols (FTP, SFT, etc.), and offers an handy double paned interface to quickly transfer files and folders between your computer and the server.
 
-<!-- ![](taxi-screenshot.png)
+![Taxi Screenshot](data/screenshot.png?raw=true)
 
-## Get it from the elementary OS AppCenter!
+<!-- ## Get it from the elementary OS AppCenter!
 Taxi, is primarily available from the AppCenter of elementary OS. Download it from there!
 
 [![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/com.github.alecaddd.taxi) -->
