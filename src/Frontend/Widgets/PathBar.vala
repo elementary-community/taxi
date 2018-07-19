@@ -15,24 +15,15 @@
 ***/
 
 namespace Taxi {
+    class PathBar : Gtk.Grid {
+        public bool transfer_button_sensitive { get; set; }
 
-    class PathBar : Gtk.Box {
-
-        Location location = Location.LOCAL;
-        Soup.URI current_uri;
-        Gtk.Button xfer_button;
+        private Soup.URI current_uri;
 
         public signal void navigate (Soup.URI uri);
         public signal void transfer ();
 
-        public PathBar () {
-            set_orientation (Gtk.Orientation.HORIZONTAL);
-            homogeneous = false;
-            spacing = 0;
-        }
-
         public PathBar.from_uri (Soup.URI uri) {
-            this ();
             set_path (uri);
         }
 
@@ -74,21 +65,33 @@ namespace Taxi {
         public void set_path (Soup.URI uri) {
             clear_path ();
             current_uri = uri;
+            string transfer_icon_name;
             var scheme = uri.get_scheme ();
             switch (scheme) {
                 case "file":
                     add_path_frag ("drive-harddisk-symbolic", "/");
-                    location = Location.LOCAL;
+                    transfer_icon_name = "document-export-symbolic";
                     break;
                 case "ftp":
                 case "sftp":
                 default:
                     add_path_frag ("folder-remote-symbolic", "/");
-                    location = Location.REMOTE;
+                    transfer_icon_name = "document-import-symbolic";
                     break;
             }
             set_path_helper (uri.get_path ());
-            pack_end (new_xfer_button ());
+
+            var transfer_button = new Gtk.Button.from_icon_name (transfer_icon_name, Gtk.IconSize.MENU);
+            transfer_button.halign = Gtk.Align.END;
+            transfer_button.hexpand = true;
+            transfer_button.sensitive = false;
+            transfer_button.tooltip_text = _("Transfer");
+            transfer_button.bind_property ("sensitive", this, "transfer-button-sensitive", GLib.BindingFlags.BIDIRECTIONAL);
+            transfer_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+
+            transfer_button.clicked.connect (() => transfer ());
+
+            add (transfer_button);
         }
 
         private void set_path_helper (string path) {
@@ -105,30 +108,6 @@ namespace Taxi {
                 remove (child);
             }
             margin = 0;
-        }
-
-        private Gtk.Button new_xfer_button () {
-            var xfer_icon_name = (location == Location.LOCAL)  ?
-                                    "document-export-symbolic" :
-                                    "document-import-symbolic" ;
-            xfer_button = new Gtk.Button.from_icon_name (
-                xfer_icon_name,
-                Gtk.IconSize.MENU
-            );
-            xfer_button.set_sensitive (false);
-            xfer_button.set_tooltip_text (_("Transfer"));
-            xfer_button.set_halign (Gtk.Align.END);
-            xfer_button.set_relief (Gtk.ReliefStyle.NONE);
-            xfer_button.clicked.connect (() => transfer ());
-            return xfer_button;
-        }
-
-        public void set_transfer_button_sensitive (bool sensitive) {
-            xfer_button.set_sensitive (sensitive);
-        }
-
-        public bool get_transfer_button_sensitive () {
-            return xfer_button.get_sensitive ();
         }
     }
 }
