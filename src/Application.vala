@@ -14,7 +14,7 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-public class Taxi : Gtk.Application {
+public class Taxi.Taxi : Gtk.Application {
     public Taxi () {
         Object (
             application_id: "com.github.alecaddd.lookbook",
