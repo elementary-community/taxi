@@ -14,26 +14,25 @@
   with this program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-namespace Taxi {
+public class Taxi : Gtk.Application {
+    public Taxi () {
+        Object (
+            application_id: "com.github.alecaddd.lookbook",
+            flags: ApplicationFlags.FLAGS_NONE
+        );
+    }
 
-    class Taxi : Granite.Application {
-        public Taxi () {
-            Granite.Services.Logger.initialize (exec_name);
-            Granite.Services.Logger.DisplayLevel = Granite.Services.LogLevel.DEBUG;
-        }
+    protected override void activate () {
+        var main_window = new GUI (
+            new LocalFileAccess (),
+            new RemoteFileAccess (),
+            new FileOperations (),
+            new ConnectionSaver ()
+        );
+    }
 
-        public static int main (string[] args) {
-            var program = new Taxi ();
-            return program.run (args);
-        }
-
-        protected override void activate () {
-            var gui = new GUI (
-                new LocalFileAccess (),
-                new RemoteFileAccess (),
-                new FileOperations (),
-                new ConnectionSaver ()
-            );
-        }
+    public static int main (string[] args) {
+        var program = new Taxi ();
+        return program.run (args);
     }
 }
