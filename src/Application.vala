@@ -24,6 +24,7 @@ public class Taxi.Taxi : Gtk.Application {
 
     protected override void activate () {
         var main_window = new GUI (
+            this,
             new LocalFileAccess (),
             new RemoteFileAccess (),
             new FileOperations (),
