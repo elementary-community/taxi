@@ -108,10 +108,15 @@ namespace Taxi {
                 }
             });
 
-            placeholder_label = new Gtk.Label (_("This folder is empty."));
-            placeholder_label.set_halign (Gtk.Align.CENTER);
-            placeholder_label.set_valign (Gtk.Align.CENTER);
+            placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
+            placeholder_label.halign = Gtk.Align.CENTER;
+            placeholder_label.valign = Gtk.Align.CENTER;
             placeholder_label.show ();
+
+            var placeholder_label_context = placeholder_label.get_style_context ();
+            placeholder_label_context.add_class (Granite.STYLE_CLASS_H2_LABEL);
+            placeholder_label_context.add_class (Gtk.STYLE_CLASS_DIM_LABEL);
+
             list_box.set_placeholder (placeholder_label);
 
             scrolled_pane = new Gtk.ScrolledWindow (null, null);
