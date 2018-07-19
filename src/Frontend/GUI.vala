@@ -21,10 +21,9 @@ namespace Taxi {
         public IFileAccess local_access { get; construct; }
         public IFileAccess remote_access { get; construct; }
 
+        private Granite.Widgets.Toast toast;
         private Gtk.Revealer spinner_revealer;
         private Gtk.Grid outer_box;
-        private Gtk.Grid pane_inner;
-        private Gtk.InfoBar infobar;
         private Gtk.MenuButton bookmark_menu_button;
         private Gtk.Stack alert_stack;
         private ConnectBox connect_box;
@@ -108,22 +107,23 @@ namespace Taxi {
             remote_pane.transfer.connect (on_local_file_dragged);
             remote_pane.@delete.connect (on_remote_file_delete);
 
-            pane_inner = new Gtk.Grid ();
-            pane_inner.set_column_homogeneous (true);
-            pane_inner.add (local_pane);
-            pane_inner.add (remote_pane);
-
             outer_box = new Gtk.Grid ();
-            outer_box.orientation = Gtk.Orientation.VERTICAL;
             outer_box.column_homogeneous = true;
-            outer_box.add (pane_inner);
+            outer_box.add (local_pane);
+            outer_box.add (remote_pane);
 
             alert_stack = new Gtk.Stack ();
             alert_stack.add (welcome);
             alert_stack.add (outer_box);
 
+            toast = new Granite.Widgets.Toast ("");
+
+            var overlay = new Gtk.Overlay ();
+            overlay.add (alert_stack);
+            overlay.add_overlay (toast);
+
             set_titlebar (header_bar);
-            add (alert_stack);
+            add (overlay);
 
             saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
@@ -149,14 +149,14 @@ namespace Taxi {
             connect_box.ask_hostname.connect (on_ask_hostname);
             connect_box.bookmarked.connect (bookmark);
 
+            file_operation.operation_added.connect (popover.add_operation);
+            file_operation.operation_removed.connect (popover.remove_operation);
             file_operation.ask_overwrite.connect (on_ask_overwrite);
 
             key_press_event.connect (connect_box.on_key_press_event);
 
             popover.operations_pending.connect (show_spinner);
             popover.operations_finished.connect (hide_spinner);
-            file_operation.operation_added.connect (popover.add_operation);
-            file_operation.operation_removed.connect (popover.remove_operation);
         }
 
         private void on_connect_initiated (Soup.URI uri) {
@@ -269,7 +269,8 @@ namespace Taxi {
                         file_operation.copy_recursive.end (res);
                         update_pane (pane);
                     } catch (Error e) {
-                        new_infobar (e.message, Gtk.MessageType.ERROR);
+                        toast.title = e.message;
+                        toast.send_notification ();
                     }
                 }
              );
@@ -285,30 +286,11 @@ namespace Taxi {
                         file_operation.delete_recursive.end (res);
                         update_pane (pane);
                     } catch (Error e) {
-                        new_infobar (e.message, Gtk.MessageType.ERROR);
+                        toast.title = e.message;
+                        toast.send_notification ();
                     }
                 }
             );
-        }
-
-        private void new_infobar (string message, Gtk.MessageType message_type) {
-            remove_existing_infobar ();
-            infobar = new Gtk.InfoBar ();
-            var content = infobar.get_content_area ();
-            content.add (new Gtk.Label (message));
-            infobar.set_message_type (message_type);
-            infobar.set_show_close_button (true);
-            outer_box.attach_next_to (infobar, pane_inner, Gtk.PositionType.TOP, 1, 1);
-            outer_box.show_all ();
-            infobar.response.connect (() => outer_box.remove (infobar));
-        }
-
-        private void remove_existing_infobar () {
-            foreach (Gtk.Widget outer_box_child in outer_box.get_children ()) {
-                if (outer_box_child == infobar) {
-                    outer_box.remove (infobar);
-                }
-            }
         }
 
         private void update_pane (Location pane) {
