@@ -121,8 +121,6 @@ namespace Taxi {
 
             saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
-            var window_height = saved_state.get_int ("window-height");
-            var window_width = saved_state.get_int ("window-width");
             var window_x = saved_state.get_int ("opening-x");
             var window_y = saved_state.get_int ("opening-y");
 
@@ -130,10 +128,8 @@ namespace Taxi {
                 move (window_x, window_y);
             }
 
-            if (window_height != -1 ||  window_width != -1) {
-                default_height = window_height;
-                default_width = window_width;
-            }
+            default_height = saved_state.get_int ("window-height");
+            default_width = saved_state.get_int ("window-width");
 
             if (saved_state.get_boolean ("maximized")) {
                 maximize ();
