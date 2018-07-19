@@ -43,7 +43,6 @@ namespace Taxi {
 
         private Gtk.ComboBoxText protocol_field () {
             protocol_combobox = combobox ({"FTP", "SFTP", "DAV", "AFP"});
-            protocol_combobox.set_valign (Gtk.Align.CENTER);
             return protocol_combobox;
         }
 

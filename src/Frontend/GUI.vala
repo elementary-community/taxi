@@ -52,6 +52,7 @@ namespace Taxi {
 
         construct {
             connect_box = new ConnectBox ();
+            connect_box.valign = Gtk.Align.CENTER;
 
             var spinner = new Gtk.Spinner ();
             spinner.start ();
@@ -65,7 +66,7 @@ namespace Taxi {
             bookmark_menu = new Menu ();
 
             bookmark_menu_button = new Gtk.MenuButton ();
-            bookmark_menu_button.image = new Gtk.Image.from_icon_name ("user-bookmarks-symbolic", Gtk.IconSize.BUTTON);
+            bookmark_menu_button.image = new Gtk.Image.from_icon_name ("user-bookmarks", Gtk.IconSize.LARGE_TOOLBAR);
             bookmark_menu_button.set_menu_model (bookmark_menu);
             bookmark_menu_button.set_use_popover (true);
             bookmark_menu_button.set_tooltip_text (_("Access Bookmarks"));
@@ -75,8 +76,8 @@ namespace Taxi {
             header_bar = new Gtk.HeaderBar ();
             header_bar.set_show_close_button (true);
             header_bar.set_custom_title (new Gtk.Label (null));
-            header_bar.pack_start (bookmark_menu_button);
             header_bar.pack_start (connect_box);
+            header_bar.pack_start (bookmark_menu_button);
 
             welcome = new Granite.Widgets.Welcome (
                 _("Connect"),
