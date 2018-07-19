@@ -15,7 +15,7 @@
 ***/
 
 namespace Taxi {
-    class ConnectBox : Gtk.Grid {
+    public class ConnectBox : Gtk.Grid {
         private Gtk.ComboBoxText protocol_combobox;
         private Gtk.Entry path_entry;
         private ulong? handler;
