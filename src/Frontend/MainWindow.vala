@@ -102,7 +102,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         );
         welcome.vexpand = true;
 
-        local_pane = new FilePane (true);
+        local_pane = new FilePane ();
         local_pane.open.connect (on_local_open);
         local_pane.navigate.connect (on_local_navigate);
         local_pane.file_dragged.connect (on_local_file_dragged);
@@ -118,9 +118,13 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         remote_pane.@delete.connect (on_remote_file_delete);
 
         outer_box = new Gtk.Grid ();
-        outer_box.column_homogeneous = true;
         outer_box.add (local_pane);
+        outer_box.add (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         outer_box.add (remote_pane);
+
+        var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
+        size_group.add_widget (local_pane);
+        size_group.add_widget (remote_pane);
 
         alert_stack = new Gtk.Stack ();
         alert_stack.add (welcome);
