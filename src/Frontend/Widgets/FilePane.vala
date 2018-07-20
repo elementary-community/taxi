@@ -161,21 +161,28 @@ namespace Taxi {
         }
 
         private Gtk.ListBoxRow new_row (FileInfo file_info) {
+            var checkbox = new Gtk.CheckButton ();
+            checkbox.toggled.connect (on_checkbutton_toggle);
 
-            var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
+
+            var name = new Gtk.Label (file_info.get_name ());
+            name.halign = Gtk.Align.START;
+            name.hexpand = true;
+
+            var row = new Gtk.Grid ();
+            row.column_spacing = 6;
             row.hexpand = true;
             row.margin = 6;
-
-            var checkbox = new Gtk.CheckButton ();
-            checkbox.margin_end = 6;
-            checkbox.toggled.connect (on_checkbutton_toggle);
             row.add (checkbox);
-
-            row.add (row_icon (file_info));
-            row.add (row_name (file_info));
+            row.add (icon);
+            row.add (name);
 
             if (file_info.get_file_type () == FileType.REGULAR) {
-                row.pack_end (row_size (file_info));
+                var size = new Gtk.Label (bit_string_format (file_info.get_size ()));
+                size.get_style_context ().add_class (Gtk.STYLE_CLASS_DIM_LABEL);
+
+                row.add (size);
             }
 
             var uri = new Soup.URI.with_base (current_uri, file_info.get_name ());
@@ -262,29 +269,6 @@ namespace Taxi {
             var menu_item = new Gtk.MenuItem.with_label (label);
             menu_item.activate.connect (() => activate_fn (uri));
             return menu_item;
-        }
-
-        private Gtk.Image row_icon (FileInfo file_info) {
-            var icon = new Gtk.Image.from_gicon (file_info.get_icon (), Gtk.IconSize.DND);
-            icon.set_halign (Gtk.Align.START);
-            icon.set_alignment (0f, 0.5f);
-            icon.margin_end = 6;
-            return icon;
-        }
-
-        private Gtk.Label row_name (FileInfo file_info) {
-            var name = new Gtk.Label (file_info.get_name ());
-            name.hexpand = true;
-            name.set_halign (Gtk.Align.START);
-            name.set_alignment (0f, 0.5f);
-            name.margin_end = 6;
-            return name;
-        }
-
-        private Gtk.Label row_size (FileInfo file_info) {
-            var size = new Gtk.Label (bit_string_format (file_info.get_size ()));
-            size.set_halign (Gtk.Align.END);
-            return size;
         }
 
         public void update_pathbar (Soup.URI uri) {
