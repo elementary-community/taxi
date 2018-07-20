@@ -224,9 +224,9 @@ namespace Taxi {
 
         private void on_checkbutton_toggle () {
             if (get_marked_row_uris ().size > 0) {
-                path_bar.set_transfer_button_sensitive (true);
+                path_bar.transfer_button_sensitive = true;
             } else {
-                path_bar.set_transfer_button_sensitive (false);
+                path_bar.transfer_button_sensitive = false;
             }
         }
 
