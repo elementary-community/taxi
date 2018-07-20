@@ -1,0 +1,15 @@
+.snapcraft
+.vscode
+src/config.vala
+build/
+com.github.alecaddd.taxi.substvars
+debian/.debhelper/
+debian/com.github.alecaddd.taxi/
+debian/debhelper-build-stamp
+debian/files
+obj-x86_64-linux-gnu/
+parts/
+prime/
+stage/
+*~
+*.snap
