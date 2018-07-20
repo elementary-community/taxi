@@ -44,8 +44,6 @@ namespace Taxi {
 
         public abstract void open_file (Soup.URI uri);
 
-        public abstract void edit_file (Soup.URI uri);
-
         public abstract File get_current_file ();
     }
 }
