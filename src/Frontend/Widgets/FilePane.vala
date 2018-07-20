@@ -46,12 +46,7 @@ namespace Taxi {
 
         delegate void ActivateFunc (Soup.URI uri);
 
-        public FilePane () {
-            set_orientation (Gtk.Orientation.HORIZONTAL);
-            build ();
-        }
-
-        private void build () {
+        construct {
             inner_grid = new Gtk.Grid ();
             inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
             inner_grid.add (new_path_bar ());
