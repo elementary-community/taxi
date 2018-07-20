@@ -256,7 +256,7 @@ namespace Taxi {
             //add_menu_item ("Rename", menu, u => rename (u), uri);
             menu.show_all ();
             menu.attach_to_widget (event_box, null);
-            menu.popup (null, null, null, 0, Gtk.get_current_event_time ());
+            menu.popup_at_pointer (null);
             menu.deactivate.connect (() => list_box.select_row (null));
             return true;
         }
