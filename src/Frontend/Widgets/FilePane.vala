@@ -27,14 +27,10 @@ namespace Taxi {
     };
 
     class FilePane : Gtk.Grid {
-
-        Soup.URI current_uri;
-        PathBar path_bar;
-        Gtk.Label placeholder_label;
-        Gtk.ListBox list_box;
-        Gtk.Spinner? spinner;
-        Gtk.ScrolledWindow scrolled_pane;
-        Gtk.Grid inner_grid;
+        private Soup.URI current_uri;
+        private PathBar path_bar;
+        private Gtk.ListBox list_box;
+        private Gtk.Stack stack;
 
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
@@ -47,22 +43,68 @@ namespace Taxi {
         delegate void ActivateFunc (Soup.URI uri);
 
         construct {
-            inner_grid = new Gtk.Grid ();
-            inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
-            inner_grid.add (new_path_bar ());
-            inner_grid.add (new_list_box ());
-            add (inner_grid);
-            inner_grid.show_all ();
-        }
-
-        private PathBar new_path_bar () {
             path_bar = new PathBar ();
             path_bar.hexpand = true;
-            path_bar.set_halign (Gtk.Align.FILL);
             path_bar.get_style_context ().add_class ("button");
+
+            var placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
+            placeholder_label.halign = Gtk.Align.CENTER;
+            placeholder_label.valign = Gtk.Align.CENTER;
+            placeholder_label.show ();
+
+            var placeholder_label_context = placeholder_label.get_style_context ();
+            placeholder_label_context.add_class (Granite.STYLE_CLASS_H2_LABEL);
+            placeholder_label_context.add_class (Gtk.STYLE_CLASS_DIM_LABEL);
+
+            list_box = new Gtk.ListBox ();
+            list_box.hexpand = true;
+            list_box.vexpand = true;
+            list_box.set_placeholder (placeholder_label);
+            list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
+
+            var scrolled_pane = new Gtk.ScrolledWindow (null, null);
+            scrolled_pane.add (list_box);
+
+            var spinner = new Gtk.Spinner ();
+            spinner.hexpand = true;
+            spinner.vexpand = true;
+            spinner.halign = Gtk.Align.CENTER;
+            spinner.valign = Gtk.Align.CENTER;
+            spinner.start ();
+
+            stack = new Gtk.Stack ();
+            stack.add_named (scrolled_pane, "list");
+            stack.add_named (spinner, "spinner");
+
+            var inner_grid = new Gtk.Grid ();
+            inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
+            inner_grid.add (path_bar);
+            inner_grid.add (stack);
+            inner_grid.show_all ();
+
+            add (inner_grid);
+
+            list_box.drag_drop.connect (on_drag_drop);
+            list_box.drag_data_received.connect (on_drag_data_received);
+            list_box.row_activated.connect ((row) => {
+                var uri = row.get_data<Soup.URI> ("uri");
+                var type = row.get_data<FileType> ("type");
+                if (type == FileType.DIRECTORY) {
+                    navigate (uri);
+                } else {
+                    open (uri);
+                }
+            });
+
             path_bar.navigate.connect (uri => navigate (uri));
             path_bar.transfer.connect (on_pathbar_transfer);
-            return path_bar;
+
+            Gtk.drag_dest_set (
+                list_box,
+                Gtk.DestDefaults.ALL,
+                target_list,
+                Gdk.DragAction.COPY
+            );
         }
 
         private void on_pathbar_transfer () {
@@ -79,49 +121,6 @@ namespace Taxi {
                 }
             }
             return uri_list;
-        }
-
-        private Gtk.ScrolledWindow new_list_box () {
-            list_box = new Gtk.ListBox ();
-            list_box.hexpand = true;
-            list_box.vexpand = true;
-            list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
-
-            list_box.row_activated.connect ((row) => {
-                var uri = row.get_data<Soup.URI> ("uri");
-                var type = row.get_data<FileType> ("type");
-                if (type == FileType.DIRECTORY) {
-                    navigate (uri);
-                } else {
-                    open (uri);
-                }
-            });
-
-            placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
-            placeholder_label.halign = Gtk.Align.CENTER;
-            placeholder_label.valign = Gtk.Align.CENTER;
-            placeholder_label.show ();
-
-            var placeholder_label_context = placeholder_label.get_style_context ();
-            placeholder_label_context.add_class (Granite.STYLE_CLASS_H2_LABEL);
-            placeholder_label_context.add_class (Gtk.STYLE_CLASS_DIM_LABEL);
-
-            list_box.set_placeholder (placeholder_label);
-
-            scrolled_pane = new Gtk.ScrolledWindow (null, null);
-            scrolled_pane.add (list_box);
-
-            Gtk.drag_dest_set (
-                list_box,
-                Gtk.DestDefaults.ALL,
-                target_list,
-                Gdk.DragAction.COPY
-            );
-
-            list_box.drag_drop.connect (on_drag_drop);
-            list_box.drag_data_received.connect (on_drag_data_received);
-
-            return scrolled_pane;
         }
 
         public void update_list (GLib.List<FileInfo> file_list) {
@@ -301,25 +300,11 @@ namespace Taxi {
         }
 
         public void start_spinner () {
-            scrolled_pane.hide ();
-            if (spinner == null) {
-                spinner = new Gtk.Spinner ();
-                spinner.hexpand = true;
-                spinner.vexpand = true;
-                spinner.halign = Gtk.Align.CENTER;
-                spinner.valign = Gtk.Align.CENTER;
-                spinner.start ();
-                inner_grid.add (spinner);
-            }
-            spinner.show ();
+            stack.visible_child_name = "spinner";
         }
 
         public void stop_spinner () {
-            if (spinner != null) {
-                inner_grid.remove (spinner);
-                spinner = null;
-            }
-            scrolled_pane.show ();
+            stack.visible_child_name = "list";
         }
 
         private string bit_string_format (int64 bytes) {
