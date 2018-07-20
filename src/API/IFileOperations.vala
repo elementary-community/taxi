@@ -35,7 +35,5 @@ namespace Taxi {
             FileCopyFlags flags = FileCopyFlags.NONE,
             Cancellable? cancellable = null
         ) throws Error;
-
-        public async abstract bool rename_file (File file, string new_name) throws Error;
     }
 }

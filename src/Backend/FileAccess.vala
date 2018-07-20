@@ -57,9 +57,6 @@ namespace Taxi {
             }
         }
 
-        public virtual void edit_file (Soup.URI uri) {
-        }
-
         public virtual File get_current_file () {
             return file_handle;
         }

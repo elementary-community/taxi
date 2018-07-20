@@ -148,9 +148,5 @@ namespace Taxi {
                 warning ("Unrecognised file type" + file_type.to_string ());
             }
         }
-
-        public async bool rename_file (File file, string new_name) throws Error {
-            return false;
-        }
     }
 }
