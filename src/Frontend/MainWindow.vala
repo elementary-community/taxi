@@ -117,23 +117,28 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         remote_pane.transfer.connect (on_local_file_dragged);
         remote_pane.@delete.connect (on_remote_file_delete);
 
+        alert_stack = new Gtk.Stack ();
+        alert_stack.add (welcome);
+        alert_stack.add (remote_pane);
+
         outer_box = new Gtk.Grid ();
         outer_box.add (local_pane);
         outer_box.add (new Gtk.Separator (Gtk.Orientation.VERTICAL));
-        outer_box.add (remote_pane);
+        outer_box.add (alert_stack);
 
         var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
         size_group.add_widget (local_pane);
-        size_group.add_widget (remote_pane);
+        size_group.add_widget (alert_stack);
 
-        alert_stack = new Gtk.Stack ();
-        alert_stack.add (welcome);
-        alert_stack.add (outer_box);
+        //  alert_stack = new Gtk.Stack ();
+        //  alert_stack.add (welcome);
+        //  alert_stack.add (outer_box);
 
         toast = new Granite.Widgets.Toast ("");
 
         var overlay = new Gtk.Overlay ();
-        overlay.add (alert_stack);
+        //  overlay.add (alert_stack);
+        overlay.add (outer_box);
         overlay.add_overlay (toast);
 
         set_titlebar (header_bar);
@@ -171,13 +176,15 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
 
         popover.operations_pending.connect (show_spinner);
         popover.operations_finished.connect (hide_spinner);
+
+        update_pane (Location.LOCAL);
     }
 
     private void on_connect_initiated (Soup.URI uri) {
         show_spinner ();
         remote_access.connect_to_device.begin (uri, this, (obj, res) => {
             if (remote_access.connect_to_device.end (res)) {
-                alert_stack.visible_child = outer_box;
+                alert_stack.visible_child = remote_pane;
                 if (local_pane == null) {
                     key_press_event.disconnect (connect_box.on_key_press_event);
                 }
