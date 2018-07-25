@@ -7,4 +7,4 @@ Exec=com.github.alecaddd.taxi
 Icon=com.github.alecaddd.taxi
 Keywords=ftp;sftp;dav;afp;transfer;
 Terminal=false
-Categories=Network;
+Categories=Utility;Development;Network;

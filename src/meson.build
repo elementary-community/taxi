@@ -1,0 +1,33 @@
+executable(
+    meson.project_name(),
+    'Application.vala',
+    'Enum/Protocol.vala',
+    'Enum/ConflictFlag.vala',
+    'Enum/Location.vala',
+    'API/IConnectionSaver.vala',
+    'API/IFileAccess.vala',
+    'API/IFileOperations.vala',
+    'API/IOperationInfo.vala',
+    'Backend/ConnectionSaver.vala',
+    'Backend/FileOperations.vala',
+    'Backend/FileAccess.vala',
+    'Backend/LocalFileAccess.vala',
+    'Backend/OperationInfo.vala',
+    'Backend/RemoteFileAccess.vala',
+    'Frontend/MainWindow.vala',
+    'Frontend/Widgets/ConnectBox.vala',
+    'Frontend/Widgets/FilePane.vala',
+    'Frontend/Widgets/OperationsPopover.vala',
+    'Frontend/Widgets/PathBarSeparator.vala',
+    'Frontend/Widgets/PathBar.vala',
+    asresources,
+    dependencies: [
+        dependency('glib-2.0'),
+        dependency('gobject-2.0'),
+        dependency('granite', version: '>=0.5'),
+        dependency('gtk+-3.0', version: '>=3.22'),
+        dependency('libsoup-2.4'),
+        meson.get_compiler('vala').find_library('posix', required : false)
+    ],
+    install : true
+)
