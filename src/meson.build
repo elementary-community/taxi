@@ -1,20 +1,3 @@
-conf_data = configuration_data()
-conf_data.set('PROJECT_NAME', meson.project_name())
-conf_data.set('EXEC_NAME', meson.project_name())
-conf_data.set('DATADIR', get_option('datadir'))
-conf_data.set('PKGDATADIR', get_option('datadir') + '/' + meson.project_name())
-conf_data.set('GETTEXT_PACKAGE', meson.project_name())
-conf_data.set('RELEASE_NAME', 'Taxi')
-conf_data.set('VERSION', '1.0.0')
-conf_data.set('VERSION_INFO', 'The FTP Client that drives you anywhere')
-conf_data.set('PREFIX', get_option('prefix'))
-
-config_header = configure_file(
-    input: 'config.vala.in',
-    output: 'config.vala',
-    configuration: conf_data
-)
-
 executable(
     meson.project_name(),
     'Application.vala',
