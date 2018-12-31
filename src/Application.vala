@@ -1,40 +1,65 @@
-/***
-  Copyright (C) 2014 Kiran John Hampal <kiran@elementaryos.org>
+/*
+* Copyright (C) 2014 Kiran John Hampal <kiran@elementaryos.org>
+* Copyright (c) 2018 Alecaddd (https://alecaddd.com)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Alessandro "Alecaddd" Castellani <castellani.ale@gmail.com>
+*/
 
-  This program is free software: you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public License version 3, as published
-  by the Free Software Foundation.
+public class Taxi.Application : Gtk.Application {
+	public GLib.List <Gtk.Window> windows;
 
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranties of
-  MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
-  PURPOSE. See the GNU General Public License for more details.
+	construct {
+		application_id = "com.github.alecaddd.taxi";
+		flags |= ApplicationFlags.FLAGS_NONE;
 
-  You should have received a copy of the GNU General Public License along
-  with this program. If not, see <http://www.gnu.org/licenses>
-***/
+		windows = new GLib.List <Gtk.Window> ();
+	}
 
-public class Taxi.Taxi : Gtk.Application {
-    public Taxi () {
-        Object (
-            application_id: "com.github.alecaddd.taxi",
-            flags: ApplicationFlags.FLAGS_NONE
-        );
+	public void new_window () {
+        new Taxi.Frontend.Window (this, new LocalFileAccess (),
+								new RemoteFileAccess (),
+								new FileOperations (),
+								new ConnectionSaver ()).present ();
     }
 
-    protected override void activate () {
-        var main_window = new MainWindow (
-            this,
-            new LocalFileAccess (),
-            new RemoteFileAccess (),
-            new FileOperations (),
-            new ConnectionSaver ()
-        );
-        main_window.show_all ();
+    public override void window_added (Gtk.Window window) {
+        windows.append (window as Gtk.Window);
+        base.window_added (window);
+	}
+	
+	public override void window_removed (Gtk.Window window) {
+        windows.remove (window as Gtk.Window);
+        base.window_removed (window);
     }
 
-    public static int main (string[] args) {
-        var program = new Taxi ();
-        return program.run (args);
-    }
+	protected override void activate () {
+		var window = new Taxi.Frontend.Window (this,
+										new LocalFileAccess (),
+										new RemoteFileAccess (),
+										new FileOperations (),
+										new ConnectionSaver ());
+
+		window.show_all ();
+	}
+
+	public static int main (string[] args) {
+		var application = new Application ();
+
+		return application.run (args);
+	}
 }

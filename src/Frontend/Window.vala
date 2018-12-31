@@ -14,7 +14,7 @@
   with program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-class Taxi.MainWindow : Gtk.ApplicationWindow {
+class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     public IConnectionSaver conn_saver { get; construct; }
     public IFileOperations file_operation { get; construct; }
     public IFileAccess local_access { get; construct; }
@@ -33,7 +33,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     private Soup.URI conn_uri;
     private GLib.Settings saved_state;
 
-    public MainWindow (
+    public Window (
         Gtk.Application application,
         IFileAccess local_access,
         IFileAccess remote_access,
