@@ -15,6 +15,7 @@ executable(
     'Backend/OperationInfo.vala',
     'Backend/RemoteFileAccess.vala',
     'Frontend/Window.vala',
+    'Frontend/Widgets/HeaderBar.vala',
     'Frontend/Widgets/ConnectBox.vala',
     'Frontend/Widgets/FilePane.vala',
     'Frontend/Widgets/OperationsPopover.vala',

@@ -1,18 +1,24 @@
 /***
-  Copyright (C) 2014 Kiran John Hampal <kiran@elementaryos.org>
-
-  This program is free software: you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public License version 3, as published
-  by the Free Software Foundation.
-
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranties of
-  MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
-  PURPOSE. See the GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along
-  with program. If not, see <http://www.gnu.org/licenses>
-***/
+* Copyright (C) 2014 Kiran John Hampal <kiran@elementaryos.org>
+* Copyright (c) 2019 Alecaddd (https://alecaddd.com)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Alessandro "Alecaddd" Castellani <castellani.ale@gmail.com>
+*/
 
 class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     public IConnectionSaver conn_saver { get; construct; }
@@ -89,12 +95,13 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
         update_bookmark_menu ();
 
-        var header_bar = new Gtk.HeaderBar ();
-        header_bar.set_show_close_button (true);
-        header_bar.set_custom_title (new Gtk.Label (null));
-        header_bar.pack_start (connect_box);
-        header_bar.pack_start (spinner_revealer);
-        header_bar.pack_start (bookmark_menu_button);
+        //  var header_bar = new Gtk.HeaderBar ();
+        //  header_bar.set_show_close_button (true);
+        //  header_bar.set_custom_title (new Gtk.Label (null));
+        //  header_bar.pack_start (connect_box);
+        //  header_bar.pack_start (spinner_revealer);
+        //  header_bar.pack_start (bookmark_menu_button);
+        var headerbar = new Taxi.Frontend.Widgets.HeaderBar (this);
 
         welcome = new Granite.Widgets.Welcome (
             _("Connect"),
@@ -141,7 +148,7 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         overlay.add (outer_box);
         overlay.add_overlay (toast);
 
-        set_titlebar (header_bar);
+        set_titlebar (headerbar);
         add (overlay);
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
