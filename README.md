@@ -1,4 +1,4 @@
-# ![Taxi](taxi-logo-transparent.png)
+# ![Taxi](data/taxi-logo-transparent.png)
 >The FTP Client that drives you anywhere
 
 [![Build Status](https://travis-ci.org/Alecaddd/taxi.svg?branch=master)](https://travis-ci.org/Alecaddd/taxi)
@@ -7,10 +7,15 @@ Taxi is a native Linux FTP client built in Vala and Gtk originally created by Ki
 
 ![Taxi Screenshot](data/screenshot.png?raw=true)
 
-<!-- ## Get it from the elementary OS AppCenter!
+## Get it from the elementary OS AppCenter!
 Taxi, is primarily available from the AppCenter of elementary OS. Download it from there!
 
-[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/com.github.alecaddd.taxi) -->
+[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/com.github.alecaddd.taxi)
+
+## Support the Project
+If you like Sequeler and you want to support its development, consider donating via [PayPal](https://www.paypal.me/alecaddd) or pledge on [Patreon](https://www.patreon.com/alecaddd).
+
+<a href="https://www.patreon.com/alecaddd" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="170px" alt="Become a Patron"></a> <a href="https://www.paypal.me/alecaddd" target="_blank"><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png" width="150px" alt="Donate on PayPal"></a>
 
 ## Install it from source
 You can install Taxi by compiling from source, here's the list of dependencies required:
@@ -28,6 +33,3 @@ meson build --prefix=/usr
 cd build
 ninja && sudo ninja install
 ```
-
-### Donations
-If you like Taxi and you want to support its development, consider donating via [PayPal](https://www.paypal.me/alecaddd) or pledge on [Patreon](https://www.patreon.com/alecaddd).
