@@ -31,7 +31,7 @@ public class Taxi.Application : Gtk.Application {
 	}
 
 	public void new_window () {
-        new Taxi.Frontend.Window (this, new LocalFileAccess (),
+        new Frontend.Window (this, new LocalFileAccess (),
 								new RemoteFileAccess (),
 								new FileOperations (),
 								new ConnectionSaver ()).present ();
@@ -48,7 +48,7 @@ public class Taxi.Application : Gtk.Application {
     }
 
 	protected override void activate () {
-		var window = new Taxi.Frontend.Window (this,
+		var window = new Frontend.Window (this,
 										new LocalFileAccess (),
 										new RemoteFileAccess (),
 										new FileOperations (),

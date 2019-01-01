@@ -101,7 +101,7 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         //  header_bar.pack_start (connect_box);
         //  header_bar.pack_start (spinner_revealer);
         //  header_bar.pack_start (bookmark_menu_button);
-        var headerbar = new Taxi.Frontend.Widgets.HeaderBar (this);
+        var headerbar = new Frontend.Widgets.HeaderBar (this);
 
         welcome = new Granite.Widgets.Welcome (
             _("Connect"),

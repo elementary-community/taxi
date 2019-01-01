@@ -20,22 +20,21 @@
 */
 
 class Taxi.Frontend.Widgets.HeaderBar : Gtk.HeaderBar {
-    public weak Taxi.Frontend.Window window { get; construct; }
+    public weak Frontend.Window window { get; construct; }
 
     private Granite.ModeSwitch mode_switch;
 
-    public HeaderBar (Taxi.Frontend.Window main_window) {
+    public HeaderBar (Frontend.Window main_window) {
 		Object (window: main_window);
 
-        set_show_close_button (true);
-        set_custom_title (new Gtk.Label (null));
-        build_ui ();
+        show_close_button = true;
+        custom_title = null;
     }
     
-    public void build_ui () {
+    construct {
         mode_switch = new Granite.ModeSwitch.from_icon_name ("display-brightness-symbolic", "weather-clear-night-symbolic");
-		mode_switch.primary_icon_tooltip_text = _("Light background");
-		mode_switch.secondary_icon_tooltip_text = _("Dark background");
+		mode_switch.primary_icon_tooltip_text = _("Light Mode");
+		mode_switch.secondary_icon_tooltip_text = _("Dark Mode");
 		mode_switch.valign = Gtk.Align.CENTER;
 		//  mode_switch.bind_property ("active", settings, "dark-theme");
 		//  mode_switch.notify.connect (() => {
