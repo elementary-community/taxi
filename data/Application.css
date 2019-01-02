@@ -10,3 +10,8 @@
     border-radius: 0;
     padding: 0 6px;
 }
+
+.headerbar-separator {
+    margin-left: 3px;
+    margin-right: 3px;
+}
