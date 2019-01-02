@@ -38,21 +38,21 @@ namespace Taxi {
                     return false;
                 }
             }
-            try {
-                var bookmark = new BookmarkFile ();
-                var bookmark_file = File.new_for_path (file_name);
-                if (bookmark_file.query_exists ()) {
-                    bookmark.load_from_file (file_name);
-                    if (bookmark.has_item (uri)) {
-                        message ("Item already exists");
-                        return true;
-                    }
-                }
-                bookmark.add_application (uri, "taxi", "taxi");
-                return bookmark.to_file (file_name);
-            } catch (BookmarkFileError e) {
-                message (e.message);
-            }
+            //  try {
+            //      var bookmark = new BookmarkFile ();
+            //      var bookmark_file = File.new_for_path (file_name);
+            //      if (bookmark_file.query_exists ()) {
+            //          //  bookmark.load_from_file (file_name);
+            //          if (bookmark.has_item (uri)) {
+            //              message ("Item already exists");
+            //              return true;
+            //          }
+            //      }
+            //      bookmark.add_application (uri, "taxi", "taxi");
+            //      //  return bookmark.to_file (file_name);
+            //  } catch (BookmarkFileError e) {
+            //      message (e.message);
+            //  }
             return false;
         }
 
@@ -61,9 +61,9 @@ namespace Taxi {
             var bookmark_file = File.new_for_path (file_name);
             if (bookmark_file.query_exists ()) {
                 try {
-                    bookmark.load_from_file (file_name);
+                    //  bookmark.load_from_file (file_name);
                     bookmark.remove_application (uri, "taxi");
-                    return bookmark.to_file (file_name);
+                    //  return bookmark.to_file (file_name);
                 } catch (BookmarkFileError e) {
                     message (e.message);
                     return false;
@@ -73,32 +73,32 @@ namespace Taxi {
         }
 
         public List<string> get_saved_conns () {
-            var bookmark = new BookmarkFile ();
+            //  var bookmark = new BookmarkFile ();
             var bookmark_file = File.new_for_path (file_name);
             var connection_list = new List<string> ();
             if (bookmark_file.query_exists ()) {
-                try {
-                    bookmark.load_from_file (file_name);
-                    foreach (string uri in bookmark.get_uris ()) {
-                        connection_list.append (uri);
-                    }
-                } catch (BookmarkFileError e) {
-                    message (e.message);
-                }
+                //  try {
+                //      //  bookmark.load_from_file (file_name);
+                //      foreach (string uri in bookmark.get_uris ()) {
+                //          connection_list.append (uri);
+                //      }
+                //  } catch (BookmarkFileError e) {
+                //      message (e.message);
+                //  }
             }
             return connection_list;
         }
 
         public bool is_bookmarked (string uri) {
-            var bookmark = new BookmarkFile ();
+            //  var bookmark = new BookmarkFile ();
             var bookmark_file = File.new_for_path (file_name);
             if (bookmark_file.query_exists ()) {
-                try {
-                    bookmark.load_from_file (file_name);
-                    return bookmark.has_item (uri);
-                } catch (BookmarkFileError e) {
-                    message (e.message);
-                }
+                //  try {
+                //      //  bookmark.load_from_file (file_name);
+                //      return bookmark.has_item (uri);
+                //  } catch (BookmarkFileError e) {
+                //      message (e.message);
+                //  }
             }
             return false;
         }

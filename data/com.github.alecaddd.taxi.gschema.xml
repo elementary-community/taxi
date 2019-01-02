@@ -2,12 +2,12 @@
 <schemalist>
   <schema path="/com/github/alecaddd/taxi/state/" id="com.github.alecaddd.taxi.state">
     <key type="i" name="window-width">
-      <default>650</default>
+      <default>800</default>
       <summary>Window width.</summary>
       <description>Default window width.</description>
     </key>
     <key type="i" name="window-height">
-      <default>550</default>
+      <default>600</default>
       <summary>Window height.</summary>
       <description>Default window height.</description>
     </key>
@@ -15,6 +15,11 @@
       <default>false</default>
       <summary>Whether the window should be maximized.</summary>
       <description>Whether the window should be maximized by default.</description>
+    </key>
+    <key type="b" name="dark-mode">
+      <default>false</default>
+      <summary>Use dark theme</summary>
+      <description>Switch between Light and Dark theme.</description>
     </key>
     <key type="i" name="opening-x">
       <default>-1</default>

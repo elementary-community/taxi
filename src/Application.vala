@@ -19,6 +19,9 @@
 *
 * Authored by: Alessandro "Alecaddd" Castellani <castellani.ale@gmail.com>
 */
+namespace Taxi {
+	public Settings settings;
+}
 
 public class Taxi.Application : Gtk.Application {
 	public GLib.List <Gtk.Window> windows;
@@ -26,6 +29,8 @@ public class Taxi.Application : Gtk.Application {
 	construct {
 		application_id = "com.github.alecaddd.taxi";
 		flags |= ApplicationFlags.FLAGS_NONE;
+
+		settings = new Settings ();
 
 		windows = new GLib.List <Gtk.Window> ();
 	}

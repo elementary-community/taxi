@@ -36,14 +36,14 @@ class Taxi.Frontend.Widgets.HeaderBar : Gtk.HeaderBar {
 		mode_switch.primary_icon_tooltip_text = _("Light Mode");
 		mode_switch.secondary_icon_tooltip_text = _("Dark Mode");
 		mode_switch.valign = Gtk.Align.CENTER;
-		//  mode_switch.bind_property ("active", settings, "dark-theme");
-		//  mode_switch.notify.connect (() => {
-		//  	Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.dark_theme;
-		//  });
+		mode_switch.bind_property ("active", settings, "dark-mode");
+		mode_switch.notify.connect (() => {
+			Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.dark_mode;
+		});
 		
-		//  if (settings.dark_theme) {
-		//  	mode_switch.active = true;
-		//  }
+		if (settings.dark_mode) {
+			mode_switch.active = true;
+		}
 
 		var new_window_item = new Gtk.ModelButton ();
 		set_button_grid (new_window_item, _("New Window"), "Ctrl+N");

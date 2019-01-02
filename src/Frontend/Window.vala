@@ -37,7 +37,6 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     private FilePane local_pane;
     private FilePane remote_pane;
     private Soup.URI conn_uri;
-    private GLib.Settings saved_state;
 
     public Window (
         Gtk.Application application,
@@ -56,6 +55,11 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     }
 
     construct {
+        move (settings.opening_x, settings.opening_y);
+        resize (settings.window_width, settings.window_height);
+        if (settings.maximized)
+            maximize ();
+
         connect_box = new ConnectBox ();
         connect_box.valign = Gtk.Align.CENTER;
 
@@ -95,12 +99,6 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
         update_bookmark_menu ();
 
-        //  var header_bar = new Gtk.HeaderBar ();
-        //  header_bar.set_show_close_button (true);
-        //  header_bar.set_custom_title (new Gtk.Label (null));
-        //  header_bar.pack_start (connect_box);
-        //  header_bar.pack_start (spinner_revealer);
-        //  header_bar.pack_start (bookmark_menu_button);
         var headerbar = new Frontend.Widgets.HeaderBar (this);
 
         welcome = new Granite.Widgets.Welcome (
@@ -150,22 +148,6 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
         set_titlebar (headerbar);
         add (overlay);
-
-        saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
-
-        var window_x = saved_state.get_int ("opening-x");
-        var window_y = saved_state.get_int ("opening-y");
-
-        if (window_x != -1 ||  window_y != -1) {
-            move (window_x, window_y);
-        }
-
-        default_height = saved_state.get_int ("window-height");
-        default_width = saved_state.get_int ("window-width");
-
-        if (saved_state.get_boolean ("maximized")) {
-            maximize ();
-        }
 
         var provider = new Gtk.CssProvider ();
         provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
@@ -383,19 +365,19 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
     public override bool configure_event (Gdk.EventConfigure event) {
         if (is_maximized) {
-            saved_state.set_boolean ("maximized", true);
+            settings.maximized = true;
         } else {
-            saved_state.set_boolean ("maximized", false);
+            settings.maximized = false;
 
-            int window_width, window_height;
-            get_size (out window_width, out window_height);
-            saved_state.set_int ("window-height", window_height);
-            saved_state.set_int ("window-width", window_width);
+            int width, height, x, y;
 
-            int x_pos, y_pos;
-            get_position (out x_pos, out y_pos);
-            saved_state.set_int ("opening-x", x_pos);
-            saved_state.set_int ("opening-y", y_pos);
+            get_size (out width, out height);
+            get_position (out x, out y);
+
+            settings.opening_x = x;
+            settings.opening_y = y;
+            settings.window_width = width;
+            settings.window_height = height;
         }
 
         return base.configure_event (event);

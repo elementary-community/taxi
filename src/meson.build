@@ -8,6 +8,7 @@ executable(
     'API/IFileAccess.vala',
     'API/IFileOperations.vala',
     'API/IOperationInfo.vala',
+    'API/GraniteSettings.vala',
     'Backend/ConnectionSaver.vala',
     'Backend/FileOperations.vala',
     'Backend/FileAccess.vala',
