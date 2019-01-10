@@ -102,10 +102,20 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         var headerbar = new Frontend.Widgets.HeaderBar (this);
 
         welcome = new Granite.Widgets.Welcome (
-            _("Connect"),
-            _("Type a URL and press 'Enter' to\nconnect to a server.")
+            _("Welcome to Taxi"),
+            _("The FTP Client that drives you anywhere")
         );
         welcome.vexpand = true;
+
+        welcome.append ("preferences-system-network", _("Create a New Connection"), _("Connect to a Server and save it in your Bookmarks"));
+
+        welcome.activated.connect ( index => {
+			switch (index) {
+				case 0:
+					//
+				break;
+			}
+        });
 
         local_pane = new FilePane ();
         local_pane.open.connect (on_local_open);
