@@ -180,6 +180,8 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         string color = settings.dark_mode ? "-dark" : "";
 
         var provider = new Gtk.CssProvider ();
+        Gtk.StyleContext.reset_widgets (get_screen ());
+
         provider.load_from_resource (("com/github/alecaddd/taxi/application%s.css").printf(color));
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }

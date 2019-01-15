@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/alecaddd/taxi">
-    <file alias="application.css" compressed="true">application.css</file>
-    <file alias="application-dark.css" compressed="true">application-dark.css</file>
+    <file alias="default.css" compressed="true">css/default.css</file>
+    <file alias="application.css" compressed="true">css/application.css</file>
+    <file alias="application-dark.css" compressed="true">css/application-dark.css</file>
   </gresource>
 </gresources>
