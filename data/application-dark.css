@@ -3,6 +3,7 @@
     border-radius: 0;
     border-width: 0;
 }
+@define-color colorPrimary @ORANGE_500;
 
 .button {
     border-width: 0;

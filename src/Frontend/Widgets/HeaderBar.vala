@@ -39,6 +39,7 @@ class Taxi.Frontend.Widgets.HeaderBar : Gtk.HeaderBar {
 		mode_switch.bind_property ("active", settings, "dark-mode");
 		mode_switch.notify.connect (() => {
 			Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.dark_mode;
+			window.load_style ();
 		});
 		
 		if (settings.dark_mode) {

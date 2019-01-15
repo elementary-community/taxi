@@ -159,10 +159,6 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         set_titlebar (headerbar);
         add (overlay);
 
-        var provider = new Gtk.CssProvider ();
-        provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
-        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
         connect_box.connect_initiated.connect (on_connect_initiated);
         connect_box.ask_hostname.connect (on_ask_hostname);
         connect_box.bookmarked.connect (bookmark);
@@ -177,6 +173,15 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         popover.operations_finished.connect (hide_spinner);
 
         update_pane (Location.LOCAL);
+        load_style ();
+    }
+
+    public void load_style () {
+        string color = settings.dark_mode ? "-dark" : "";
+
+        var provider = new Gtk.CssProvider ();
+        provider.load_from_resource (("com/github/alecaddd/taxi/application%s.css").printf(color));
+        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     private void on_connect_initiated (Soup.URI uri) {
