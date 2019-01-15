@@ -21,6 +21,8 @@
 */
 
 class Taxi.Frontend.Window : Gtk.ApplicationWindow {
+    public weak Taxi.Application app { get; construct; }
+
     public IConnectionSaver conn_saver { get; construct; }
     public IFileOperations file_operation { get; construct; }
     public IFileAccess local_access { get; construct; }
@@ -29,7 +31,7 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     private Granite.Widgets.Toast toast;
     private Gtk.Revealer spinner_revealer;
     private Gtk.Grid bookmark_list;
-    private Gtk.Grid outer_box;
+    private Gtk.Paned main_panel;
     private Gtk.MenuButton bookmark_menu_button;
     private Gtk.Stack alert_stack;
     private ConnectBox connect_box;
@@ -39,7 +41,7 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     private Soup.URI conn_uri;
 
     public Window (
-        Gtk.Application application,
+        Taxi.Application application,
         IFileAccess local_access,
         IFileAccess remote_access,
         IFileOperations file_operation,
@@ -47,6 +49,7 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
     ) {
         Object (
             application: application,
+            app: application,
             conn_saver: conn_saver,
             file_operation: file_operation,
             local_access: local_access,
@@ -136,10 +139,14 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         alert_stack.add (welcome);
         alert_stack.add (remote_pane);
 
-        outer_box = new Gtk.Grid ();
-        outer_box.add (local_pane);
-        outer_box.add (new Gtk.Separator (Gtk.Orientation.VERTICAL));
-        outer_box.add (alert_stack);
+        main_panel = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+        main_panel.position = settings.panel_position;
+        main_panel.add1 (local_pane);
+        main_panel.add2 (alert_stack);
+        main_panel.accept_position.connect (() => {
+            debug ("%i", main_panel.position);
+            settings.panel_position = main_panel.position;
+        });
 
         var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
         size_group.add_widget (local_pane);
@@ -147,13 +154,13 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
         //  alert_stack = new Gtk.Stack ();
         //  alert_stack.add (welcome);
-        //  alert_stack.add (outer_box);
+        //  alert_stack.add (main_panel);
 
         toast = new Granite.Widgets.Toast ("");
 
         var overlay = new Gtk.Overlay ();
         //  overlay.add (alert_stack);
-        overlay.add (outer_box);
+        overlay.add (main_panel);
         overlay.add_overlay (toast);
 
         set_titlebar (headerbar);
@@ -174,15 +181,15 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
 
         update_pane (Location.LOCAL);
         load_style ();
+
+        delete_event.connect (before_destroy);
     }
 
     public void load_style () {
+        var provider = new Gtk.CssProvider ();
         string color = settings.dark_mode ? "-dark" : "";
 
-        var provider = new Gtk.CssProvider ();
-        Gtk.StyleContext.reset_widgets (get_screen ());
-
-        provider.load_from_resource (("com/github/alecaddd/taxi/application%s.css").printf(color));
+        provider.load_from_resource (("com/github/alecaddd/taxi/application%s.css").printf (color));
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
@@ -380,8 +387,24 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
         return response;
     }
 
-    public override bool configure_event (Gdk.EventConfigure event) {
-        if (is_maximized) {
+    public bool before_destroy () {
+		update_status ();
+		app.get_active_window ().destroy ();
+        on_destroy ();
+
+		return true;
+	}
+
+	public void on_destroy () {
+        uint length = app.windows.length ();
+
+		if (length == 0) {
+			Gtk.main_quit ();
+		}
+	}
+
+	private void update_status () {
+		if (is_maximized) {
             settings.maximized = true;
         } else {
             settings.maximized = false;
@@ -397,6 +420,6 @@ class Taxi.Frontend.Window : Gtk.ApplicationWindow {
             settings.window_height = height;
         }
 
-        return base.configure_event (event);
+        settings.panel_position = main_panel.position;
     }
 }

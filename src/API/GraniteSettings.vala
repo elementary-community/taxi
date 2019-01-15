@@ -26,6 +26,7 @@ public class Taxi.Settings : Granite.Services.Settings {
     public int window_height { get; set; }
 	public bool maximized { get; set; }
 	public bool dark_mode { get; set; }
+	public int panel_position { get; set; }
 
 	public Settings () {
 		base ("com.github.alecaddd.taxi.state");

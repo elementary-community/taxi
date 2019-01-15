@@ -31,5 +31,10 @@
       <summary>Most recent y position of the window.</summary>
       <description>Most recent y position of the window.</description>
     </key>
+    <key type="i" name="panel-position">
+      <default>400</default>
+      <summary>Main Paned Panel Position.</summary>
+      <description>Default Main Paned Panel Position.</description>
+    </key>
   </schema>
 </schemalist>
