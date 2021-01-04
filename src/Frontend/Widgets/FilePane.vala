@@ -31,6 +31,7 @@ namespace Taxi {
         private PathBar path_bar;
         private Gtk.ListBox list_box;
         private Gtk.Stack stack;
+        private Gtk.Button path_bar_outer;
 
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
@@ -76,9 +77,13 @@ namespace Taxi {
             stack.add_named (scrolled_pane, "list");
             stack.add_named (spinner, "spinner");
 
+            path_bar_outer = new Gtk.Button ();
+            path_bar_outer.add (path_bar);
+            path_bar_outer.get_style_context ().add_class ("pathbar");
+
             var inner_grid = new Gtk.Grid ();
             inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
-            inner_grid.add (path_bar);
+            inner_grid.add (path_bar_outer);
             inner_grid.add (stack);
             inner_grid.show_all ();
 
