@@ -2,9 +2,10 @@
     background: none;
     border-radius: 0;
     border-width: 0;
+    padding: 6px;
 }
 
-.button {
+button.pathbar {
     border-width: 0;
     border-bottom-width: 1px;
     border-radius: 0;

@@ -27,6 +27,14 @@ namespace Taxi {
             set_path (uri);
         }
 
+        class construct {
+            set_css_name (Gtk.STYLE_CLASS_BUTTON);
+        }
+
+        construct {
+            get_style_context ().add_class ("pathbar");
+        }
+
         private string concat_until (string[] words, int n) {
             var result = "";
             for (int i = 0; (i < n + 1) && (i < words.length); i++) {

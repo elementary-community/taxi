@@ -45,7 +45,6 @@ namespace Taxi {
         construct {
             path_bar = new PathBar ();
             path_bar.hexpand = true;
-            path_bar.get_style_context ().add_class ("button");
 
             var placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
             placeholder_label.halign = Gtk.Align.CENTER;
@@ -170,10 +169,13 @@ namespace Taxi {
             name.halign = Gtk.Align.START;
             name.hexpand = true;
 
-            var row = new Gtk.Grid ();
-            row.column_spacing = 6;
-            row.hexpand = true;
-            row.margin = 6;
+            var row = new Gtk.Grid () {
+                column_spacing = 6,
+                hexpand = true,
+                margin = 6,
+                margin_start = 12,
+                margin_end = 12
+            };
             row.add (checkbox);
             row.add (icon);
             row.add (name);

@@ -26,6 +26,7 @@ executable(
         dependency('gobject-2.0'),
         dependency('granite', version: '>=6.0.0'),
         dependency('gtk+-3.0', version: '>=3.22'),
+        dependency('libhandy-1'),
         dependency('libsoup-2.4'),
         meson.get_compiler('vala').find_library('posix', required : false)
     ],
