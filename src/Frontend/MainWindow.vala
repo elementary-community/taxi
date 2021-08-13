@@ -14,7 +14,7 @@
   with program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-class Taxi.MainWindow : Gtk.ApplicationWindow {
+class Taxi.MainWindow : Hdy.ApplicationWindow {
     public IConnectionSaver conn_saver { get; construct; }
     public IFileOperations file_operation { get; construct; }
     public IFileAccess local_access { get; construct; }
@@ -50,6 +50,8 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     }
 
     construct {
+        Hdy.init ();
+
         connect_box = new ConnectBox ();
         connect_box.valign = Gtk.Align.CENTER;
 
@@ -89,9 +91,10 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
 
         update_bookmark_menu ();
 
-        var header_bar = new Gtk.HeaderBar ();
-        header_bar.set_show_close_button (true);
-        header_bar.set_custom_title (new Gtk.Label (null));
+        var header_bar = new Hdy.HeaderBar () {
+            custom_title = new Gtk.Label (null),
+            show_close_button = true
+        };
         header_bar.pack_start (connect_box);
         header_bar.pack_start (spinner_revealer);
         header_bar.pack_start (bookmark_menu_button);
@@ -136,8 +139,11 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         overlay.add (alert_stack);
         overlay.add_overlay (toast);
 
-        set_titlebar (header_bar);
-        add (overlay);
+        var grid = new Gtk.Grid ();
+        grid.attach (header_bar, 0, 0);
+        grid.attach (overlay, 0, 1);
+
+        add (grid);
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 

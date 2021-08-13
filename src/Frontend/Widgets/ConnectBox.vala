@@ -34,7 +34,6 @@ namespace Taxi {
                 protocol_combobox.append_text (entry);
             }
             protocol_combobox.active = 0;
-            protocol_combobox.valign = Gtk.Align.CENTER;
 
             path_entry = new Gtk.Entry ();
             path_entry.placeholder_text = _("hostname:port/folder");
