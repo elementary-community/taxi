@@ -13,6 +13,11 @@
     <binary>com.github.alecaddd.taxi</binary>
   </provides>
   <releases>
+    <release version="2.0.1" date="2018-08-13">
+      <description>
+        <p>Fix Flatpak permissions for FTP mounts</p>
+      </description>
+    </release>
     <release version="2.0.0" date="2021-08-13">
       <description>
         <p>Update for elementary OS 6</p>
