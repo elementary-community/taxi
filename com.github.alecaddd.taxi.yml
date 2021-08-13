@@ -11,8 +11,10 @@ finish-args:
   - '--share=network'
   - '--socket=fallback-x11'
   - '--socket=wayland'
+    # Since it's a file browser
+  - '--filesystem=home'
     # needed to mount FTP
-  - "--talk-name=org.gtk.vfs.*"
+  - '--talk-name=org.gtk.vfs.*'
   # needed for perfers-color-scheme
   - '--system-talk-name=org.freedesktop.Accounts'
 
