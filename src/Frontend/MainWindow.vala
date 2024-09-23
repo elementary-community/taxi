@@ -150,7 +150,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         var window_x = saved_state.get_int ("opening-x");
         var window_y = saved_state.get_int ("opening-y");
 
-        if (window_x != -1 ||  window_y != -1) {
+        if (window_x != -1 || window_y != -1) {
             move (window_x, window_y);
         }
 

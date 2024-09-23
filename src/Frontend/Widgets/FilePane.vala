@@ -21,8 +21,8 @@ namespace Taxi {
         URI_LIST;
     }
 
-    const Gtk.TargetEntry[] target_list = {
-        { "test/plain",    0, Target.STRING },
+    const Gtk.TargetEntry[] TARGET_LIST = {
+        { "test/plain", 0, Target.STRING },
         { "text/uri-list", 0, Target.URI_LIST }
     };
 
@@ -101,7 +101,7 @@ namespace Taxi {
             Gtk.drag_dest_set (
                 list_box,
                 Gtk.DestDefaults.ALL,
-                target_list,
+                TARGET_LIST,
                 Gdk.DragAction.COPY
             );
         }
@@ -203,7 +203,7 @@ namespace Taxi {
             Gtk.drag_source_set (
                 ebrow,
                 Gdk.ModifierType.BUTTON1_MASK,
-                target_list,
+                TARGET_LIST,
                 Gdk.DragAction.COPY
             );
 
