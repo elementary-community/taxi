@@ -101,7 +101,7 @@ namespace Taxi {
             Gtk.drag_dest_set (
                 list_box,
                 Gtk.DestDefaults.ALL,
-                target_list,
+                TARGET_LIST
                 Gdk.DragAction.COPY
             );
         }
@@ -203,7 +203,7 @@ namespace Taxi {
             Gtk.drag_source_set (
                 ebrow,
                 Gdk.ModifierType.BUTTON1_MASK,
-                target_list,
+                TARGET_LIST,
                 Gdk.DragAction.COPY
             );
 
