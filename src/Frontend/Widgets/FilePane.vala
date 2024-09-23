@@ -35,7 +35,6 @@ namespace Taxi {
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
         public signal void navigate (GLib.Uri uri);
-        public signal void @delete (GLib.Uri uri);
         public signal void rename (GLib.Uri uri);
         public signal void open (GLib.Uri uri);
         public signal void edit (GLib.Uri uri);
@@ -247,32 +246,49 @@ namespace Taxi {
                 PARSE_RELAXED
             );
 
+            var menu_model = new GLib.Menu ();
+
             var type = event_box.get_data<FileType> ("type");
-            var menu = new Gtk.Menu ();
             if (type == FileType.DIRECTORY) {
-                menu.add (new_menu_item (_("Open"), u => navigate (u), uri));
+                menu_model.append (
+                    _("Open"),
+                    Action.print_detailed_name (
+                        "win.navigate",
+                        new Variant.string (uri.to_string ())
+                    )
+                );
             } else {
-                menu.add (new_menu_item (_("Open"), u => open (u), uri));
+                menu_model.append (
+                    _("Open"),
+                    Action.print_detailed_name (
+                        "win.open",
+                        new Variant.string (uri.to_string ())
+                    )
+                );
+
                 //menu.add (new_menu_item ("Edit", u => edit (u), uri));
             }
-            menu.add (new Gtk.SeparatorMenuItem ());
-            menu.add (new_menu_item (_("Delete"), u => @delete (u), uri));
+
+            var delete_section = new GLib.Menu ();
+            delete_section.append (
+                _("Delete"),
+                Action.print_detailed_name (
+                    "win.delete",
+                    new Variant.string (uri.to_string ())
+                )
+            );
+
+            menu_model.append_section (null, delete_section);
+
             //add_menu_item ("Rename", menu, u => rename (u), uri);
-            menu.show_all ();
-            menu.attach_to_widget (event_box, null);
+
+            var menu = new Gtk.Menu.from_model (menu_model) {
+                attach_widget = event_box
+            };
             menu.popup_at_pointer (null);
             menu.deactivate.connect (() => list_box.select_row (null));
-            return true;
-        }
 
-        private Gtk.MenuItem new_menu_item (
-            string label,
-            ActivateFunc activate_fn,
-            GLib.Uri uri
-        ) {
-            var menu_item = new Gtk.MenuItem.with_label (label);
-            menu_item.activate.connect (() => activate_fn (uri));
-            return menu_item;
+            return true;
         }
 
         public void update_pathbar (GLib.Uri uri) {
