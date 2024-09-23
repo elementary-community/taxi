@@ -18,7 +18,7 @@ namespace Taxi {
 
     class ConnectionSaver : IConnectionSaver, Object {
 
-        string file_dir  = Path.build_filename (
+        string file_dir = Path.build_filename (
             Environment.get_user_config_dir (),
             "taxi"
         );

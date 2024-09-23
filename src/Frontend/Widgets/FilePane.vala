@@ -21,8 +21,8 @@ namespace Taxi {
         URI_LIST;
     }
 
-    const Gtk.TargetEntry[] target_list = {
-        { "test/plain",    0, Target.STRING },
+    const Gtk.TargetEntry[] TARGET_LIST = {
+        { "test/plain", 0, Target.STRING },
         { "text/uri-list", 0, Target.URI_LIST }
     };
 
