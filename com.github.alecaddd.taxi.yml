@@ -1,7 +1,7 @@
 app-id: com.github.alecaddd.taxi
 
 runtime: io.elementary.Platform
-runtime-version: '6'
+runtime-version: '7.1'
 sdk: io.elementary.Sdk
 
 command: com.github.alecaddd.taxi
