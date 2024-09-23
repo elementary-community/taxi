@@ -101,7 +101,7 @@ namespace Taxi {
             Gtk.drag_dest_set (
                 list_box,
                 Gtk.DestDefaults.ALL,
-                TARGET_LIST
+                TARGET_LIST,
                 Gdk.DragAction.COPY
             );
         }
