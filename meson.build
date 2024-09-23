@@ -18,4 +18,7 @@ subdir('data')
 subdir('src')
 subdir('po')
 
-meson.add_install_script('meson/post_install.py')
+gnome.post_install(
+    glib_compile_schemas: true,
+    update_desktop_database: true
+)
