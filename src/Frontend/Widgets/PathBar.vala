@@ -18,12 +18,12 @@ namespace Taxi {
     class PathBar : Gtk.Grid {
         public bool transfer_button_sensitive { get; set; }
 
-        private Soup.URI current_uri;
+        private GLib.Uri current_uri;
 
-        public signal void navigate (Soup.URI uri);
+        public signal void navigate (GLib.Uri uri);
         public signal void transfer ();
 
-        public PathBar.from_uri (Soup.URI uri) {
+        public PathBar.from_uri (GLib.Uri uri) {
             set_path (uri);
         }
 
@@ -64,13 +64,13 @@ namespace Taxi {
             button_style_context.add_class ("path-button");
 
             button.clicked.connect (() => {
-                current_uri.set_path (path);
+                current_uri.parse (current_uri.get_scheme () + path, PARSE_RELAXED);
                 navigate (current_uri);
             });
             add (button);
         }
 
-        public void set_path (Soup.URI uri) {
+        public void set_path (GLib.Uri uri) {
             clear_path ();
             current_uri = uri;
             string transfer_icon_name;

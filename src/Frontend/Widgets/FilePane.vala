@@ -27,20 +27,20 @@ namespace Taxi {
     };
 
     class FilePane : Gtk.Grid {
-        private Soup.URI current_uri;
+        private GLib.Uri current_uri;
         private PathBar path_bar;
         private Gtk.ListBox list_box;
         private Gtk.Stack stack;
 
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
-        public signal void navigate (Soup.URI uri);
-        public signal void @delete (Soup.URI uri);
-        public signal void rename (Soup.URI uri);
-        public signal void open (Soup.URI uri);
-        public signal void edit (Soup.URI uri);
+        public signal void navigate (GLib.Uri uri);
+        public signal void @delete (GLib.Uri uri);
+        public signal void rename (GLib.Uri uri);
+        public signal void open (GLib.Uri uri);
+        public signal void edit (GLib.Uri uri);
 
-        delegate void ActivateFunc (Soup.URI uri);
+        delegate void ActivateFunc (GLib.Uri uri);
 
         construct {
             path_bar = new PathBar ();
@@ -86,7 +86,7 @@ namespace Taxi {
             list_box.drag_drop.connect (on_drag_drop);
             list_box.drag_data_received.connect (on_drag_data_received);
             list_box.row_activated.connect ((row) => {
-                var uri = row.get_data<Soup.URI> ("uri");
+                var uri = row.get_data<GLib.Uri> ("uri");
                 var type = row.get_data<FileType> ("type");
                 if (type == FileType.DIRECTORY) {
                     navigate (uri);
@@ -116,7 +116,7 @@ namespace Taxi {
             var uri_list = new Gee.ArrayList<string> ();
             foreach (Gtk.Widget row in list_box.get_children ()) {
                 if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
-                    uri_list.add (current_uri.to_string (false) + "/" + row.get_data<string> ("name"));
+                    uri_list.add (current_uri.to_string () + "/" + row.get_data<string> ("name"));
                 }
             }
             return uri_list;
@@ -187,7 +187,7 @@ namespace Taxi {
                 row.add (size);
             }
 
-            var uri = new Soup.URI.with_base (current_uri, file_info.get_name ());
+            var uri = GLib.Uri.parse_relative (current_uri, file_info.get_name (), PARSE_RELAXED);
 
             var ebrow = new Gtk.EventBox ();
             ebrow.add (row);
@@ -241,10 +241,12 @@ namespace Taxi {
 
 
         private bool on_ebr_popup_menu (Gtk.EventBox event_box) {
-            var uri = new Soup.URI.with_base (
+            var uri = GLib.Uri.parse_relative (
                 current_uri,
-                event_box.get_data<string> ("name")
+                event_box.get_data<string> ("name"),
+                PARSE_RELAXED
             );
+
             var type = event_box.get_data<FileType> ("type");
             var menu = new Gtk.Menu ();
             if (type == FileType.DIRECTORY) {
@@ -266,14 +268,14 @@ namespace Taxi {
         private Gtk.MenuItem new_menu_item (
             string label,
             ActivateFunc activate_fn,
-            Soup.URI uri
+            GLib.Uri uri
         ) {
             var menu_item = new Gtk.MenuItem.with_label (label);
             menu_item.activate.connect (() => activate_fn (uri));
             return menu_item;
         }
 
-        public void update_pathbar (Soup.URI uri) {
+        public void update_pathbar (GLib.Uri uri) {
             current_uri = uri;
             path_bar.set_path (uri);
             path_bar.show_all ();
@@ -335,7 +337,7 @@ namespace Taxi {
             uint time
         ) {
             string file_name = widget.get_data ("name");
-            string file_uri = current_uri.to_string (false) + "/" + file_name;
+            string file_uri = current_uri.to_string () + "/" + file_name;
             switch (target_type) {
                 case Target.URI_LIST:
                     selection_data.set_uris ({ file_uri });
