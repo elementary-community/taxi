@@ -30,7 +30,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     private Granite.Widgets.Welcome welcome;
     private FilePane local_pane;
     private FilePane remote_pane;
-    private Soup.URI conn_uri;
+    private GLib.Uri conn_uri;
     private GLib.Settings saved_state;
 
     public MainWindow (
@@ -50,8 +50,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     construct {
-        Hdy.init ();
-
         connect_box = new ConnectBox ();
         connect_box.valign = Gtk.Align.CENTER;
 
@@ -147,23 +145,12 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
-        var window_x = saved_state.get_int ("opening-x");
-        var window_y = saved_state.get_int ("opening-y");
-
-        if (window_x != -1 || window_y != -1) {
-            move (window_x, window_y);
-        }
-
         default_height = saved_state.get_int ("window-height");
         default_width = saved_state.get_int ("window-width");
 
         if (saved_state.get_boolean ("maximized")) {
             maximize ();
         }
-
-        var provider = new Gtk.CssProvider ();
-        provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
-        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
         connect_box.connect_initiated.connect (on_connect_initiated);
         connect_box.ask_hostname.connect (on_ask_hostname);
@@ -179,7 +166,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         popover.operations_finished.connect (hide_spinner);
     }
 
-    private void on_connect_initiated (Soup.URI uri) {
+    private void on_connect_initiated (GLib.Uri uri) {
         show_spinner ();
         remote_access.connect_to_device.begin (uri, this, (obj, res) => {
             if (remote_access.connect_to_device.end (res)) {
@@ -190,12 +177,12 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
                 update_pane (Location.LOCAL);
                 update_pane (Location.REMOTE);
                 connect_box.show_favorite_icon (
-                    conn_saver.is_bookmarked (remote_access.get_uri ().to_string (false))
+                    conn_saver.is_bookmarked (remote_access.get_uri ().to_string ())
                 );
                 conn_uri = uri;
             } else {
                 alert_stack.visible_child = welcome;
-                welcome.title = _("Could not connect to '%s'").printf (uri.to_string (false));
+                welcome.title = _("Could not connect to '%s'").printf (uri.to_string ());
             }
             hide_spinner ();
         });
@@ -210,7 +197,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     private void bookmark () {
-        var uri_string = conn_uri.to_string (false);
+        var uri_string = conn_uri.to_string ();
         if (conn_saver.is_bookmarked (uri_string)) {
             conn_saver.remove (uri_string);
         } else {
@@ -246,19 +233,19 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         }
     }
 
-    private void on_local_navigate (Soup.URI uri) {
+    private void on_local_navigate (GLib.Uri uri) {
         navigate (uri, local_access, Location.LOCAL);
     }
 
-    private void on_local_open (Soup.URI uri) {
+    private void on_local_open (GLib.Uri uri) {
         local_access.open_file (uri);
     }
 
-    private void on_remote_navigate (Soup.URI uri) {
+    private void on_remote_navigate (GLib.Uri uri) {
         navigate (uri, remote_access, Location.REMOTE);
     }
 
-    private void on_remote_open (Soup.URI uri) {
+    private void on_remote_open (GLib.Uri uri) {
         remote_access.open_file (uri);
     }
 
@@ -270,15 +257,15 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         file_dragged (uri, Location.LOCAL, local_access);
     }
 
-    private void on_local_file_delete (Soup.URI uri) {
+    private void on_local_file_delete (GLib.Uri uri) {
         file_delete (uri, Location.LOCAL);
     }
 
-    private void on_remote_file_delete (Soup.URI uri) {
+    private void on_remote_file_delete (GLib.Uri uri) {
         file_delete (uri, Location.REMOTE);
     }
 
-    private void navigate (Soup.URI uri, IFileAccess file_access, Location pane) {
+    private void navigate (GLib.Uri uri, IFileAccess file_access, Location pane) {
         file_access.goto_dir (uri);
         update_pane (pane);
     }
@@ -307,8 +294,8 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
          );
     }
 
-    private void file_delete (Soup.URI uri, Location pane) {
-        var file = File.new_for_uri (uri.to_string (false));
+    private void file_delete (GLib.Uri uri, Location pane) {
+        var file = File.new_for_uri (uri.to_string ());
         file_operation.delete_recursive.begin (
             file,
             new Cancellable (),
@@ -348,7 +335,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         });
     }
 
-    private Soup.URI on_ask_hostname () {
+    private GLib.Uri on_ask_hostname () {
         return conn_uri;
     }
 
@@ -383,11 +370,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
             get_size (out window_width, out window_height);
             saved_state.set_int ("window-height", window_height);
             saved_state.set_int ("window-width", window_width);
-
-            int x_pos, y_pos;
-            get_position (out x_pos, out y_pos);
-            saved_state.set_int ("opening-x", x_pos);
-            saved_state.set_int ("opening-y", y_pos);
         }
 
         return base.configure_event (event);

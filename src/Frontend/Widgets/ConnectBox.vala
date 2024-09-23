@@ -22,9 +22,9 @@ namespace Taxi {
         private bool show_fav_icon = false;
         private bool added = false;
 
-        public signal void connect_initiated (Soup.URI uri);
+        public signal void connect_initiated (GLib.Uri uri);
         public signal void bookmarked ();
-        public signal Soup.URI ask_hostname ();
+        public signal GLib.Uri ask_hostname ();
 
         construct {
             string[] entries = {"FTP", "SFTP", "DAV", "AFP"};
@@ -54,7 +54,7 @@ namespace Taxi {
         private void submit_form () {
             var protocol = ((Protocol) protocol_combobox.get_active ()).to_plain_text ();
             var path = path_entry.get_text ();
-            var uri = new Soup.URI (protocol + "://" + path);
+            var uri = Uri.parse (protocol + "://" + path, PARSE_RELAXED);
             connect_initiated (uri);
         }
 
@@ -83,7 +83,7 @@ namespace Taxi {
                 var uri_reply = ask_hostname ();
                 // TODO: Handle text changes in a less lazy way
                 path_entry.changed.disconnect (this.on_changed);
-                path_entry.set_text (uri_reply.to_string (false));
+                path_entry.set_text (uri_reply.to_string ());
                 path_entry.changed.connect (this.on_changed);
             }
             return false;
@@ -116,7 +116,7 @@ namespace Taxi {
 
             path_entry.text = split[1];
 
-            connect_initiated (new Soup.URI (uri));
+            connect_initiated (GLib.Uri.parse (uri, PARSE_RELAXED));
         }
 
         public void show_favorite_icon (bool added = false) {
