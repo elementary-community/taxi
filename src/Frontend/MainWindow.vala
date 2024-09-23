@@ -50,6 +50,19 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     construct {
+        var navigate_action = new SimpleAction ("navigate", VariantType.STRING);
+        navigate_action.activate.connect (action_navigate);
+
+        var open_action = new SimpleAction ("open", VariantType.STRING);
+        open_action.activate.connect (action_open);
+
+        var delete_action = new SimpleAction ("delete", VariantType.STRING);
+        delete_action.activate.connect (action_delete);
+
+        add_action (navigate_action);
+        add_action (open_action);
+        add_action (delete_action);
+
         connect_box = new ConnectBox ();
         connect_box.valign = Gtk.Align.CENTER;
 
@@ -108,7 +121,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         local_pane.navigate.connect (on_local_navigate);
         local_pane.file_dragged.connect (on_local_file_dragged);
         local_pane.transfer.connect (on_remote_file_dragged);
-        local_pane.@delete.connect (on_local_file_delete);
         local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
 
         remote_pane = new FilePane ();
@@ -116,7 +128,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         remote_pane.navigate.connect (on_remote_navigate);
         remote_pane.file_dragged.connect (on_remote_file_dragged);
         remote_pane.transfer.connect (on_local_file_dragged);
-        remote_pane.@delete.connect (on_remote_file_delete);
 
         outer_box = new Gtk.Grid ();
         outer_box.add (local_pane);
@@ -257,17 +268,38 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         file_dragged (uri, Location.LOCAL, local_access);
     }
 
-    private void on_local_file_delete (GLib.Uri uri) {
-        file_delete (uri, Location.LOCAL);
-    }
-
-    private void on_remote_file_delete (GLib.Uri uri) {
-        file_delete (uri, Location.REMOTE);
-    }
-
     private void navigate (GLib.Uri uri, IFileAccess file_access, Location pane) {
         file_access.goto_dir (uri);
         update_pane (pane);
+    }
+
+    private void action_navigate (GLib.SimpleAction action, GLib.Variant? variant) {
+        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        if (uri.get_scheme () == "file") {
+            local_access.goto_dir (uri);
+            update_pane (LOCAL);
+        } else {
+            remote_access.goto_dir (uri);
+            update_pane (REMOTE);
+        }
+    }
+
+    private void action_open (GLib.SimpleAction action, GLib.Variant? variant) {
+        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        if (uri.get_scheme () == "file") {
+            local_access.open_file (uri);
+        } else {
+            remote_access.open_file (uri);
+        }
+    }
+
+    private void action_delete (GLib.SimpleAction action, GLib.Variant? variant) {
+        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        if (uri.get_scheme () == "file") {
+            file_delete (uri, Location.LOCAL);
+        } else {
+            file_delete (uri, Location.REMOTE);
+        }
     }
 
     private void file_dragged (
