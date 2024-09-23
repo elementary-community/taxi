@@ -55,7 +55,9 @@ namespace Taxi {
             var protocol = ((Protocol) protocol_combobox.get_active ()).to_plain_text ();
             var path = path_entry.get_text ();
             var uri = new Soup.URI (protocol + "://" + path);
-            connect_initiated (uri);
+            if (path.length > 0) {
+                connect_initiated (uri);
+            }
         }
 
         private void on_changed () {
