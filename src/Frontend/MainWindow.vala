@@ -50,8 +50,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     construct {
-        Hdy.init ();
-
         connect_box = new ConnectBox ();
         connect_box.valign = Gtk.Align.CENTER;
 
@@ -153,10 +151,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         if (saved_state.get_boolean ("maximized")) {
             maximize ();
         }
-
-        var provider = new Gtk.CssProvider ();
-        provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
-        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
         connect_box.connect_initiated.connect (on_connect_initiated);
         connect_box.ask_hostname.connect (on_ask_hostname);
