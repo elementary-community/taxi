@@ -31,7 +31,7 @@ namespace Taxi {
                 return yield file_operation.get_file_list (file_handle);
             } catch (Error e) {
                 message (e.message);
-                return new List<FileInfo>();
+                return new List<FileInfo> ();
             }
         }
 
