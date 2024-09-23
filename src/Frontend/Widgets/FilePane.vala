@@ -246,46 +246,48 @@ namespace Taxi {
                 PARSE_RELAXED
             );
 
+            var menu_model = new GLib.Menu ();
+
             var type = event_box.get_data<FileType> ("type");
-            var menu = new Gtk.Menu ();
             if (type == FileType.DIRECTORY) {
-                var navigate_menuitem = new Gtk.MenuItem.with_label (_("Open"));
-                navigate_menuitem.set_detailed_action_name (
+                menu_model.append (
+                    _("Open"),
                     Action.print_detailed_name (
                         "win.navigate",
                         new Variant.string (uri.to_string ())
                     )
                 );
-
-                menu.add (navigate_menuitem);
             } else {
-                var open_menuitem = new Gtk.MenuItem.with_label (_("Open"));
-                open_menuitem.set_detailed_action_name (
+                menu_model.append (
+                    _("Open"),
                     Action.print_detailed_name (
                         "win.open",
                         new Variant.string (uri.to_string ())
                     )
                 );
 
-                menu.add (open_menuitem);
                 //menu.add (new_menu_item ("Edit", u => edit (u), uri));
             }
-            menu.add (new Gtk.SeparatorMenuItem ());
 
-            var delete_menuitem = new Gtk.MenuItem.with_label (_("Delete"));
-            delete_menuitem.set_detailed_action_name (
+            var delete_section = new GLib.Menu ();
+            delete_section.append (
+                _("Delete"),
                 Action.print_detailed_name (
                     "win.delete",
                     new Variant.string (uri.to_string ())
                 )
             );
 
-            menu.add (delete_menuitem);
+            menu_model.append_section (null, delete_section);
+
             //add_menu_item ("Rename", menu, u => rename (u), uri);
-            menu.show_all ();
-            menu.attach_to_widget (event_box, null);
+
+            var menu = new Gtk.Menu.from_model (menu_model) {
+                attach_widget = event_box
+            };
             menu.popup_at_pointer (null);
             menu.deactivate.connect (() => list_box.select_row (null));
+
             return true;
         }
 
