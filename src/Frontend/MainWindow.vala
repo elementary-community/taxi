@@ -147,13 +147,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
-        var window_x = saved_state.get_int ("opening-x");
-        var window_y = saved_state.get_int ("opening-y");
-
-        if (window_x != -1 ||  window_y != -1) {
-            move (window_x, window_y);
-        }
-
         default_height = saved_state.get_int ("window-height");
         default_width = saved_state.get_int ("window-width");
 
@@ -383,11 +376,6 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
             get_size (out window_width, out window_height);
             saved_state.set_int ("window-height", window_height);
             saved_state.set_int ("window-width", window_width);
-
-            int x_pos, y_pos;
-            get_position (out x_pos, out y_pos);
-            saved_state.set_int ("opening-x", x_pos);
-            saved_state.set_int ("opening-y", y_pos);
         }
 
         return base.configure_event (event);
