@@ -16,15 +16,5 @@
       <summary>Whether the window should be maximized.</summary>
       <description>Whether the window should be maximized by default.</description>
     </key>
-    <key type="i" name="opening-x">
-      <default>-1</default>
-      <summary>Most recent x position of the window.</summary>
-      <description>Most recent x position of the window.</description>
-    </key>
-    <key type="i" name="opening-y">
-      <default>-1</default>
-      <summary>Most recent y position of the window.</summary>
-      <description>Most recent y position of the window.</description>
-    </key>
   </schema>
 </schemalist>
