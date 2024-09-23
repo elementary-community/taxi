@@ -20,7 +20,7 @@ executable(
     'Frontend/Widgets/OperationsPopover.vala',
     'Frontend/Widgets/PathBarSeparator.vala',
     'Frontend/Widgets/PathBar.vala',
-    asresources,
+    gresource,
     dependencies: [
         dependency('glib-2.0'),
         dependency('gobject-2.0'),
