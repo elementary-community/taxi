@@ -192,9 +192,9 @@ namespace Taxi {
 
                 row.add (size);
             }
-            
+
             GLib.Uri uri;
-            try {                
+            try {
                 uri = GLib.Uri.parse_relative (current_uri, file_info.get_name (), PARSE_RELAXED);
             } catch (Error e) {
                 message (e.message);
@@ -259,9 +259,9 @@ namespace Taxi {
                     event_box.get_data<string> ("name"),
                     PARSE_RELAXED
                 );
-    
+
                 var menu_model = new GLib.Menu ();
-    
+
                 var type = event_box.get_data<FileType> ("type");
                 if (type == FileType.DIRECTORY) {
                     menu_model.append (
@@ -279,10 +279,10 @@ namespace Taxi {
                             new Variant.string (uri.to_string ())
                         )
                     );
-    
+
                     //menu.add (new_menu_item ("Edit", u => edit (u), uri));
                 }
-    
+
                 var delete_section = new GLib.Menu ();
                 delete_section.append (
                     _("Delete"),
@@ -291,17 +291,17 @@ namespace Taxi {
                         new Variant.string (uri.to_string ())
                     )
                 );
-    
+
                 menu_model.append_section (null, delete_section);
-    
+
                 //add_menu_item ("Rename", menu, u => rename (u), uri);
-    
+
                 var menu = new Gtk.Menu.from_model (menu_model) {
                     attach_widget = event_box
                 };
                 menu.popup_at_pointer (null);
                 menu.deactivate.connect (() => list_box.select_row (null));
-    
+
                 return true;
             } catch (Error err) {
                 warning (err.message);

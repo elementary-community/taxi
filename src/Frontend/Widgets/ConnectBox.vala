@@ -57,7 +57,7 @@ namespace Taxi {
 
             try {
                 var uri = Uri.parse (protocol + "://" + path, PARSE_RELAXED);
-                connect_initiated (uri);   
+                connect_initiated (uri);
             } catch (Error err) {
 				warning (err.message);
 			}
