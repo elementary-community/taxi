@@ -59,8 +59,8 @@ namespace Taxi {
                 var uri = Uri.parse (protocol + "://" + path, PARSE_RELAXED);
                 connect_initiated (uri);
             } catch (Error err) {
-				warning (err.message);
-			}
+                warning (err.message);
+            }
         }
 
         private void on_changed () {
@@ -124,8 +124,8 @@ namespace Taxi {
             try {
                 connect_initiated (GLib.Uri.parse (uri, PARSE_RELAXED));
             } catch (Error err) {
-				warning (err.message);
-			}
+                warning (err.message);
+            }
         }
 
         public void show_favorite_icon (bool added = false) {
