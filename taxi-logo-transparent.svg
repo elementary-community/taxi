@@ -3,10 +3,10 @@
 
 <svg
    version="1.1"
-   width="128"
+   width="382"
    height="128"
    id="svg3049"
-   sodipodi:docname="128.svg"
+   sodipodi:docname="taxi-logo-transparent.svg"
    inkscape:version="1.3.2 (1:1.3.2+202311252150+091e20ef0f)"
    xml:space="preserve"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -28,10 +28,10 @@
      inkscape:window-width="3200"
      inkscape:window-height="1674"
      id="namedview98"
-     showgrid="true"
-     inkscape:zoom="4.3539347"
-     inkscape:cx="28.479986"
-     inkscape:cy="26.068374"
+     showgrid="false"
+     inkscape:zoom="2.2"
+     inkscape:cx="200.22727"
+     inkscape:cy="64.772727"
      inkscape:window-x="0"
      inkscape:window-y="60"
      inkscape:window-maximized="1"
@@ -46,12 +46,12 @@
        spacingy="0.5"
        spacingx="0.5"
        units="px"
-       visible="true"
+       visible="false"
        empspacing="2"
        enabled="true" /><inkscape:page
        x="0"
        y="0"
-       width="128"
+       width="382"
        height="128"
        id="page2"
        margin="0"
@@ -70,7 +70,7 @@
        dotted="false"
        gridanglex="30"
        gridanglez="30"
-       visible="true"
+       visible="false"
        enabled="false" /></sodipodi:namedview><defs
      id="defs3051"><linearGradient
        id="linearGradient10"
@@ -255,7 +255,15 @@
        x2="196"
        y2="79"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-138)" /></defs><metadata
+       gradientTransform="translate(-138)" /><linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient10"
+       id="linearGradient7"
+       x1="169"
+       y1="37.706692"
+       x2="169"
+       y2="100"
+       gradientUnits="userSpaceOnUse" /></defs><metadata
      id="metadata3054"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><path
@@ -316,4 +324,7 @@
      d="M 22,56 V 68 H 34 V 56 Z M 34,68 V 80 H 46 V 68 Z m 12,0 H 58 V 56 H 46 Z m 12,0 V 80 H 70 V 68 Z m 12,0 H 82 V 56 H 70 Z m 12,0 V 80 H 94 V 68 Z m 12,0 h 12 V 56 H 94 Z" /><path
      id="rect4"
      style="opacity:1;fill:url(#linearGradient11);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.498"
-     d="M 22,55 V 67 H 34 V 55 Z M 34,67 V 79 H 46 V 67 Z m 12,0 H 58 V 55 H 46 Z m 12,0 V 79 H 70 V 67 Z m 12,0 H 82 V 55 H 70 Z m 12,0 V 79 H 94 V 67 Z m 12,0 h 12 V 55 H 94 Z" /></svg>
+     d="M 22,55 V 67 H 34 V 55 Z M 34,67 V 79 H 46 V 67 Z m 12,0 H 58 V 55 H 46 Z m 12,0 V 79 H 70 V 67 Z m 12,0 H 82 V 55 H 70 Z m 12,0 V 79 H 94 V 67 Z m 12,0 h 12 V 55 H 94 Z" /><path
+     id="text5"
+     style="font-style:italic;font-stretch:semi-expanded;font-size:85.3333px;font-family:'Monaspace Krypton';-inkscape-font-specification:'Monaspace Krypton, Italic Semi-Expanded';font-feature-settings:ss06;letter-spacing:0px;fill:url(#linearGradient7);stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.498"
+     d="M 145.48242 37.707031 L 142.36719 49.269531 L 160.28711 49.269531 L 150.43164 100 L 164.51172 100 L 174.36719 49.269531 L 191.9043 49.269531 L 193.3125 37.707031 L 145.48242 37.707031 z M 220.44727 37.707031 L 201.07812 60.191406 L 193.35547 100 L 207.30664 100 L 209.82422 87.072266 L 229.15234 87.072266 L 226.63477 100 L 240.58594 100 L 248.30859 60.191406 L 237.77148 37.707031 L 220.44727 37.707031 z M 264.56445 37.707031 L 261.49414 53.451172 L 273.09766 67.957031 L 255.43359 84.640625 L 252.44727 100 L 266.10156 100 L 268.36328 88.394531 L 280.26562 76.917969 L 289.43945 88.394531 L 287.17773 100 L 300.83203 100 L 303.9043 84.212891 L 292.29883 69.707031 L 309.96289 53.023438 L 312.94922 37.707031 L 299.29492 37.707031 L 297.03516 49.269531 L 285.13086 60.746094 L 275.95703 49.269531 L 278.21875 37.707031 L 264.56445 37.707031 z M 326.81641 37.707031 L 323.70117 49.269531 L 339.10352 49.269531 L 331.50977 88.4375 L 316.10547 88.4375 L 314.69922 100 L 357.87695 100 L 360.99219 88.4375 L 345.58984 88.4375 L 353.18359 49.269531 L 368.58594 49.269531 L 369.99414 37.707031 L 326.81641 37.707031 z M 227.44531 48.927734 L 233.58984 64.373047 L 231.11523 77.087891 L 211.78711 77.087891 L 214.00586 65.654297 L 227.44531 48.927734 z " /></svg>

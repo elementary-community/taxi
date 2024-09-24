@@ -1,4 +1,4 @@
-# ![Taxi](taxi-logo-transparent.png)
+# ![Taxi](taxi-logo-transparent.svg)
 >The FTP Client that drives you anywhere
 
 [![Build Status](https://travis-ci.org/Alecaddd/taxi.svg?branch=master)](https://travis-ci.org/Alecaddd/taxi)
