@@ -54,8 +54,13 @@ namespace Taxi {
         private void submit_form () {
             var protocol = ((Protocol) protocol_combobox.get_active ()).to_plain_text ();
             var path = path_entry.get_text ();
-            var uri = Uri.parse (protocol + "://" + path, PARSE_RELAXED);
-            connect_initiated (uri);
+
+            try {
+                var uri = Uri.parse (protocol + "://" + path, PARSE_RELAXED);
+                connect_initiated (uri);
+            } catch (Error err) {
+                warning (err.message);
+            }
         }
 
         private void on_changed () {
@@ -116,7 +121,11 @@ namespace Taxi {
 
             path_entry.text = split[1];
 
-            connect_initiated (GLib.Uri.parse (uri, PARSE_RELAXED));
+            try {
+                connect_initiated (GLib.Uri.parse (uri, PARSE_RELAXED));
+            } catch (Error err) {
+                warning (err.message);
+            }
         }
 
         public void show_favorite_icon (bool added = false) {

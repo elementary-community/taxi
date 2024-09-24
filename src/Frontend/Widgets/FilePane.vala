@@ -128,9 +128,16 @@ namespace Taxi {
             var gee_list = glib_to_gee<FileInfo> (file_list);
             alphabetical_order (gee_list);
             foreach (FileInfo file_info in gee_list) {
-                if (file_info.get_name ().get_char (0) == '.') continue;
-                list_box.add (new_row (file_info));
+                if (file_info.get_name ().get_char (0) == '.') {
+                    continue;
+                }
+
+                var row = new_row (file_info);
+                if (row != null) {
+                    list_box.add (row);
+                }
             }
+
             list_box.show_all ();
         }
 
@@ -158,7 +165,7 @@ namespace Taxi {
             });
         }
 
-        private Gtk.ListBoxRow new_row (FileInfo file_info) {
+        private Gtk.ListBoxRow? new_row (FileInfo file_info) {
             var checkbox = new Gtk.CheckButton ();
             checkbox.toggled.connect (on_checkbutton_toggle);
 
@@ -186,7 +193,13 @@ namespace Taxi {
                 row.add (size);
             }
 
-            var uri = GLib.Uri.parse_relative (current_uri, file_info.get_name (), PARSE_RELAXED);
+            GLib.Uri uri;
+            try {
+                uri = GLib.Uri.parse_relative (current_uri, file_info.get_name (), PARSE_RELAXED);
+            } catch (Error e) {
+                message (e.message);
+                return null;
+            }
 
             var ebrow = new Gtk.EventBox ();
             ebrow.add (row);
@@ -240,55 +253,61 @@ namespace Taxi {
 
 
         private bool on_ebr_popup_menu (Gtk.EventBox event_box) {
-            var uri = GLib.Uri.parse_relative (
-                current_uri,
-                event_box.get_data<string> ("name"),
-                PARSE_RELAXED
-            );
+            try {
+                var uri = GLib.Uri.parse_relative (
+                    current_uri,
+                    event_box.get_data<string> ("name"),
+                    PARSE_RELAXED
+                );
 
-            var menu_model = new GLib.Menu ();
+                var menu_model = new GLib.Menu ();
 
-            var type = event_box.get_data<FileType> ("type");
-            if (type == FileType.DIRECTORY) {
-                menu_model.append (
-                    _("Open"),
+                var type = event_box.get_data<FileType> ("type");
+                if (type == FileType.DIRECTORY) {
+                    menu_model.append (
+                        _("Open"),
+                        Action.print_detailed_name (
+                            "win.navigate",
+                            new Variant.string (uri.to_string ())
+                        )
+                    );
+                } else {
+                    menu_model.append (
+                        _("Open"),
+                        Action.print_detailed_name (
+                            "win.open",
+                            new Variant.string (uri.to_string ())
+                        )
+                    );
+
+                    //menu.add (new_menu_item ("Edit", u => edit (u), uri));
+                }
+
+                var delete_section = new GLib.Menu ();
+                delete_section.append (
+                    _("Delete"),
                     Action.print_detailed_name (
-                        "win.navigate",
+                        "win.delete",
                         new Variant.string (uri.to_string ())
                     )
                 );
-            } else {
-                menu_model.append (
-                    _("Open"),
-                    Action.print_detailed_name (
-                        "win.open",
-                        new Variant.string (uri.to_string ())
-                    )
-                );
 
-                //menu.add (new_menu_item ("Edit", u => edit (u), uri));
+                menu_model.append_section (null, delete_section);
+
+                //add_menu_item ("Rename", menu, u => rename (u), uri);
+
+                var menu = new Gtk.Menu.from_model (menu_model) {
+                    attach_widget = event_box
+                };
+                menu.popup_at_pointer (null);
+                menu.deactivate.connect (() => list_box.select_row (null));
+
+                return true;
+            } catch (Error err) {
+                warning (err.message);
             }
 
-            var delete_section = new GLib.Menu ();
-            delete_section.append (
-                _("Delete"),
-                Action.print_detailed_name (
-                    "win.delete",
-                    new Variant.string (uri.to_string ())
-                )
-            );
-
-            menu_model.append_section (null, delete_section);
-
-            //add_menu_item ("Rename", menu, u => rename (u), uri);
-
-            var menu = new Gtk.Menu.from_model (menu_model) {
-                attach_widget = event_box
-            };
-            menu.popup_at_pointer (null);
-            menu.deactivate.connect (() => list_box.select_row (null));
-
-            return true;
+            return false;
         }
 
         public void update_pathbar (GLib.Uri uri) {

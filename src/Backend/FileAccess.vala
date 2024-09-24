@@ -35,12 +35,19 @@ namespace Taxi {
             }
         }
 
-        public virtual GLib.Uri get_uri () {
+        public virtual GLib.Uri? get_uri () {
             var uri = file_handle.get_uri ();
             if (!uri.has_suffix ("/")) {
                 uri += "/";
             }
-            return GLib.Uri.parse (uri, PARSE_RELAXED);
+
+            try {
+                return GLib.Uri.parse (uri, PARSE_RELAXED);
+            } catch (Error e) {
+                message (e.message);
+            }
+
+            return null;
         }
 
         public virtual void goto_dir (GLib.Uri uri) {
