@@ -64,8 +64,12 @@ namespace Taxi {
             button_style_context.add_class ("path-button");
 
             button.clicked.connect (() => {
-                current_uri = GLib.Uri.parse (current_uri.get_scheme () + "://" + path, PARSE_RELAXED);
-                navigate (current_uri);
+                try {
+                    current_uri = GLib.Uri.parse (current_uri.get_scheme () + "://" + path, PARSE_RELAXED);
+                    navigate (current_uri);
+                } catch (Error err) {
+                    warning (err.message);
+                }
             });
             add (button);
         }

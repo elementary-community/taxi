@@ -274,31 +274,43 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     private void action_navigate (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            local_access.goto_dir (uri);
-            update_pane (LOCAL);
-        } else {
-            remote_access.goto_dir (uri);
-            update_pane (REMOTE);
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                local_access.goto_dir (uri);
+                update_pane (LOCAL);
+            } else {
+                remote_access.goto_dir (uri);
+                update_pane (REMOTE);
+            }
+        } catch (Error err) {
+            warning (err.message);
         }
     }
 
     private void action_open (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            local_access.open_file (uri);
-        } else {
-            remote_access.open_file (uri);
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                local_access.open_file (uri);
+            } else {
+                remote_access.open_file (uri);
+            }
+        } catch (Error err) {
+            warning (err.message);
         }
     }
 
     private void action_delete (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            file_delete (uri, Location.LOCAL);
-        } else {
-            file_delete (uri, Location.REMOTE);
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                file_delete (uri, Location.LOCAL);
+            } else {
+                file_delete (uri, Location.REMOTE);
+            }
+        } catch (Error err) {
+            warning (err.message);
         }
     }
 
