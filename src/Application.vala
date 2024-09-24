@@ -25,11 +25,14 @@ public class Taxi.Taxi : Gtk.Application {
     protected override void startup () {
         base.startup ();
 
-        Hdy.init ();
+        Granite.init ();
 
         var provider = new Gtk.CssProvider ();
         provider.load_from_resource ("com/github/alecaddd/taxi/Application.css");
-        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk.StyleContext.add_provider_for_display (
+			Gdk.Display.get_default (),
+			provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+		);
 
         var granite_settings = Granite.Settings.get_default ();
         var gtk_settings = Gtk.Settings.get_default ();
@@ -54,7 +57,17 @@ public class Taxi.Taxi : Gtk.Application {
             new ConnectionSaver ()
         );
 
-        main_window.show_all ();
+        var settings = new Settings ("com.github.alecaddd.taxi.state");
+        settings.bind ("window-height", main_window, "default-height", SettingsBindFlags.DEFAULT);
+        settings.bind ("window-width", main_window, "default-width", SettingsBindFlags.DEFAULT);
+
+        if (settings.get_boolean ("maximized")) {
+            main_window.maximize ();
+        }
+
+        settings.bind ("maximized", main_window, "maximized", SettingsBindFlags.SET);
+
+        main_window.show ();
     }
 
     public static int main (string[] args) {

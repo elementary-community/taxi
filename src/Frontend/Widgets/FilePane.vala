@@ -42,120 +42,117 @@ namespace Taxi {
         delegate void ActivateFunc (GLib.Uri uri);
 
         construct {
-            path_bar = new PathBar ();
-            path_bar.hexpand = true;
+            path_bar = new PathBar () {
+                hexpand = true
+            };
 
-            var placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
-            placeholder_label.halign = Gtk.Align.CENTER;
-            placeholder_label.valign = Gtk.Align.CENTER;
-            placeholder_label.show ();
+            //  var placeholder_label = new Gtk.Label (_("This Folder Is Empty"));
+            //  placeholder_label.halign = Gtk.Align.CENTER;
+            //  placeholder_label.valign = Gtk.Align.CENTER;
+            //  placeholder_label.add_css_class (Granite.STYLE_CLASS_H2_LABEL);
+            //  placeholder_label.add_css_class (Granite.STYLE_CLASS_DIM_LABEL);
 
-            var placeholder_label_context = placeholder_label.get_style_context ();
-            placeholder_label_context.add_class (Granite.STYLE_CLASS_H2_LABEL);
-            placeholder_label_context.add_class (Gtk.STYLE_CLASS_DIM_LABEL);
+            //  list_box = new Gtk.ListBox ();
+            //  list_box.hexpand = true;
+            //  list_box.vexpand = true;
+            //  list_box.set_placeholder (placeholder_label);
+            //  list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
 
-            list_box = new Gtk.ListBox ();
-            list_box.hexpand = true;
-            list_box.vexpand = true;
-            list_box.set_placeholder (placeholder_label);
-            list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
+            //  var scrolled_pane = new Gtk.ScrolledWindow () {
+            //      child = list_box
+            //  };
 
-            var scrolled_pane = new Gtk.ScrolledWindow (null, null);
-            scrolled_pane.add (list_box);
+            //  var spinner = new Gtk.Spinner ();
+            //  spinner.hexpand = true;
+            //  spinner.vexpand = true;
+            //  spinner.halign = Gtk.Align.CENTER;
+            //  spinner.valign = Gtk.Align.CENTER;
+            //  spinner.start ();
 
-            var spinner = new Gtk.Spinner ();
-            spinner.hexpand = true;
-            spinner.vexpand = true;
-            spinner.halign = Gtk.Align.CENTER;
-            spinner.valign = Gtk.Align.CENTER;
-            spinner.start ();
+            //  stack = new Gtk.Stack ();
+            //  stack.add_named (scrolled_pane, "list");
+            //  stack.add_named (spinner, "spinner");
 
-            stack = new Gtk.Stack ();
-            stack.add_named (scrolled_pane, "list");
-            stack.add_named (spinner, "spinner");
+            //  var inner_grid = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            //  inner_grid.append (path_bar);
+            //  inner_grid.append (stack);
 
-            var inner_grid = new Gtk.Grid ();
-            inner_grid.set_orientation (Gtk.Orientation.VERTICAL);
-            inner_grid.add (path_bar);
-            inner_grid.add (stack);
-            inner_grid.show_all ();
+            //  attach (inner_grid, 0, 0);
 
-            add (inner_grid);
+            //  list_box.drag_drop.connect (on_drag_drop);
+            //  list_box.drag_data_received.connect (on_drag_data_received);
+            //  list_box.row_activated.connect ((row) => {
+            //      var uri = row.get_data<GLib.Uri> ("uri");
+            //      var type = row.get_data<FileType> ("type");
+            //      if (type == FileType.DIRECTORY) {
+            //          navigate (uri);
+            //      } else {
+            //          open (uri);
+            //      }
+            //  });
 
-            list_box.drag_drop.connect (on_drag_drop);
-            list_box.drag_data_received.connect (on_drag_data_received);
-            list_box.row_activated.connect ((row) => {
-                var uri = row.get_data<GLib.Uri> ("uri");
-                var type = row.get_data<FileType> ("type");
-                if (type == FileType.DIRECTORY) {
-                    navigate (uri);
-                } else {
-                    open (uri);
-                }
-            });
+            //  path_bar.navigate.connect (uri => navigate (uri));
+            //  path_bar.transfer.connect (on_pathbar_transfer);
 
-            path_bar.navigate.connect (uri => navigate (uri));
-            path_bar.transfer.connect (on_pathbar_transfer);
-
-            Gtk.drag_dest_set (
-                list_box,
-                Gtk.DestDefaults.ALL,
-                TARGET_LIST,
-                Gdk.DragAction.COPY
-            );
+            //  Gtk.drag_dest_set (
+            //      list_box,
+            //      Gtk.DestDefaults.ALL,
+            //      TARGET_LIST,
+            //      Gdk.DragAction.COPY
+            //  );
         }
 
         private void on_pathbar_transfer () {
-            foreach (string uri in get_marked_row_uris ()) {
-                transfer (uri);
-            }
+            //  foreach (string uri in get_marked_row_uris ()) {
+            //      transfer (uri);
+            //  }
         }
 
         private Gee.List<string> get_marked_row_uris () {
             var uri_list = new Gee.ArrayList<string> ();
-            foreach (Gtk.Widget row in list_box.get_children ()) {
-                if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
-                    uri_list.add (current_uri.to_string () + "/" + row.get_data<string> ("name"));
-                }
-            }
+            //  foreach (Gtk.Widget row in list_box.get_children ()) {
+            //      if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
+            //          uri_list.add (current_uri.to_string () + "/" + row.get_data<string> ("name"));
+            //      }
+            //  }
             return uri_list;
         }
 
         public void update_list (GLib.List<FileInfo> file_list) {
-            clear_children (list_box);
-            // Have to convert to gee list because glib list sort function is buggy
-            // (it randomly removes items...)
-            var gee_list = glib_to_gee<FileInfo> (file_list);
-            alphabetical_order (gee_list);
-            foreach (FileInfo file_info in gee_list) {
-                if (file_info.get_name ().get_char (0) == '.') continue;
-                list_box.add (new_row (file_info));
-            }
-            list_box.show_all ();
+            //  clear_children (list_box);
+            //  // Have to convert to gee list because glib list sort function is buggy
+            //  // (it randomly removes items...)
+            //  var gee_list = glib_to_gee<FileInfo> (file_list);
+            //  alphabetical_order (gee_list);
+            //  foreach (FileInfo file_info in gee_list) {
+            //      if (file_info.get_name ().get_char (0) == '.') continue;
+            //      list_box.add (new_row (file_info));
+            //  }
+            //  list_box.show_all ();
         }
 
         private Gee.ArrayList<G> glib_to_gee<G> (GLib.List<G> list) {
             var gee_list = new Gee.ArrayList<G> ();
-            foreach (G item in list) {
-                gee_list.add (item);
-            }
+            //  foreach (G item in list) {
+            //      gee_list.add (item);
+            //  }
             return gee_list;
         }
 
         private void alphabetical_order (Gee.ArrayList<FileInfo> file_list) {
-            file_list.sort ((a, b) => {
-                if ((a.get_file_type () == FileType.DIRECTORY) &&
-                    (b.get_file_type () == FileType.DIRECTORY)) {
-                    return a.get_name ().collate (b.get_name ());
-                }
-                if (a.get_file_type () == FileType.DIRECTORY) {
-                    return -1;
-                }
-                if (b.get_file_type () == FileType.DIRECTORY) {
-                    return 1;
-                }
-                return a.get_name ().collate (b.get_name ());
-            });
+            //  file_list.sort ((a, b) => {
+            //      if ((a.get_file_type () == FileType.DIRECTORY) &&
+            //          (b.get_file_type () == FileType.DIRECTORY)) {
+            //          return a.get_name ().collate (b.get_name ());
+            //      }
+            //      if (a.get_file_type () == FileType.DIRECTORY) {
+            //          return -1;
+            //      }
+            //      if (b.get_file_type () == FileType.DIRECTORY) {
+            //          return 1;
+            //      }
+            //      return a.get_name ().collate (b.get_name ());
+            //  });
         }
 
         private Gtk.ListBoxRow new_row (FileInfo file_info) {
@@ -211,7 +208,7 @@ namespace Taxi {
             ebrow.drag_begin.connect (on_drag_begin);
             ebrow.drag_data_get.connect (on_drag_data_get);
             ebrow.button_press_event.connect ((event) =>
-                on_ebr_button_press (event, ebrow, lbrow)
+                //  on_ebr_button_press (event, ebrow, lbrow)
             );
             ebrow.popup_menu.connect (() => on_ebr_popup_menu (ebrow));
 
@@ -219,24 +216,24 @@ namespace Taxi {
         }
 
         private void on_checkbutton_toggle () {
-            if (get_marked_row_uris ().size > 0) {
-                path_bar.transfer_button_sensitive = true;
-            } else {
-                path_bar.transfer_button_sensitive = false;
-            }
+            //  if (get_marked_row_uris ().size > 0) {
+            //      path_bar.transfer_button_sensitive = true;
+            //  } else {
+            //      path_bar.transfer_button_sensitive = false;
+            //  }
         }
 
-        private bool on_ebr_button_press (
-            Gdk.EventButton event,
-            Gtk.EventBox event_box,
-            Gtk.ListBoxRow list_box_row
-        ) {
-            if (event.button == Gdk.BUTTON_SECONDARY) {
-                list_box.select_row (list_box_row);
-                event_box.popup_menu ();
-            }
-            return false;
-        }
+        //  private bool on_ebr_button_press (
+        //      Gdk.EventButton event,
+        //      Gtk.EventBox event_box,
+        //      Gtk.ListBoxRow list_box_row
+        //  ) {
+        //      if (event.button == Gdk.BUTTON_SECONDARY) {
+        //          list_box.select_row (list_box_row);
+        //          event_box.popup_menu ();
+        //      }
+        //      return false;
+        //  }
 
 
         private bool on_ebr_popup_menu (Gtk.EventBox event_box) {

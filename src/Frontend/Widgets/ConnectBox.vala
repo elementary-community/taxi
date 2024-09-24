@@ -15,7 +15,7 @@
 ***/
 
 namespace Taxi {
-    public class ConnectBox : Gtk.Grid {
+    public class ConnectBox : Adw.Bin {
         private Gtk.ComboBoxText protocol_combobox;
         private Gtk.Entry path_entry;
         private ulong? handler;
@@ -40,15 +40,17 @@ namespace Taxi {
             path_entry.hexpand = true;
             path_entry.max_width_chars = 10000;
 
-            orientation = Gtk.Orientation.HORIZONTAL;
-            add (protocol_combobox);
-            add (path_entry );
-            get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
+            var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            box.append (protocol_combobox);
+            box.append (path_entry );
+            box.add_css_class (Granite.STYLE_CLASS_LINKED);
+
+            child = box;
 
             path_entry.activate.connect (submit_form);
             path_entry.changed.connect (on_changed);
-            path_entry.focus_out_event.connect (on_focus_out);
-            path_entry.grab_focus.connect_after (on_grab_focus);
+            //  path_entry.focus_out_event.connect (on_focus_out);
+            //  path_entry.grab_focus.connect_after (on_grab_focus);
         }
 
         private void submit_form () {
@@ -136,7 +138,7 @@ namespace Taxi {
             });
         }
 
-        public bool on_key_press_event (Gdk.EventKey event) {
+        public bool on_key_press_event () {
             if (!path_entry.has_visible_focus ()) {
                 path_entry.grab_focus ();
             }

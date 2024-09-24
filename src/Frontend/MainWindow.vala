@@ -14,20 +14,20 @@
   with program. If not, see <http://www.gnu.org/licenses>
 ***/
 
-class Taxi.MainWindow : Hdy.ApplicationWindow {
+class Taxi.MainWindow : Gtk.ApplicationWindow {
     public IConnectionSaver conn_saver { get; construct; }
     public IFileOperations file_operation { get; construct; }
     public IFileAccess local_access { get; construct; }
     public IFileAccess remote_access { get; construct; }
 
-    private Granite.Widgets.Toast toast;
+    private Granite.Toast toast;
     private Gtk.Revealer spinner_revealer;
-    private Gtk.Grid bookmark_list;
-    private Gtk.Grid outer_box;
+    private Gtk.Box bookmark_list;
+    private Gtk.Box outer_box;
     private Gtk.MenuButton bookmark_menu_button;
     private Gtk.Stack alert_stack;
     private ConnectBox connect_box;
-    private Granite.Widgets.Welcome welcome;
+    private Granite.Placeholder welcome;
     private FilePane local_pane;
     private FilePane remote_pane;
     private GLib.Uri conn_uri;
@@ -71,107 +71,114 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
 
         var popover = new OperationsPopover (spinner);
 
-        var operations_button = new Gtk.MenuButton ();
-        operations_button.popover = popover;
-        operations_button.valign = Gtk.Align.CENTER;
-        operations_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-        operations_button.add (spinner);
+        var operations_button = new Gtk.MenuButton () {
+            popover = popover,
+            valign = Gtk.Align.CENTER,
+            child = spinner
+        };
+        operations_button.add_css_class (Granite.STYLE_CLASS_FLAT);
 
-        spinner_revealer = new Gtk.Revealer ();
-        spinner_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
-        spinner_revealer.add (operations_button);
+        spinner_revealer = new Gtk.Revealer () {
+            transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT,
+            child = operations_button
+        };
 
-        bookmark_list = new Gtk.Grid ();
-        bookmark_list.margin_top = bookmark_list.margin_bottom = 3;
-        bookmark_list.orientation = Gtk.Orientation.VERTICAL;
+        bookmark_list = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
+            margin_top = 6,
+            margin_bottom = 6,
+            margin_start = 3,
+            margin_end = 3
+        };
 
-        var bookmark_scrollbox = new Gtk.ScrolledWindow (null, null);
-        bookmark_scrollbox.hscrollbar_policy = Gtk.PolicyType.NEVER;
-        bookmark_scrollbox.max_content_height = 500;
-        bookmark_scrollbox.propagate_natural_height = true;
-        bookmark_scrollbox.add (bookmark_list);
-        bookmark_scrollbox.show ();
+        var bookmark_scrollbox = new Gtk.ScrolledWindow () {
+            child = bookmark_list,
+            hscrollbar_policy = Gtk.PolicyType.NEVER,
+            max_content_height = 500,
+            propagate_natural_height = true,
+        };
 
-        var bookmark_popover = new Gtk.Popover (null);
-        bookmark_popover.add (bookmark_scrollbox);
+        var bookmark_popover = new Gtk.Popover () {
+            child = bookmark_scrollbox,
+            width_request = 250
+        };
 
-        bookmark_menu_button = new Gtk.MenuButton ();
-        bookmark_menu_button.image = new Gtk.Image.from_icon_name ("user-bookmarks", Gtk.IconSize.LARGE_TOOLBAR);
-        bookmark_menu_button.popover = bookmark_popover;
-        bookmark_menu_button.tooltip_text = _("Access Bookmarks");
+        bookmark_menu_button = new Gtk.MenuButton () {
+            icon_name = "user-bookmarks",
+            tooltip_text = _("Access Bookmarks"),
+            popover = bookmark_popover,
+            valign = CENTER
+        };
 
         update_bookmark_menu ();
 
-        var header_bar = new Hdy.HeaderBar () {
-            custom_title = new Gtk.Label (null),
-            show_close_button = true
+        var header_bar = new Adw.HeaderBar () {
+            show_title = false
         };
         header_bar.pack_start (connect_box);
         header_bar.pack_start (spinner_revealer);
         header_bar.pack_start (bookmark_menu_button);
 
-        welcome = new Granite.Widgets.Welcome (
-            _("Connect"),
-            _("Type a URL and press 'Enter' to\nconnect to a server.")
-        );
+        welcome = new Granite.Placeholder (_("Connect")) {
+            description = _("Type a URL and press 'Enter' to\nconnect to a server.")
+        };
         welcome.vexpand = true;
 
-        local_pane = new FilePane ();
-        local_pane.open.connect (on_local_open);
-        local_pane.navigate.connect (on_local_navigate);
-        local_pane.file_dragged.connect (on_local_file_dragged);
-        local_pane.transfer.connect (on_remote_file_dragged);
-        local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
+        //  local_pane = new FilePane ();
+        //  local_pane.open.connect (on_local_open);
+        //  local_pane.navigate.connect (on_local_navigate);
+        //  local_pane.file_dragged.connect (on_local_file_dragged);
+        //  local_pane.transfer.connect (on_remote_file_dragged);
+        //  local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
 
-        remote_pane = new FilePane ();
-        remote_pane.open.connect (on_remote_open);
-        remote_pane.navigate.connect (on_remote_navigate);
-        remote_pane.file_dragged.connect (on_remote_file_dragged);
-        remote_pane.transfer.connect (on_local_file_dragged);
+        //  remote_pane = new FilePane ();
+        //  remote_pane.open.connect (on_remote_open);
+        //  remote_pane.navigate.connect (on_remote_navigate);
+        //  remote_pane.file_dragged.connect (on_remote_file_dragged);
+        //  remote_pane.transfer.connect (on_local_file_dragged);
 
-        outer_box = new Gtk.Grid ();
-        outer_box.add (local_pane);
-        outer_box.add (new Gtk.Separator (Gtk.Orientation.VERTICAL));
-        outer_box.add (remote_pane);
+        outer_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        //  outer_box.append (local_pane);
+        //  outer_box.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
+        //  outer_box.append (remote_pane);
 
         var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
-        size_group.add_widget (local_pane);
-        size_group.add_widget (remote_pane);
+        //  size_group.add_widget (local_pane);
+        //  size_group.add_widget (remote_pane);
 
         alert_stack = new Gtk.Stack ();
-        alert_stack.add (welcome);
-        alert_stack.add (outer_box);
+        alert_stack.add_child (welcome);
+        alert_stack.add_child (outer_box);
 
-        toast = new Granite.Widgets.Toast ("");
+        toast = new Granite.Toast ("");
 
-        var overlay = new Gtk.Overlay ();
-        overlay.add (alert_stack);
+        var overlay = new Gtk.Overlay () {
+            child = alert_stack
+        };
         overlay.add_overlay (toast);
 
-        var grid = new Gtk.Grid ();
-        grid.attach (header_bar, 0, 0);
-        grid.attach (overlay, 0, 1);
+        var grid = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        grid.append (header_bar);
+        grid.append (overlay);
 
-        add (grid);
+        // We need to hide the title area for the split headerbar
+        var null_title = new Gtk.Grid () {
+            visible = false
+        };
+        set_titlebar (null_title);
+
+        child = grid;
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
-        default_height = saved_state.get_int ("window-height");
-        default_width = saved_state.get_int ("window-width");
+        //  connect_box.connect_initiated.connect (on_connect_initiated);
+        //  connect_box.ask_hostname.connect (on_ask_hostname);
+        //  connect_box.bookmarked.connect (bookmark);
 
-        if (saved_state.get_boolean ("maximized")) {
-            maximize ();
-        }
+        //  file_operation.operation_added.connect (popover.add_operation);
+        //  file_operation.operation_removed.connect (popover.remove_operation);
+        //  file_operation.ask_overwrite.connect (on_ask_overwrite);
 
-        connect_box.connect_initiated.connect (on_connect_initiated);
-        connect_box.ask_hostname.connect (on_ask_hostname);
-        connect_box.bookmarked.connect (bookmark);
-
-        file_operation.operation_added.connect (popover.add_operation);
-        file_operation.operation_removed.connect (popover.remove_operation);
-        file_operation.ask_overwrite.connect (on_ask_overwrite);
-
-        key_press_event.connect (connect_box.on_key_press_event);
+        //  key_press_event.connect (connect_box.on_key_press_event);
 
         popover.operations_pending.connect (show_spinner);
         popover.operations_finished.connect (hide_spinner);
@@ -183,7 +190,7 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
             if (remote_access.connect_to_device.end (res)) {
                 alert_stack.visible_child = outer_box;
                 if (local_pane == null) {
-                    key_press_event.disconnect (connect_box.on_key_press_event);
+                    //  key_press_event.disconnect (connect_box.on_key_press_event);
                 }
                 update_pane (Location.LOCAL);
                 update_pane (Location.REMOTE);
@@ -208,98 +215,100 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
     }
 
     private void bookmark () {
-        var uri_string = conn_uri.to_string ();
-        if (conn_saver.is_bookmarked (uri_string)) {
-            conn_saver.remove (uri_string);
-        } else {
-            conn_saver.save (uri_string);
-        }
-        connect_box.show_favorite_icon (
-            conn_saver.is_bookmarked (uri_string)
-        );
-        update_bookmark_menu ();
+        //  var uri_string = conn_uri.to_string ();
+        //  if (conn_saver.is_bookmarked (uri_string)) {
+        //      conn_saver.remove (uri_string);
+        //  } else {
+        //      conn_saver.save (uri_string);
+        //  }
+        //  connect_box.show_favorite_icon (
+        //      conn_saver.is_bookmarked (uri_string)
+        //  );
+        //  update_bookmark_menu ();
     }
 
     private void update_bookmark_menu () {
-        foreach (Gtk.Widget child in bookmark_list.get_children ()) {
-            child.destroy ();
-        }
+        //  foreach (Gtk.Widget child in bookmark_list.get_children ()) {
+        //      child.destroy ();
+        //  }
 
         var uri_list = conn_saver.get_saved_conns ();
         if (uri_list.length () == 0) {
             bookmark_menu_button.sensitive = false;
         } else {
             foreach (string uri in uri_list) {
-                var bookmark_item = new Gtk.ModelButton ();
-                bookmark_item.text = uri;
-
-                bookmark_list.add (bookmark_item);
-
+                var bookmark_item = new Gtk.Button () {
+                    child = new Gtk.Label (uri) {
+                        halign = START
+                    }
+                };
+                bookmark_item.add_css_class (Granite.STYLE_CLASS_FLAT);
                 bookmark_item.clicked.connect (() => {
                     connect_box.go_to_uri (uri);
                 });
+
+                bookmark_list.append (bookmark_item);
             }
-            bookmark_list.show_all ();
             bookmark_menu_button.sensitive = true;
         }
     }
 
     private void on_local_navigate (GLib.Uri uri) {
-        navigate (uri, local_access, Location.LOCAL);
+        //  navigate (uri, local_access, Location.LOCAL);
     }
 
     private void on_local_open (GLib.Uri uri) {
-        local_access.open_file (uri);
+        //  local_access.open_file (uri);
     }
 
     private void on_remote_navigate (GLib.Uri uri) {
-        navigate (uri, remote_access, Location.REMOTE);
+        //  navigate (uri, remote_access, Location.REMOTE);
     }
 
     private void on_remote_open (GLib.Uri uri) {
-        remote_access.open_file (uri);
+        //  remote_access.open_file (uri);
     }
 
     private void on_remote_file_dragged (string uri) {
-        file_dragged (uri, Location.REMOTE, remote_access);
+        //  file_dragged (uri, Location.REMOTE, remote_access);
     }
 
     private void on_local_file_dragged (string uri) {
-        file_dragged (uri, Location.LOCAL, local_access);
+        //  file_dragged (uri, Location.LOCAL, local_access);
     }
 
     private void navigate (GLib.Uri uri, IFileAccess file_access, Location pane) {
-        file_access.goto_dir (uri);
-        update_pane (pane);
+        //  file_access.goto_dir (uri);
+        //  update_pane (pane);
     }
 
     private void action_navigate (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            local_access.goto_dir (uri);
-            update_pane (LOCAL);
-        } else {
-            remote_access.goto_dir (uri);
-            update_pane (REMOTE);
-        }
+        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        //  if (uri.get_scheme () == "file") {
+        //      local_access.goto_dir (uri);
+        //      update_pane (LOCAL);
+        //  } else {
+        //      remote_access.goto_dir (uri);
+        //      update_pane (REMOTE);
+        //  }
     }
 
     private void action_open (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            local_access.open_file (uri);
-        } else {
-            remote_access.open_file (uri);
-        }
+        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        //  if (uri.get_scheme () == "file") {
+        //      local_access.open_file (uri);
+        //  } else {
+        //      remote_access.open_file (uri);
+        //  }
     }
 
     private void action_delete (GLib.SimpleAction action, GLib.Variant? variant) {
-        var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        if (uri.get_scheme () == "file") {
-            file_delete (uri, Location.LOCAL);
-        } else {
-            file_delete (uri, Location.REMOTE);
-        }
+        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+        //  if (uri.get_scheme () == "file") {
+        //      file_delete (uri, Location.LOCAL);
+        //  } else {
+        //      file_delete (uri, Location.REMOTE);
+        //  }
     }
 
     private void file_dragged (
@@ -307,103 +316,88 @@ class Taxi.MainWindow : Hdy.ApplicationWindow {
         Location pane,
         IFileAccess file_access
     ) {
-        var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
-        var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
-        file_operation.copy_recursive.begin (
-            source_file,
-            dest_file,
-            FileCopyFlags.NONE,
-            new Cancellable (),
-            (obj, res) => {
-                try {
-                    file_operation.copy_recursive.end (res);
-                    update_pane (pane);
-                } catch (Error e) {
-                    toast.title = e.message;
-                    toast.send_notification ();
-                }
-            }
-         );
+        //  var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
+        //  var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
+        //  file_operation.copy_recursive.begin (
+        //      source_file,
+        //      dest_file,
+        //      FileCopyFlags.NONE,
+        //      new Cancellable (),
+        //      (obj, res) => {
+        //          try {
+        //              file_operation.copy_recursive.end (res);
+        //              update_pane (pane);
+        //          } catch (Error e) {
+        //              toast.title = e.message;
+        //              toast.send_notification ();
+        //          }
+        //      }
+        //   );
     }
 
     private void file_delete (GLib.Uri uri, Location pane) {
-        var file = File.new_for_uri (uri.to_string ());
-        file_operation.delete_recursive.begin (
-            file,
-            new Cancellable (),
-            (obj, res) => {
-                try {
-                    file_operation.delete_recursive.end (res);
-                    update_pane (pane);
-                } catch (Error e) {
-                    toast.title = e.message;
-                    toast.send_notification ();
-                }
-            }
-        );
+        //  var file = File.new_for_uri (uri.to_string ());
+        //  file_operation.delete_recursive.begin (
+        //      file,
+        //      new Cancellable (),
+        //      (obj, res) => {
+        //          try {
+        //              file_operation.delete_recursive.end (res);
+        //              update_pane (pane);
+        //          } catch (Error e) {
+        //              toast.title = e.message;
+        //              toast.send_notification ();
+        //          }
+        //      }
+        //  );
     }
 
     private void update_pane (Location pane) {
-        IFileAccess file_access;
-        FilePane file_pane;
-        switch (pane) {
-            case Location.REMOTE:
-                file_access = remote_access;
-                file_pane = remote_pane;
-                break;
-            case Location.LOCAL:
-            default:
-                file_access = local_access;
-                file_pane = local_pane;
-                break;
-        }
-        file_pane.start_spinner ();
-        var file_uri = file_access.get_uri ();
-        file_access.get_file_list.begin ((obj, res) => {
-        var file_files = file_access.get_file_list.end (res);
-            file_pane.stop_spinner ();
-            file_pane.update_pathbar (file_uri);
-            file_pane.update_list (file_files);
-        });
+        //  IFileAccess file_access;
+        //  FilePane file_pane;
+        //  switch (pane) {
+        //      case Location.REMOTE:
+        //          file_access = remote_access;
+        //          file_pane = remote_pane;
+        //          break;
+        //      case Location.LOCAL:
+        //      default:
+        //          file_access = local_access;
+        //          file_pane = local_pane;
+        //          break;
+        //  }
+        //  file_pane.start_spinner ();
+        //  var file_uri = file_access.get_uri ();
+        //  file_access.get_file_list.begin ((obj, res) => {
+        //  var file_files = file_access.get_file_list.end (res);
+        //      file_pane.stop_spinner ();
+        //      file_pane.update_pathbar (file_uri);
+        //      file_pane.update_list (file_files);
+        //  });
     }
 
     private GLib.Uri on_ask_hostname () {
         return conn_uri;
     }
 
-    private int on_ask_overwrite (File destination) {
-        var dialog = new Gtk.MessageDialog (
-            this,
-            Gtk.DialogFlags.MODAL,
-            Gtk.MessageType.QUESTION,
-            Gtk.ButtonsType.NONE,
-            _("Replace existing file?")
-        );
-        dialog.format_secondary_markup (
-            _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ()))
-        );
-        dialog.add_button (_("Replace All Conflicts"), 2);
-        dialog.add_button (_("Skip"), 0);
-        dialog.add_button (_("Replace"), 1);
-        dialog.get_widget_for_response (1).get_style_context ().add_class ("suggested-action");
+    //  private int on_ask_overwrite (File destination) {
+    //      var dialog = new Gtk.MessageDialog (
+    //          this,
+    //          Gtk.DialogFlags.MODAL,
+    //          Gtk.MessageType.QUESTION,
+    //          Gtk.ButtonsType.NONE,
+    //          _("Replace existing file?")
+    //      );
+    //      dialog.format_secondary_markup (
+    //          _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ()))
+    //      );
+    //      dialog.add_button (_("Replace All Conflicts"), 2);
+    //      dialog.add_button (_("Skip"), 0);
+    //      dialog.add_button (_("Replace"), 1);
+    //      dialog.get_widget_for_response (1).get_style_context ().add_class ("suggested-action");
 
-        var response = dialog.run ();
-        dialog.destroy ();
-        return response;
-    }
-
-    public override bool configure_event (Gdk.EventConfigure event) {
-        if (is_maximized) {
-            saved_state.set_boolean ("maximized", true);
-        } else {
-            saved_state.set_boolean ("maximized", false);
-
-            int window_width, window_height;
-            get_size (out window_width, out window_height);
-            saved_state.set_int ("window-height", window_height);
-            saved_state.set_int ("window-width", window_width);
-        }
-
-        return base.configure_event (event);
-    }
+    //      var response = dialog.run ();
+    //      dialog.destroy ();
+    //      return response;
+    //  }
 }
