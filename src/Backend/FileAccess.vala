@@ -40,8 +40,8 @@ namespace Taxi {
             if (!uri.has_suffix ("/")) {
                 uri += "/";
             }
-            
-            try {                
+
+            try {
                 return GLib.Uri.parse (uri, PARSE_RELAXED);
             } catch (Error e) {
                 message (e.message);
