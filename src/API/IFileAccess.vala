@@ -38,7 +38,7 @@ namespace Taxi {
          */
         public async abstract List<FileInfo> get_file_list ();
 
-        public abstract GLib.Uri get_uri ();
+        public abstract GLib.Uri? get_uri ();
 
         public abstract void goto_dir (GLib.Uri uri);
 

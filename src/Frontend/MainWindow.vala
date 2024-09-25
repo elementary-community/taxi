@@ -73,7 +73,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
 
         var operations_button = new Gtk.MenuButton () {
             popover = popover,
-            valign = Gtk.Align.CENTER,
+            valign = CENTER,
             child = spinner
         };
         operations_button.add_css_class (Granite.STYLE_CLASS_FLAT);
@@ -119,31 +119,31 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         header_bar.pack_start (bookmark_menu_button);
 
         welcome = new Granite.Placeholder (_("Connect")) {
-            description = _("Type a URL and press 'Enter' to\nconnect to a server.")
+            description = _("Type a URL and press 'Enter' to connect to a server."),
+            vexpand = true
         };
-        welcome.vexpand = true;
 
-        //  local_pane = new FilePane ();
-        //  local_pane.open.connect (on_local_open);
-        //  local_pane.navigate.connect (on_local_navigate);
-        //  local_pane.file_dragged.connect (on_local_file_dragged);
-        //  local_pane.transfer.connect (on_remote_file_dragged);
-        //  local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
+        local_pane = new FilePane ();
+        local_pane.open.connect (on_local_open);
+        local_pane.navigate.connect (on_local_navigate);
+        local_pane.file_dragged.connect (on_local_file_dragged);
+        local_pane.transfer.connect (on_remote_file_dragged);
+        local_access.directory_changed.connect (() => update_pane (Location.LOCAL));
 
-        //  remote_pane = new FilePane ();
-        //  remote_pane.open.connect (on_remote_open);
-        //  remote_pane.navigate.connect (on_remote_navigate);
-        //  remote_pane.file_dragged.connect (on_remote_file_dragged);
-        //  remote_pane.transfer.connect (on_local_file_dragged);
+        remote_pane = new FilePane ();
+        remote_pane.open.connect (on_remote_open);
+        remote_pane.navigate.connect (on_remote_navigate);
+        remote_pane.file_dragged.connect (on_remote_file_dragged);
+        remote_pane.transfer.connect (on_local_file_dragged);
 
         outer_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-        //  outer_box.append (local_pane);
-        //  outer_box.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
-        //  outer_box.append (remote_pane);
+        outer_box.append (local_pane);
+        outer_box.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
+        outer_box.append (remote_pane);
 
         var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
-        //  size_group.add_widget (local_pane);
-        //  size_group.add_widget (remote_pane);
+        size_group.add_widget (local_pane);
+        size_group.add_widget (remote_pane);
 
         alert_stack = new Gtk.Stack ();
         alert_stack.add_child (welcome);
@@ -170,15 +170,13 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
 
         saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
 
-        //  connect_box.connect_initiated.connect (on_connect_initiated);
-        //  connect_box.ask_hostname.connect (on_ask_hostname);
-        //  connect_box.bookmarked.connect (bookmark);
+        connect_box.connect_initiated.connect (on_connect_initiated);
+        connect_box.ask_hostname.connect (on_ask_hostname);
+        connect_box.bookmarked.connect (bookmark);
 
-        //  file_operation.operation_added.connect (popover.add_operation);
-        //  file_operation.operation_removed.connect (popover.remove_operation);
+        file_operation.operation_added.connect (popover.add_operation);
+        file_operation.operation_removed.connect (popover.remove_operation);
         //  file_operation.ask_overwrite.connect (on_ask_overwrite);
-
-        //  key_press_event.connect (connect_box.on_key_press_event);
 
         popover.operations_pending.connect (show_spinner);
         popover.operations_finished.connect (hide_spinner);
@@ -189,9 +187,6 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         remote_access.connect_to_device.begin (uri, this, (obj, res) => {
             if (remote_access.connect_to_device.end (res)) {
                 alert_stack.visible_child = outer_box;
-                if (local_pane == null) {
-                    //  key_press_event.disconnect (connect_box.on_key_press_event);
-                }
                 update_pane (Location.LOCAL);
                 update_pane (Location.REMOTE);
                 connect_box.show_favorite_icon (
@@ -215,22 +210,24 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void bookmark () {
-        //  var uri_string = conn_uri.to_string ();
-        //  if (conn_saver.is_bookmarked (uri_string)) {
-        //      conn_saver.remove (uri_string);
-        //  } else {
-        //      conn_saver.save (uri_string);
-        //  }
-        //  connect_box.show_favorite_icon (
-        //      conn_saver.is_bookmarked (uri_string)
-        //  );
-        //  update_bookmark_menu ();
+        var uri_string = conn_uri.to_string ();
+        if (conn_saver.is_bookmarked (uri_string)) {
+            conn_saver.remove (uri_string);
+        } else {
+            conn_saver.save (uri_string);
+        }
+        connect_box.show_favorite_icon (
+            conn_saver.is_bookmarked (uri_string)
+        );
+        update_bookmark_menu ();
     }
 
     private void update_bookmark_menu () {
-        //  foreach (Gtk.Widget child in bookmark_list.get_children ()) {
-        //      child.destroy ();
-        //  }
+        for (Gtk.Widget? child = bookmark_list.get_first_child (); child != null;) {
+            Gtk.Widget? next = child.get_next_sibling ();
+            bookmark_list.remove (child);
+            child = next;
+        }
 
         var uri_list = conn_saver.get_saved_conns ();
         if (uri_list.length () == 0) {
@@ -254,61 +251,73 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void on_local_navigate (GLib.Uri uri) {
-        //  navigate (uri, local_access, Location.LOCAL);
+        navigate (uri, local_access, Location.LOCAL);
     }
 
     private void on_local_open (GLib.Uri uri) {
-        //  local_access.open_file (uri);
+        local_access.open_file (uri);
     }
 
     private void on_remote_navigate (GLib.Uri uri) {
-        //  navigate (uri, remote_access, Location.REMOTE);
+        navigate (uri, remote_access, Location.REMOTE);
     }
 
     private void on_remote_open (GLib.Uri uri) {
-        //  remote_access.open_file (uri);
+        remote_access.open_file (uri);
     }
 
     private void on_remote_file_dragged (string uri) {
-        //  file_dragged (uri, Location.REMOTE, remote_access);
+        file_dragged (uri, Location.REMOTE, remote_access);
     }
 
     private void on_local_file_dragged (string uri) {
-        //  file_dragged (uri, Location.LOCAL, local_access);
+        file_dragged (uri, Location.LOCAL, local_access);
     }
 
     private void navigate (GLib.Uri uri, IFileAccess file_access, Location pane) {
-        //  file_access.goto_dir (uri);
-        //  update_pane (pane);
+        file_access.goto_dir (uri);
+        update_pane (pane);
     }
 
     private void action_navigate (GLib.SimpleAction action, GLib.Variant? variant) {
-        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        //  if (uri.get_scheme () == "file") {
-        //      local_access.goto_dir (uri);
-        //      update_pane (LOCAL);
-        //  } else {
-        //      remote_access.goto_dir (uri);
-        //      update_pane (REMOTE);
-        //  }
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                local_access.goto_dir (uri);
+                update_pane (LOCAL);
+            } else {
+                remote_access.goto_dir (uri);
+                update_pane (REMOTE);
+            }
+        } catch (Error err) {
+            warning (err.message);
+        }
     }
 
     private void action_open (GLib.SimpleAction action, GLib.Variant? variant) {
-        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        //  if (uri.get_scheme () == "file") {
-        //      local_access.open_file (uri);
-        //  } else {
-        //      remote_access.open_file (uri);
-        //  }
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                local_access.open_file (uri);
+            } else {
+                remote_access.open_file (uri);
+            }
+        } catch (Error err) {
+            warning (err.message);
+        }
     }
 
     private void action_delete (GLib.SimpleAction action, GLib.Variant? variant) {
-        //  var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
-        //  if (uri.get_scheme () == "file") {
-        //      file_delete (uri, Location.LOCAL);
-        //  } else {
-        //      file_delete (uri, Location.REMOTE);
-        //  }
+        try {
+            var uri = GLib.Uri.parse (variant.get_string (), PARSE_RELAXED);
+            if (uri.get_scheme () == "file") {
+                file_delete (uri, Location.LOCAL);
+            } else {
+                file_delete (uri, Location.REMOTE);
+            }
+        } catch (Error err) {
+            warning (err.message);
+        }
     }
 
     private void file_dragged (
@@ -316,64 +325,64 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         Location pane,
         IFileAccess file_access
     ) {
-        //  var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
-        //  var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
-        //  file_operation.copy_recursive.begin (
-        //      source_file,
-        //      dest_file,
-        //      FileCopyFlags.NONE,
-        //      new Cancellable (),
-        //      (obj, res) => {
-        //          try {
-        //              file_operation.copy_recursive.end (res);
-        //              update_pane (pane);
-        //          } catch (Error e) {
-        //              toast.title = e.message;
-        //              toast.send_notification ();
-        //          }
-        //      }
-        //   );
+        var source_file = File.new_for_uri (uri.replace ("\r\n", ""));
+        var dest_file = file_access.get_current_file ().get_child (source_file.get_basename ());
+        file_operation.copy_recursive.begin (
+            source_file,
+            dest_file,
+            FileCopyFlags.NONE,
+            new Cancellable (),
+            (obj, res) => {
+                try {
+                    file_operation.copy_recursive.end (res);
+                    update_pane (pane);
+                } catch (Error e) {
+                    toast.title = e.message;
+                    toast.send_notification ();
+                }
+            }
+         );
     }
 
     private void file_delete (GLib.Uri uri, Location pane) {
-        //  var file = File.new_for_uri (uri.to_string ());
-        //  file_operation.delete_recursive.begin (
-        //      file,
-        //      new Cancellable (),
-        //      (obj, res) => {
-        //          try {
-        //              file_operation.delete_recursive.end (res);
-        //              update_pane (pane);
-        //          } catch (Error e) {
-        //              toast.title = e.message;
-        //              toast.send_notification ();
-        //          }
-        //      }
-        //  );
+        var file = File.new_for_uri (uri.to_string ());
+        file_operation.delete_recursive.begin (
+            file,
+            new Cancellable (),
+            (obj, res) => {
+                try {
+                    file_operation.delete_recursive.end (res);
+                    update_pane (pane);
+                } catch (Error e) {
+                    toast.title = e.message;
+                    toast.send_notification ();
+                }
+            }
+        );
     }
 
     private void update_pane (Location pane) {
-        //  IFileAccess file_access;
-        //  FilePane file_pane;
-        //  switch (pane) {
-        //      case Location.REMOTE:
-        //          file_access = remote_access;
-        //          file_pane = remote_pane;
-        //          break;
-        //      case Location.LOCAL:
-        //      default:
-        //          file_access = local_access;
-        //          file_pane = local_pane;
-        //          break;
-        //  }
-        //  file_pane.start_spinner ();
-        //  var file_uri = file_access.get_uri ();
-        //  file_access.get_file_list.begin ((obj, res) => {
-        //  var file_files = file_access.get_file_list.end (res);
-        //      file_pane.stop_spinner ();
-        //      file_pane.update_pathbar (file_uri);
-        //      file_pane.update_list (file_files);
-        //  });
+        IFileAccess file_access;
+        FilePane file_pane;
+        switch (pane) {
+            case Location.REMOTE:
+                file_access = remote_access;
+                file_pane = remote_pane;
+                break;
+            case Location.LOCAL:
+            default:
+                file_access = local_access;
+                file_pane = local_pane;
+                break;
+        }
+        file_pane.start_spinner ();
+        var file_uri = file_access.get_uri ();
+        file_access.get_file_list.begin ((obj, res) => {
+        var file_files = file_access.get_file_list.end (res);
+            file_pane.stop_spinner ();
+            file_pane.update_pathbar (file_uri);
+            file_pane.update_list (file_files);
+        });
     }
 
     private GLib.Uri on_ask_hostname () {

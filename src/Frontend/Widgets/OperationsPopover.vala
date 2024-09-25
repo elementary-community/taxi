@@ -67,10 +67,11 @@ namespace Taxi {
             var cancel_container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             cancel_container.append (cancel);
 
-            //  cancel_container.button_press_event.connect (() => {
-            //      operation.cancel ();
-            //      return false;
-            //  });
+            var click_controller = new Gtk.GestureClick ();
+            cancel_container.add_controller (click_controller);
+            click_controller.pressed.connect (() => {
+                operation.cancel ();
+            });
             
             row.append (cancel_container);
 

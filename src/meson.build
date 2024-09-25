@@ -18,7 +18,6 @@ executable(
     'Frontend/Widgets/ConnectBox.vala',
     'Frontend/Widgets/FilePane.vala',
     'Frontend/Widgets/OperationsPopover.vala',
-    'Frontend/Widgets/PathBarSeparator.vala',
     'Frontend/Widgets/PathBar.vala',
     gresource,
     dependencies: [
