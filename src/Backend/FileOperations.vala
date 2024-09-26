@@ -125,7 +125,7 @@ namespace Taxi {
             } else if (file_type == FileType.REGULAR) {
                 var tmp_flag = *flags;
                 if (*flags == FileCopyFlags.NONE && destination.query_exists ()) {
-                    switch ((ConflictFlag)ask_overwrite (destination)) {
+                    switch ((ConflictFlag) ask_overwrite (destination)) {
                         case ConflictFlag.REPLACE_ALL:
                             *flags = FileCopyFlags.OVERWRITE;
                             tmp_flag = *flags;
@@ -138,6 +138,7 @@ namespace Taxi {
                             return;
                     }
                 }
+
                 yield source.copy_async (
                     destination,
                     tmp_flag,
@@ -148,5 +149,40 @@ namespace Taxi {
                 warning ("Unrecognised file type" + file_type.to_string ());
             }
         }
+    }
+
+    private int ask_overwrite (File destination) {
+        var message_dialog = new Granite.MessageDialog (
+            _("Replace existing file?"),
+            _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ())),
+            new ThemedIcon ("dialog-warning"),
+            Gtk.ButtonsType.CANCEL
+        ) {
+            modal = true
+        };
+
+        var replace_all_button = new Gtk.Button.with_label (_("Replace All Conflicts"));
+        message_dialog.add_action_widget (replace_all_button, ConflictFlag.REPLACE_ALL);
+
+        var skip_button = new Gtk.Button.with_label (_("Skip"));
+        message_dialog.add_action_widget (skip_button, ConflictFlag.SKIP);
+
+        var replace_button = new Gtk.Button.with_label (_("Replace"));
+        replace_button.add_css_class (Granite.STYLE_CLASS_SUGGESTED_ACTION);
+        message_dialog.add_action_widget (replace_button, ConflictFlag.REPLACE);
+        
+        message_dialog.show ();
+
+        int response = 0;
+        var loop = new MainLoop ();
+        message_dialog.response.connect ((response_id) => {
+            response = response_id;
+            message_dialog.destroy ();
+            loop.quit();
+        });
+
+        loop.run();
+
+        return response;         
     }
 }

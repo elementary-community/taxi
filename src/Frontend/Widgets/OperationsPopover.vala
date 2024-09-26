@@ -45,7 +45,7 @@ namespace Taxi {
             grid.attach (placeholder, 0, 0);
         }
 
-        public void add_operation (IOperationInfo operation) {
+        public async void add_operation (IOperationInfo operation) {
             if (grid.get_child_at (0, 0) == placeholder) {
                 grid.remove (placeholder);
                 operations_pending ();
@@ -53,19 +53,18 @@ namespace Taxi {
             var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             operation_map.set (operation, row);
 
-            row.append (new Gtk.Label (operation.get_file_name ()));
+            var icon = yield operation.get_file_icon ();
+            row.append (new Gtk.Image.from_gicon (icon));
 
-            operation.get_file_icon.begin ((obj, res) => {
-                row.append (
-                    new Gtk.Image.from_gicon (
-                        operation.get_file_icon.end (res)
-                    )
-                );
+            row.append (new Gtk.Label (operation.get_file_name ()) {
+                margin_start = 6
             });
 
-            var cancel = new Gtk.Image.from_icon_name ("process-stop-symbolic");
-            var cancel_container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            cancel_container.append (cancel);
+            var cancel_container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
+                hexpand = true,
+                halign = END
+            };
+            cancel_container.append (new Gtk.Image.from_icon_name ("process-stop-symbolic"));
 
             var click_controller = new Gtk.GestureClick ();
             cancel_container.add_controller (click_controller);

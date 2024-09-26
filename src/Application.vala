@@ -67,7 +67,7 @@ public class Taxi.Taxi : Gtk.Application {
 
         settings.bind ("maximized", main_window, "maximized", SettingsBindFlags.SET);
 
-        main_window.show ();
+        main_window.present ();
     }
 
     public static int main (string[] args) {

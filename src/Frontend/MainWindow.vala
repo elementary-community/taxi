@@ -27,11 +27,12 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     private Gtk.MenuButton bookmark_menu_button;
     private Gtk.Stack alert_stack;
     private ConnectBox connect_box;
-    private Granite.Placeholder welcome;
     private FilePane local_pane;
     private FilePane remote_pane;
     private GLib.Uri conn_uri;
-    private GLib.Settings saved_state;
+    private Gtk.Popover bookmark_popover;
+    private Gtk.Box welcome_box;
+    private Gtk.Label title_label;
 
     public MainWindow (
         Gtk.Application application,
@@ -83,12 +84,8 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
             child = operations_button
         };
 
-        bookmark_list = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
-            margin_top = 6,
-            margin_bottom = 6,
-            margin_start = 3,
-            margin_end = 3
-        };
+        bookmark_list = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        bookmark_list.add_css_class (Granite.STYLE_CLASS_MENU);
 
         var bookmark_scrollbox = new Gtk.ScrolledWindow () {
             child = bookmark_list,
@@ -97,7 +94,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
             propagate_natural_height = true,
         };
 
-        var bookmark_popover = new Gtk.Popover () {
+        bookmark_popover = new Gtk.Popover () {
             child = bookmark_scrollbox,
             width_request = 250
         };
@@ -108,6 +105,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
             popover = bookmark_popover,
             valign = CENTER
         };
+        bookmark_menu_button.add_css_class (Granite.STYLE_CLASS_LARGE_ICONS);
 
         update_bookmark_menu ();
 
@@ -118,10 +116,26 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         header_bar.pack_start (spinner_revealer);
         header_bar.pack_start (bookmark_menu_button);
 
-        welcome = new Granite.Placeholder (_("Connect")) {
-            description = _("Type a URL and press 'Enter' to connect to a server."),
-            vexpand = true
+        var app_icon = new Gtk.Image.from_icon_name ("com.github.alecaddd.taxi") {
+            pixel_size = 64
         };
+
+        title_label = new Gtk.Label (_("Connect"));
+        title_label.add_css_class (Granite.STYLE_CLASS_H1_LABEL);
+
+        var description_label = new Gtk.Label (_("Type a URL and press 'Enter' to\nconnect to a server.")) {
+            justify = CENTER
+        };
+
+        welcome_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6) {
+            hexpand = true,
+            vexpand = true,
+            halign = CENTER,
+            valign = CENTER
+        };
+        welcome_box.append (app_icon);
+        welcome_box.append (title_label);
+        welcome_box.append (description_label);
 
         local_pane = new FilePane ();
         local_pane.open.connect (on_local_open);
@@ -146,7 +160,7 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
         size_group.add_widget (remote_pane);
 
         alert_stack = new Gtk.Stack ();
-        alert_stack.add_child (welcome);
+        alert_stack.add_child (welcome_box);
         alert_stack.add_child (outer_box);
 
         toast = new Granite.Toast ("");
@@ -168,15 +182,12 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
 
         child = grid;
 
-        saved_state = new GLib.Settings ("com.github.alecaddd.taxi.state");
-
         connect_box.connect_initiated.connect (on_connect_initiated);
         connect_box.ask_hostname.connect (on_ask_hostname);
         connect_box.bookmarked.connect (bookmark);
 
         file_operation.operation_added.connect (popover.add_operation);
         file_operation.operation_removed.connect (popover.remove_operation);
-        //  file_operation.ask_overwrite.connect (on_ask_overwrite);
 
         popover.operations_pending.connect (show_spinner);
         popover.operations_finished.connect (hide_spinner);
@@ -194,8 +205,8 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
                 );
                 conn_uri = uri;
             } else {
-                alert_stack.visible_child = welcome;
-                welcome.title = _("Could not connect to '%s'").printf (uri.to_string ());
+                alert_stack.visible_child = welcome_box;
+                title_label.label = _("Could not connect to '%s'").printf (uri.to_string ());
             }
             hide_spinner ();
         });
@@ -239,9 +250,10 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
                         halign = START
                     }
                 };
-                bookmark_item.add_css_class (Granite.STYLE_CLASS_FLAT);
+                bookmark_item.add_css_class (Granite.STYLE_CLASS_MENUITEM);
                 bookmark_item.clicked.connect (() => {
                     connect_box.go_to_uri (uri);
+                    bookmark_popover.popdown ();
                 });
 
                 bookmark_list.append (bookmark_item);
@@ -388,25 +400,4 @@ class Taxi.MainWindow : Gtk.ApplicationWindow {
     private GLib.Uri on_ask_hostname () {
         return conn_uri;
     }
-
-    //  private int on_ask_overwrite (File destination) {
-    //      var dialog = new Gtk.MessageDialog (
-    //          this,
-    //          Gtk.DialogFlags.MODAL,
-    //          Gtk.MessageType.QUESTION,
-    //          Gtk.ButtonsType.NONE,
-    //          _("Replace existing file?")
-    //      );
-    //      dialog.format_secondary_markup (
-    //          _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ()))
-    //      );
-    //      dialog.add_button (_("Replace All Conflicts"), 2);
-    //      dialog.add_button (_("Skip"), 0);
-    //      dialog.add_button (_("Replace"), 1);
-    //      dialog.get_widget_for_response (1).get_style_context ().add_class ("suggested-action");
-
-    //      var response = dialog.run ();
-    //      dialog.destroy ();
-    //      return response;
-    //  }
 }

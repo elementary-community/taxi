@@ -30,7 +30,6 @@ namespace Taxi {
             string[] entries = {"FTP", "SFTP", "DAV", "AFP"};
 
             protocol_combobox = new Gtk.ComboBoxText ();
-            protocol_combobox.add_css_class ("combobox-linked");
             foreach (var entry in entries) {
                 protocol_combobox.append_text (entry);
             }

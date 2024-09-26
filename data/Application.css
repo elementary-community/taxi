@@ -12,6 +12,6 @@ button.pathbar {
     padding: 0 6px;
 }
 
-.combo {
-        padding: 2.5px 3px;
+.linked .combo {
+    padding: 2.5px 3px;
 }
