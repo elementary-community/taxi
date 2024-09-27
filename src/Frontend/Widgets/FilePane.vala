@@ -16,21 +16,12 @@
 
 namespace Taxi {
 
-    enum Target {
-        STRING,
-        URI_LIST;
-    }
-
-    //  const Gtk.TargetEntry[] TARGET_LIST = {
-    //      { "test/plain", 0, Target.STRING },
-    //      { "text/uri-list", 0, Target.URI_LIST }
-    //  };
-
     class FilePane : Adw.Bin {
         private GLib.Uri current_uri;
         private PathBar path_bar;
         private Gtk.ListBox list_box;
         private Gtk.Stack stack;
+        private Gtk.Popover menu_popover;
 
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
@@ -60,6 +51,8 @@ namespace Taxi {
 
             list_box.set_placeholder (placeholder_label);
             list_box.set_selection_mode (Gtk.SelectionMode.MULTIPLE);
+            list_box.add_css_class ("transition");
+            list_box.add_css_class ("drop-target");
 
             var listbox_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
             listbox_view.append (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
@@ -87,8 +80,6 @@ namespace Taxi {
 
             child = toolbar;
 
-            //  list_box.drag_drop.connect (on_drag_drop);
-            //  list_box.drag_data_received.connect (on_drag_data_received);
             list_box.row_activated.connect ((row) => {
                 var uri = row.get_data<GLib.Uri> ("uri");
                 var type = row.get_data<FileType> ("type");
@@ -102,12 +93,18 @@ namespace Taxi {
             path_bar.navigate.connect (uri => navigate (uri));
             path_bar.transfer.connect (on_pathbar_transfer);
 
-            //  Gtk.drag_dest_set (
-            //      list_box,
-            //      Gtk.DestDefaults.ALL,
-            //      TARGET_LIST,
-            //      Gdk.DragAction.COPY
-            //  );
+            var drop_target = new Gtk.DropTarget (typeof (Gtk.ListBoxRow), Gdk.DragAction.COPY);
+		    list_box.add_controller (drop_target);
+            drop_target.drop.connect ((value, x, y) => {
+                var row = (Gtk.ListBoxRow) value;
+                var uri = row.get_data<GLib.Uri> ("uri");
+
+                if (uri != null) {
+                    file_dragged (uri.to_string ());
+                }
+
+                return true;
+            });
         }
 
         private void on_pathbar_transfer () {
@@ -225,27 +222,17 @@ namespace Taxi {
             lbrow.set_data ("type", file_info.get_file_type ());
             lbrow.set_data ("checkbutton", checkbox);
 
-            //  Gtk.drag_source_set (
-            //      ebrow,
-            //      Gdk.ModifierType.BUTTON1_MASK,
-            //      TARGET_LIST,
-            //      Gdk.DragAction.COPY
-            //  );
-            
-            //  ebrow.drag_begin.connect (on_drag_begin);
-            //  ebrow.drag_data_get.connect (on_drag_data_get);
-            //  ebrow.button_press_event.connect ((event) =>
-            //      //  on_ebr_button_press (event, ebrow, lbrow)
-            //  );
-            //  ebrow.popup_menu.connect (() => on_ebr_popup_menu (ebrow));
+            var drag_source = new Gtk.DragSource ();
+            drag_source.set_actions (Gdk.DragAction.COPY);
+            lbrow.add_controller (drag_source);
 
-            var click_controller = new Gtk.GestureClick () {
-                button = 3
-            };
-            ebrow.add_controller (click_controller);
-            click_controller.released.connect ((n_press, x, y) => {
-                list_box.select_row (lbrow);
-                //  event_box.popup_menu ();
+            drag_source.prepare.connect ((x, y) => {
+                return new Gdk.ContentProvider.for_value (lbrow);
+            });
+
+            drag_source.drag_begin.connect ((source, drag) => {
+                var paintable = new Gtk.WidgetPaintable (lbrow);
+                source.set_icon (paintable, 0, 0);
             });
 
             return lbrow;
@@ -257,64 +244,6 @@ namespace Taxi {
             } else {
                 path_bar.transfer_button_sensitive = false;
             }
-        }
-
-        private bool on_ebr_popup_menu (Gtk.Box event_box) {
-            try {
-                var uri = GLib.Uri.parse_relative (
-                    current_uri,
-                    event_box.get_data<string> ("name"),
-                    PARSE_RELAXED
-                );
-
-                var menu_model = new GLib.Menu ();
-
-                var type = event_box.get_data<FileType> ("type");
-                if (type == FileType.DIRECTORY) {
-                    menu_model.append (
-                        _("Open"),
-                        Action.print_detailed_name (
-                            "win.navigate",
-                            new Variant.string (uri.to_string ())
-                        )
-                    );
-                } else {
-                    menu_model.append (
-                        _("Open"),
-                        Action.print_detailed_name (
-                            "win.open",
-                            new Variant.string (uri.to_string ())
-                        )
-                    );
-
-                    //menu.add (new_menu_item ("Edit", u => edit (u), uri));
-                }
-
-                //  var delete_section = new GLib.Menu ();
-                //  delete_section.append (
-                //      _("Delete"),
-                //      Action.print_detailed_name (
-                //          "win.delete",
-                //          new Variant.string (uri.to_string ())
-                //      )
-                //  );
-
-                //  menu_model.append_section (null, delete_section);
-
-                //add_menu_item ("Rename", menu, u => rename (u), uri);
-
-                //  var menu = new Gtk.Menu.from_model (menu_model) {
-                //      attach_widget = event_box
-                //  };
-                //  menu.popup_at_pointer (null);
-                //  menu.deactivate.connect (() => list_box.select_row (null));
-
-                return true;
-            } catch (Error err) {
-                warning (err.message);
-            }
-
-            return false;
         }
 
         public void update_pathbar (GLib.Uri uri) {
@@ -343,71 +272,5 @@ namespace Taxi {
             string[] measurement = { "bytes", "kB", "MB", "GB", "TB", "PB", "EB" };
             return "%.3g %s".printf (floatbytes, measurement [i]);
         }
-
-        //  private void on_drag_begin (Gtk.Widget widget, Gdk.DragContext context) {
-        //      var widget_window = widget.get_window ();
-        //      var pixbuf = Gdk.pixbuf_get_from_window (
-        //          widget_window,
-        //          0,
-        //          0,
-        //          widget_window.get_width (),
-        //          widget_window.get_height ()
-        //      );
-        //      Gtk.drag_set_icon_pixbuf (context, pixbuf, 0, 0);
-        //  }
-
-        //  private bool on_drag_drop (
-        //      Gtk.Widget widget,
-        //      Gdk.DragContext context,
-        //      int x,
-        //      int y,
-        //      uint time
-        //  ) {
-        //      var target_type = (Gdk.Atom) context.list_targets ().nth_data (Target.URI_LIST);
-        //      Gtk.drag_get_data (widget, context, target_type, time);
-        //      return true;
-        //  }
-
-        //  private void on_drag_data_get (
-        //      Gtk.Widget widget,
-        //      Gdk.DragContext context,
-        //      Gtk.SelectionData selection_data,
-        //      uint target_type,
-        //      uint time
-        //  ) {
-        //      string file_name = widget.get_data ("name");
-        //      string file_uri = current_uri.to_string () + "/" + file_name;
-        //      switch (target_type) {
-        //          case Target.URI_LIST:
-        //              selection_data.set_uris ({ file_uri });
-        //              break;
-        //          case Target.STRING:
-        //              selection_data.set_uris ({ file_uri });
-        //              break;
-        //          default:
-        //              assert_not_reached ();
-        //      }
-        //  }
-
-        //  private void on_drag_data_received (
-        //      Gtk.Widget widget,
-        //      Gdk.DragContext context,
-        //      int x,
-        //      int y,
-        //      Gtk.SelectionData selection_data,
-        //      uint target_type,
-        //      uint time
-        //  ) {
-        //      switch (target_type) {
-        //          case Target.URI_LIST:
-        //              file_dragged ((string) selection_data.get_data ());
-        //              break;
-        //          case Target.STRING:
-        //              break;
-        //          default:
-        //              message ("Data received not accepted");
-        //              break;
-        //      }
-        //  }
     }
 }
