@@ -178,10 +178,10 @@ namespace Taxi {
         message_dialog.response.connect ((response_id) => {
             response = response_id;
             message_dialog.destroy ();
-            loop.quit();
+            loop.quit ();
         });
 
-        loop.run();
+        loop.run ();
 
         return response;
     }
