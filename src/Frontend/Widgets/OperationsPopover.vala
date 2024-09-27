@@ -71,7 +71,7 @@ namespace Taxi {
             click_controller.pressed.connect (() => {
                 operation.cancel ();
             });
-            
+
             row.append (cancel_container);
 
             grid.attach (row, 0, 0);

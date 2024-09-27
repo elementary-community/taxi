@@ -94,7 +94,7 @@ namespace Taxi {
             path_bar.transfer.connect (on_pathbar_transfer);
 
             var drop_target = new Gtk.DropTarget (typeof (Gtk.ListBoxRow), Gdk.DragAction.COPY);
-		    list_box.add_controller (drop_target);
+            list_box.add_controller (drop_target);
             drop_target.drop.connect ((value, x, y) => {
                 var row = (Gtk.ListBoxRow) value;
                 var uri = row.get_data<GLib.Uri> ("uri");

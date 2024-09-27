@@ -170,7 +170,7 @@ namespace Taxi {
         var replace_button = new Gtk.Button.with_label (_("Replace"));
         replace_button.add_css_class (Granite.STYLE_CLASS_SUGGESTED_ACTION);
         message_dialog.add_action_widget (replace_button, ConflictFlag.REPLACE);
-        
+
         message_dialog.show ();
 
         int response = 0;
@@ -183,6 +183,6 @@ namespace Taxi {
 
         loop.run();
 
-        return response;         
+        return response;
     }
 }
