@@ -18,10 +18,10 @@ namespace Taxi {
 
     class FileRow : Gtk.ListBoxRow {
         public GLib.FileInfo file_info { get; construct; }
-        
+
         private Gtk.CheckButton checkbox;
         private Gtk.Popover menu_popover;
-        
+
         GLib.Uri _current_uri;
         public GLib.Uri current_uri {
             get {
@@ -97,7 +97,7 @@ namespace Taxi {
             row.append (checkbox);
             row.append (icon);
             row.append (name);
-            
+
             if (file_info.get_file_type () == FileType.REGULAR) {
                 var size = new Gtk.Label (bit_string_format (file_info.get_size ()));
                 size.add_css_class (Granite.STYLE_CLASS_DIM_LABEL);
@@ -122,7 +122,7 @@ namespace Taxi {
                 menu_popover.popup ();
                 return;
             }
-    
+
             var open_menu = new Gtk.Button () {
                 child = new Gtk.Label (_("Open")) {
                     halign = START
@@ -144,14 +144,14 @@ namespace Taxi {
 
             menu_box.append (open_menu);
             menu_box.append (delete_menu);
-    
+
             menu_popover = new Gtk.Popover () {
                 has_arrow = false,
                 halign = Gtk.Align.START,
                 child = menu_box,
                 width_request = 250
             };
-    
+
             menu_popover.set_parent (this);
             menu_popover.pointing_to = { ((int) x), (int) y, 1, 1 };
             menu_popover.popup ();
@@ -171,17 +171,17 @@ namespace Taxi {
             var drag_source = new Gtk.DragSource ();
             drag_source.set_actions (Gdk.DragAction.COPY);
             add_controller (drag_source);
-    
+
             drag_source.prepare.connect ((x, y) => {
                 return new Gdk.ContentProvider.for_value (this);
             });
-    
+
             drag_source.drag_begin.connect ((source, drag) => {
                 var paintable = new Gtk.WidgetPaintable (this);
                 source.set_icon (paintable, 0, 0);
             });
         }
-    
+
         private string bit_string_format (int64 bytes) {
             var floatbytes = (float) bytes;
             int i;
