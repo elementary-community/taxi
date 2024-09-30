@@ -19,6 +19,7 @@ executable(
     'Frontend/Widgets/FilePane.vala',
     'Frontend/Widgets/OperationsPopover.vala',
     'Frontend/Widgets/PathBar.vala',
+    'Frontend/Widgets/FileRow.vala',
     gresource,
     dependencies: [
         dependency('glib-2.0'),

@@ -21,7 +21,6 @@ namespace Taxi {
         private PathBar path_bar;
         private Gtk.ListBox list_box;
         private Gtk.Stack stack;
-        private Gtk.Popover menu_popover;
 
         public signal void file_dragged (string uri);
         public signal void transfer (string uri);
@@ -80,9 +79,11 @@ namespace Taxi {
 
             child = toolbar;
 
-            list_box.row_activated.connect ((row) => {
-                var uri = row.get_data<GLib.Uri> ("uri");
-                var type = row.get_data<FileType> ("type");
+            list_box.row_activated.connect ((value) => {
+                var row = (FileRow) value;
+
+                var uri = row.uri;
+                var type = row.file_type;
                 if (type == FileType.DIRECTORY) {
                     navigate (uri);
                 } else {
@@ -93,11 +94,11 @@ namespace Taxi {
             path_bar.navigate.connect (uri => navigate (uri));
             path_bar.transfer.connect (on_pathbar_transfer);
 
-            var drop_target = new Gtk.DropTarget (typeof (Gtk.ListBoxRow), Gdk.DragAction.COPY);
+            var drop_target = new Gtk.DropTarget (typeof (FileRow), Gdk.DragAction.COPY);
             list_box.add_controller (drop_target);
             drop_target.drop.connect ((value, x, y) => {
-                var row = (Gtk.ListBoxRow) value;
-                var uri = row.get_data<GLib.Uri> ("uri");
+                var row = (FileRow) value;
+                var uri = row.uri;
 
                 if (uri != null) {
                     file_dragged (uri.to_string ());
@@ -121,8 +122,8 @@ namespace Taxi {
 
             do {
                 row = list_box.get_row_at_index (row_index);
-                if (row.get_data<Gtk.CheckButton> ("checkbutton").get_active ()) {
-                    uri_list.add (current_uri.to_string () + "/" + row.get_data<string> ("name"));
+                if (((FileRow)row).active) {
+                    uri_list.add (current_uri.to_string () + "/" + ((FileRow)row).file_name);
                 }
 
                 row_index++;
@@ -135,14 +136,20 @@ namespace Taxi {
             clear_children (list_box);
             // Have to convert to gee list because glib list sort function is buggy
             // (it randomly removes items...)
-            var gee_list = glib_to_gee<FileInfo> (file_list);
+            var gee_list = glib_to_gee<GLib.FileInfo> (file_list);
             alphabetical_order (gee_list);
-            foreach (FileInfo file_info in gee_list) {
+            foreach (GLib.FileInfo file_info in gee_list) {
                 if (file_info.get_name ().get_char (0) == '.') {
                     continue;
                 }
 
-                var row = new_row (file_info);
+                var row = new FileRow (file_info);
+                row.current_uri = current_uri;
+                row.on_checkbutton_toggle.connect (on_checkbutton_toggle);
+                row.on_delete.connect (() => {
+                    
+                });
+
                 if (row != null) {
                     list_box.append (row);
                 }
@@ -173,71 +180,6 @@ namespace Taxi {
             });
         }
 
-        private Gtk.ListBoxRow? new_row (FileInfo file_info) {
-            var checkbox = new Gtk.CheckButton ();
-            checkbox.toggled.connect (on_checkbutton_toggle);
-
-            var icon = new Gtk.Image.from_gicon (file_info.get_icon ());
-
-            var name = new Gtk.Label (file_info.get_name ());
-            name.halign = Gtk.Align.START;
-            name.hexpand = true;
-
-            var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
-                hexpand = true,
-                margin_top = 6,
-                margin_bottom = 6,
-                margin_start = 12,
-                margin_end = 12
-            };
-            row.append (checkbox);
-            row.append (icon);
-            row.append (name);
-
-            if (file_info.get_file_type () == FileType.REGULAR) {
-                var size = new Gtk.Label (bit_string_format (file_info.get_size ()));
-                size.add_css_class (Granite.STYLE_CLASS_DIM_LABEL);
-                row.append (size);
-            }
-
-            GLib.Uri uri;
-            try {
-                uri = GLib.Uri.parse_relative (current_uri, file_info.get_name (), PARSE_RELAXED);
-            } catch (Error e) {
-                message (e.message);
-                return null;
-            }
-
-            var ebrow = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            ebrow.append (row);
-            ebrow.set_data ("name", file_info.get_name ());
-            ebrow.set_data ("type", file_info.get_file_type ());
-
-            var lbrow = new Gtk.ListBoxRow () {
-                hexpand = true,
-                child = ebrow
-            };
-            lbrow.set_data ("uri", uri);
-            lbrow.set_data ("name", file_info.get_name ());
-            lbrow.set_data ("type", file_info.get_file_type ());
-            lbrow.set_data ("checkbutton", checkbox);
-
-            var drag_source = new Gtk.DragSource ();
-            drag_source.set_actions (Gdk.DragAction.COPY);
-            lbrow.add_controller (drag_source);
-
-            drag_source.prepare.connect ((x, y) => {
-                return new Gdk.ContentProvider.for_value (lbrow);
-            });
-
-            drag_source.drag_begin.connect ((source, drag) => {
-                var paintable = new Gtk.WidgetPaintable (lbrow);
-                source.set_icon (paintable, 0, 0);
-            });
-
-            return lbrow;
-        }
-
         private void on_checkbutton_toggle () {
             if (get_marked_row_uris ().size > 0) {
                 path_bar.transfer_button_sensitive = true;
@@ -261,16 +203,6 @@ namespace Taxi {
 
         public void stop_spinner () {
             stack.visible_child_name = "list";
-        }
-
-        private string bit_string_format (int64 bytes) {
-            var floatbytes = (float) bytes;
-            int i;
-            for (i = 0; floatbytes >= 1000.0f || i > 6; i++) {
-                floatbytes /= 1000.0f;
-            }
-            string[] measurement = { "bytes", "kB", "MB", "GB", "TB", "PB", "EB" };
-            return "%.3g %s".printf (floatbytes, measurement [i]);
         }
     }
 }

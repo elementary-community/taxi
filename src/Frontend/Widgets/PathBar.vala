@@ -41,7 +41,9 @@ namespace Taxi {
         }
 
         private void add_path_frag (string child, string path) {
-            var button = new Gtk.Button ();
+            var button = new Gtk.Button () {
+                valign = CENTER
+            };
 
             if (path == "/") {
                 button.child = new Gtk.Image.from_icon_name (child);
@@ -61,9 +63,8 @@ namespace Taxi {
                 append (sep);
             }
 
-            var button_style_context = button.get_style_context ();
-            button_style_context.add_class (Granite.STYLE_CLASS_FLAT);
-            button_style_context.add_class ("path-button");
+            button.add_css_class (Granite.STYLE_CLASS_FLAT);
+            button.add_css_class ("path-button");
 
             button.clicked.connect (() => {
                 try {
@@ -96,12 +97,18 @@ namespace Taxi {
             }
             set_path_helper (uri.get_path ());
 
-            var transfer_button = new Gtk.Button.from_icon_name (transfer_icon_name);
+            var transfer_button = new Gtk.Button.from_icon_name (transfer_icon_name) {
+                valign = CENTER
+            };
             transfer_button.halign = Gtk.Align.END;
             transfer_button.hexpand = true;
             transfer_button.sensitive = false;
             transfer_button.tooltip_text = _("Transfer");
-            transfer_button.bind_property ("sensitive", this, "transfer-button-sensitive", GLib.BindingFlags.BIDIRECTIONAL);
+            transfer_button.bind_property (
+                "sensitive", this,
+                "transfer-button-sensitive",
+                GLib.BindingFlags.BIDIRECTIONAL
+            );
             transfer_button.add_css_class (Granite.STYLE_CLASS_FLAT);
 
             transfer_button.clicked.connect (() => transfer ());
