@@ -147,7 +147,7 @@ namespace Taxi {
                 row.current_uri = current_uri;
                 row.on_checkbutton_toggle.connect (on_checkbutton_toggle);
                 row.on_delete.connect (() => {
-                    
+
                 });
 
                 if (row != null) {
