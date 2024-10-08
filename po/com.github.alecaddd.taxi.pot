@@ -1,21 +1,25 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.alecaddd.taxi package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: com.github.alecaddd.taxi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-07 20:22-0500\n"
-"PO-Revision-Date: 2015-07-20 21:43+0000\n"
-"Last-Translator: maxim <max.kachinsky@pirates.by>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-07-21 05:36+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
 
 #: src/Backend/FileOperations.vala:156
 msgid "Replace existing file?"
-msgstr "Замяніць файл?"
+msgstr ""
 
 #: src/Backend/FileOperations.vala:157
 #, c-format
@@ -23,61 +27,58 @@ msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
 "conflicting files or choose not to replace the file by skipping."
 msgstr ""
-"<i>\"%s\"</i> ўжо існуе. Вы можаце замяніць гэты файл, замяніць усе "
-"супярэчлівыя файлы або выбраць, каб не замяніць файл, прапускаючы."
 
 #: src/Backend/FileOperations.vala:164
 msgid "Replace All Conflicts"
-msgstr "Змяніць усе канфлікты"
+msgstr ""
 
 #: src/Backend/FileOperations.vala:167
 msgid "Skip"
-msgstr "Прапусціць"
+msgstr ""
 
 #: src/Backend/FileOperations.vala:170
 msgid "Replace"
-msgstr "Замяніць"
+msgstr ""
 
 #: src/Frontend/MainWindow.vala:104
 msgid "Access Bookmarks"
-msgstr "Закладкі"
+msgstr ""
 
 #: src/Frontend/MainWindow.vala:123
 msgid "Connect"
-msgstr "Далучыцца"
+msgstr ""
 
 #: src/Frontend/MainWindow.vala:126
 msgid ""
 "Type a URL and press 'Enter' to\n"
 "connect to a server."
-msgstr "Увядзіце адрас і націсніце 'Enter' для злучэння з серверас"
+msgstr ""
 
 #: src/Frontend/MainWindow.vala:209
 #, c-format
 msgid "Could not connect to '%s'"
-msgstr "Не магу далучыцца да '%s'"
+msgstr ""
 
 #: src/Frontend/Widgets/ConnectBox.vala:39
 msgid "hostname:port/folder"
-msgstr "Імя хаста:порт/папка"
+msgstr ""
 
 #: src/Frontend/Widgets/FilePane.vala:39
-#, fuzzy
 msgid "This Folder Is Empty"
-msgstr "Гэтая папка пуста"
+msgstr ""
 
 #: src/Frontend/Widgets/OperationsPopover.vala:38
 msgid "No file operations are in progress"
-msgstr "Ніякія аперацыі не выконваюцца"
+msgstr ""
 
 #: src/Frontend/Widgets/PathBar.vala:106
 msgid "Transfer"
-msgstr "Перадача"
+msgstr ""
 
 #: src/Frontend/Widgets/FileRow.vala:127
 msgid "Open"
-msgstr "Адчыніць"
+msgstr ""
 
 #: src/Frontend/Widgets/FileRow.vala:134
 msgid "Delete"
-msgstr "Выдаліць"
+msgstr ""

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-18 16:32-0700\n"
+"POT-Creation-Date: 2024-10-07 20:22-0500\n"
 "PO-Revision-Date: 2015-04-28 12:57+0000\n"
 "Last-Translator: Mikael Nyberg <mikanybe@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,30 +13,11 @@ msgstr ""
 "X-Launchpad-Export-Date: 2015-04-29 05:37+0000\n"
 "X-Generator: Launchpad (build 17453)\n"
 
-#: src/Frontend/GUI.vala:137
-msgid "Access Bookmarks"
-msgstr "Kom åt bokmärken"
-
-#: src/Frontend/GUI.vala:151
-msgid "Connect"
-msgstr "Anslut"
-
-#: src/Frontend/GUI.vala:152
-msgid ""
-"Type a URL and press 'Enter' to\n"
-"connect to a server."
-msgstr "Skriv en URL och tryck 'Enter' för att ansluta till en server."
-
-#: src/Frontend/GUI.vala:180
-#, c-format
-msgid "Could not connect to '%s'"
-msgstr "Kunde inte ansluta till '%s'"
-
-#: src/Frontend/GUI.vala:414
+#: src/Backend/FileOperations.vala:156
 msgid "Replace existing file?"
 msgstr "Ersätt befintlig fil?"
 
-#: src/Frontend/GUI.vala:417
+#: src/Backend/FileOperations.vala:157
 #, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
@@ -46,39 +27,58 @@ msgstr ""
 "konflikterande filer eller välja att inte ersätta denna fil och istället "
 "skippa att överföra den."
 
-#: src/Frontend/GUI.vala:419
+#: src/Backend/FileOperations.vala:164
 msgid "Replace All Conflicts"
 msgstr "Ersätt alla konflikterande"
 
-#: src/Frontend/GUI.vala:420
+#: src/Backend/FileOperations.vala:167
 msgid "Skip"
 msgstr "Skippa"
 
-#: src/Frontend/GUI.vala:421
+#: src/Backend/FileOperations.vala:170
 msgid "Replace"
 msgstr "Ersätt"
 
-#: src/Frontend/Widgets/ConnectBox.vala:52
+#: src/Frontend/MainWindow.vala:104
+msgid "Access Bookmarks"
+msgstr "Kom åt bokmärken"
+
+#: src/Frontend/MainWindow.vala:123
+msgid "Connect"
+msgstr "Anslut"
+
+#: src/Frontend/MainWindow.vala:126
+msgid ""
+"Type a URL and press 'Enter' to\n"
+"connect to a server."
+msgstr "Skriv en URL och tryck 'Enter' för att ansluta till en server."
+
+#: src/Frontend/MainWindow.vala:209
+#, c-format
+msgid "Could not connect to '%s'"
+msgstr "Kunde inte ansluta till '%s'"
+
+#: src/Frontend/Widgets/ConnectBox.vala:39
 msgid "hostname:port/folder"
 msgstr "värdnamn:port/mapp"
 
-#: src/Frontend/Widgets/FilePane.vala:111
-msgid "This folder is empty."
+#: src/Frontend/Widgets/FilePane.vala:39
+#, fuzzy
+msgid "This Folder Is Empty"
 msgstr "Den här mappen är tom."
 
-#: src/Frontend/Widgets/FilePane.vala:249
-#: src/Frontend/Widgets/FilePane.vala:251
-msgid "Open"
-msgstr "Öppna"
-
-#: src/Frontend/Widgets/FilePane.vala:255
-msgid "Delete"
-msgstr "Ta bort"
-
-#: src/Frontend/Widgets/OperationsPopover.vala:33
+#: src/Frontend/Widgets/OperationsPopover.vala:38
 msgid "No file operations are in progress"
 msgstr "Inga filhanteringar pågår"
 
-#: src/Frontend/Widgets/PathBar.vala:114
+#: src/Frontend/Widgets/PathBar.vala:106
 msgid "Transfer"
 msgstr "Överför"
+
+#: src/Frontend/Widgets/FileRow.vala:127
+msgid "Open"
+msgstr "Öppna"
+
+#: src/Frontend/Widgets/FileRow.vala:134
+msgid "Delete"
+msgstr "Ta bort"

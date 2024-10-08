@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-18 16:32-0700\n"
+"POT-Creation-Date: 2024-10-07 20:22-0500\n"
 "PO-Revision-Date: 2014-08-20 14:57+0000\n"
 "Last-Translator: Yu-Hung Ou <xanatosou@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,30 +13,11 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-11-05 07:40+0000\n"
 "X-Generator: Launchpad (build 17223)\n"
 
-#: src/Frontend/GUI.vala:137
-msgid "Access Bookmarks"
-msgstr ""
-
-#: src/Frontend/GUI.vala:151
-msgid "Connect"
-msgstr "連接"
-
-#: src/Frontend/GUI.vala:152
-msgid ""
-"Type a URL and press 'Enter' to\n"
-"connect to a server."
-msgstr "輸入URL並按下\"Enter\"以連接至伺服器。"
-
-#: src/Frontend/GUI.vala:180
-#, c-format
-msgid "Could not connect to '%s'"
-msgstr "無法連接至'%s'"
-
-#: src/Frontend/GUI.vala:414
+#: src/Backend/FileOperations.vala:156
 msgid "Replace existing file?"
 msgstr "要覆蓋已存在的檔案嗎?"
 
-#: src/Frontend/GUI.vala:417
+#: src/Backend/FileOperations.vala:157
 #, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
@@ -44,39 +25,58 @@ msgid ""
 msgstr ""
 "<i>\"%s\"</i> 已經存在。你可以取代檔案、取代所有衝突檔案或者略過此步驟。"
 
-#: src/Frontend/GUI.vala:419
+#: src/Backend/FileOperations.vala:164
 msgid "Replace All Conflicts"
 msgstr "取代所有衝突"
 
-#: src/Frontend/GUI.vala:420
+#: src/Backend/FileOperations.vala:167
 msgid "Skip"
 msgstr "略過"
 
-#: src/Frontend/GUI.vala:421
+#: src/Backend/FileOperations.vala:170
 msgid "Replace"
 msgstr "取代"
 
-#: src/Frontend/Widgets/ConnectBox.vala:52
+#: src/Frontend/MainWindow.vala:104
+msgid "Access Bookmarks"
+msgstr ""
+
+#: src/Frontend/MainWindow.vala:123
+msgid "Connect"
+msgstr "連接"
+
+#: src/Frontend/MainWindow.vala:126
+msgid ""
+"Type a URL and press 'Enter' to\n"
+"connect to a server."
+msgstr "輸入URL並按下\"Enter\"以連接至伺服器。"
+
+#: src/Frontend/MainWindow.vala:209
+#, c-format
+msgid "Could not connect to '%s'"
+msgstr "無法連接至'%s'"
+
+#: src/Frontend/Widgets/ConnectBox.vala:39
 msgid "hostname:port/folder"
 msgstr "主機名稱:連接埠/資料夾"
 
-#: src/Frontend/Widgets/FilePane.vala:111
-msgid "This folder is empty."
+#: src/Frontend/Widgets/FilePane.vala:39
+#, fuzzy
+msgid "This Folder Is Empty"
 msgstr "這個資料夾是空的。"
 
-#: src/Frontend/Widgets/FilePane.vala:249
-#: src/Frontend/Widgets/FilePane.vala:251
-msgid "Open"
-msgstr ""
-
-#: src/Frontend/Widgets/FilePane.vala:255
-msgid "Delete"
-msgstr ""
-
-#: src/Frontend/Widgets/OperationsPopover.vala:33
+#: src/Frontend/Widgets/OperationsPopover.vala:38
 msgid "No file operations are in progress"
 msgstr "沒有進行中的檔案操作"
 
-#: src/Frontend/Widgets/PathBar.vala:114
+#: src/Frontend/Widgets/PathBar.vala:106
 msgid "Transfer"
+msgstr ""
+
+#: src/Frontend/Widgets/FileRow.vala:127
+msgid "Open"
+msgstr ""
+
+#: src/Frontend/Widgets/FileRow.vala:134
+msgid "Delete"
 msgstr ""
