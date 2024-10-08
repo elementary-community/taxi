@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-07 20:22-0500\n"
+"POT-Creation-Date: 2018-07-18 16:32-0700\n"
 "PO-Revision-Date: 2014-12-07 21:04+0000\n"
 "Last-Translator: Mickas Jensen <qrank@live.dk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,11 +13,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-12-08 06:43+0000\n"
 "X-Generator: Launchpad (build 17274)\n"
 
-#: src/Backend/FileOperations.vala:156
+#: src/Frontend/GUI.vala:137
+msgid "Access Bookmarks"
+msgstr "Administrer bogmærker"
+
+#: src/Frontend/GUI.vala:151
+msgid "Connect"
+msgstr "Opret forbindelse"
+
+#: src/Frontend/GUI.vala:152
+msgid ""
+"Type a URL and press 'Enter' to\n"
+"connect to a server."
+msgstr "Skriv en URL og tryk 'Enter' for at tilslutte til en server."
+
+#: src/Frontend/GUI.vala:180
+#, c-format
+msgid "Could not connect to '%s'"
+msgstr "Kunne ikke forbinde til '%s'"
+
+#: src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr "Udskift eksisterende filer?"
 
-#: src/Backend/FileOperations.vala:157
+#: src/Frontend/GUI.vala:417
 #, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
@@ -27,58 +46,39 @@ msgstr ""
 "modstridende filer eller vælg ikke at erstatte denne fil ved at springe den "
 "over."
 
-#: src/Backend/FileOperations.vala:164
+#: src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr "Udskift alle konflikter"
 
-#: src/Backend/FileOperations.vala:167
+#: src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr "Spring over"
 
-#: src/Backend/FileOperations.vala:170
+#: src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr "Erstat"
 
-#: src/Frontend/MainWindow.vala:104
-msgid "Access Bookmarks"
-msgstr "Administrer bogmærker"
-
-#: src/Frontend/MainWindow.vala:123
-msgid "Connect"
-msgstr "Opret forbindelse"
-
-#: src/Frontend/MainWindow.vala:126
-msgid ""
-"Type a URL and press 'Enter' to\n"
-"connect to a server."
-msgstr "Skriv en URL og tryk 'Enter' for at tilslutte til en server."
-
-#: src/Frontend/MainWindow.vala:209
-#, c-format
-msgid "Could not connect to '%s'"
-msgstr "Kunne ikke forbinde til '%s'"
-
-#: src/Frontend/Widgets/ConnectBox.vala:39
+#: src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
 msgstr "værtsnavn:port/mappe"
 
-#: src/Frontend/Widgets/FilePane.vala:39
-#, fuzzy
-msgid "This Folder Is Empty"
+#: src/Frontend/Widgets/FilePane.vala:111
+msgid "This folder is empty."
 msgstr "Denne mappe er tom."
 
-#: src/Frontend/Widgets/OperationsPopover.vala:38
-msgid "No file operations are in progress"
-msgstr "Ingen fil handlinger er i gang"
-
-#: src/Frontend/Widgets/PathBar.vala:106
-msgid "Transfer"
-msgstr "Overfør"
-
-#: src/Frontend/Widgets/FileRow.vala:127
+#: src/Frontend/Widgets/FilePane.vala:249
+#: src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
 msgstr "Åbn"
 
-#: src/Frontend/Widgets/FileRow.vala:134
+#: src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
 msgstr "Slet"
+
+#: src/Frontend/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr "Ingen fil handlinger er i gang"
+
+#: src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr "Overfør"

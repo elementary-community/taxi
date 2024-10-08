@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-07 20:22-0500\n"
+"POT-Creation-Date: 2018-07-18 16:32-0700\n"
 "PO-Revision-Date: 2015-06-03 14:24+0000\n"
 "Last-Translator: nado <nado@troglodyte.be>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,11 +13,32 @@ msgstr ""
 "X-Launchpad-Export-Date: 2015-06-04 05:35+0000\n"
 "X-Generator: Launchpad (build 17540)\n"
 
-#: src/Backend/FileOperations.vala:156
+#: src/Frontend/GUI.vala:137
+msgid "Access Bookmarks"
+msgstr "Accéder à vos marques-pages"
+
+#: src/Frontend/GUI.vala:151
+msgid "Connect"
+msgstr "Se connecter"
+
+#: src/Frontend/GUI.vala:152
+msgid ""
+"Type a URL and press 'Enter' to\n"
+"connect to a server."
+msgstr ""
+"Tapez une URL et appuyez sur \"Entrée\" pour \n"
+"vous connecter à un serveur."
+
+#: src/Frontend/GUI.vala:180
+#, c-format
+msgid "Could not connect to '%s'"
+msgstr "Impossible de se connecter à '%s'"
+
+#: src/Frontend/GUI.vala:414
 msgid "Replace existing file?"
 msgstr "Remplacer le fichier existant ?"
 
-#: src/Backend/FileOperations.vala:157
+#: src/Frontend/GUI.vala:417
 #, c-format
 msgid ""
 "<i>\"%s\"</i> already exists. You can replace this file, replace all "
@@ -27,60 +48,39 @@ msgstr ""
 "les fichiers conflictuels ou choisir de ne pas remplacer le fichier en "
 "ignorant."
 
-#: src/Backend/FileOperations.vala:164
+#: src/Frontend/GUI.vala:419
 msgid "Replace All Conflicts"
 msgstr "Remplacer tous les conflits"
 
-#: src/Backend/FileOperations.vala:167
+#: src/Frontend/GUI.vala:420
 msgid "Skip"
 msgstr "Ignorer"
 
-#: src/Backend/FileOperations.vala:170
+#: src/Frontend/GUI.vala:421
 msgid "Replace"
 msgstr "Remplacer"
 
-#: src/Frontend/MainWindow.vala:104
-msgid "Access Bookmarks"
-msgstr "Accéder à vos marques-pages"
-
-#: src/Frontend/MainWindow.vala:123
-msgid "Connect"
-msgstr "Se connecter"
-
-#: src/Frontend/MainWindow.vala:126
-msgid ""
-"Type a URL and press 'Enter' to\n"
-"connect to a server."
-msgstr ""
-"Tapez une URL et appuyez sur \"Entrée\" pour \n"
-"vous connecter à un serveur."
-
-#: src/Frontend/MainWindow.vala:209
-#, c-format
-msgid "Could not connect to '%s'"
-msgstr "Impossible de se connecter à '%s'"
-
-#: src/Frontend/Widgets/ConnectBox.vala:39
+#: src/Frontend/Widgets/ConnectBox.vala:52
 msgid "hostname:port/folder"
 msgstr "serveur:port/dossier"
 
-#: src/Frontend/Widgets/FilePane.vala:39
-#, fuzzy
-msgid "This Folder Is Empty"
+#: src/Frontend/Widgets/FilePane.vala:111
+msgid "This folder is empty."
 msgstr "Ce dossier est vide."
 
-#: src/Frontend/Widgets/OperationsPopover.vala:38
-msgid "No file operations are in progress"
-msgstr "Aucune opération en cours"
-
-#: src/Frontend/Widgets/PathBar.vala:106
-msgid "Transfer"
-msgstr "Télécharger"
-
-#: src/Frontend/Widgets/FileRow.vala:127
+#: src/Frontend/Widgets/FilePane.vala:249
+#: src/Frontend/Widgets/FilePane.vala:251
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/Frontend/Widgets/FileRow.vala:134
+#: src/Frontend/Widgets/FilePane.vala:255
 msgid "Delete"
 msgstr "Supprimer"
+
+#: src/Frontend/Widgets/OperationsPopover.vala:33
+msgid "No file operations are in progress"
+msgstr "Aucune opération en cours"
+
+#: src/Frontend/Widgets/PathBar.vala:114
+msgid "Transfer"
+msgstr "Télécharger"
