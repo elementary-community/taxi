@@ -161,15 +161,10 @@ namespace Taxi {
             modal = true
         };
 
-        var replace_all_button = new Gtk.Button.with_label (_("Replace All Conflicts"));
-        message_dialog.add_action_widget (replace_all_button, ConflictFlag.REPLACE_ALL);
-
-        var skip_button = new Gtk.Button.with_label (_("Skip"));
-        message_dialog.add_action_widget (skip_button, ConflictFlag.SKIP);
-
-        var replace_button = new Gtk.Button.with_label (_("Replace"));
+        message_dialog.add_button (_("Replace All Conflicts"), ConflictFlag.REPLACE_ALL);
+        message_dialog.add_button (_("Skip"), ConflictFlag.SKIP);
+        var replace_button = message_dialog.add_button (_("Replace"), ConflictFlag.REPLACE);
         replace_button.add_css_class (Granite.STYLE_CLASS_SUGGESTED_ACTION);
-        message_dialog.add_action_widget (replace_button, ConflictFlag.REPLACE);
 
         message_dialog.show ();
 
