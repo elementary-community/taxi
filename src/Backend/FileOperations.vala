@@ -154,7 +154,7 @@ namespace Taxi {
     private int ask_overwrite (File destination) {
         var message_dialog = new Granite.MessageDialog (
             _("Replace existing file?"),
-            _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.".printf (destination.get_basename ())),
+            _("<i>\"%s\"</i> already exists. You can replace this file, replace all conflicting files or choose not to replace the file by skipping.").printf (destination.get_basename ()),
             new ThemedIcon ("dialog-warning"),
             Gtk.ButtonsType.CANCEL
         ) {
